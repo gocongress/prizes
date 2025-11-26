@@ -1,0 +1,28 @@
+name: api
+
+services:
+  admin:
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - '3000:3000'
+    command: npm run dev -w app/admin
+    # Use shell for troubleshooting
+    # command: /bin/sh
+    # tty: true
+    # stdin_open: true
+    environment:
+      SERVICE_NAME: admin
+      NODE_ENV: development
+      DEBUG: true
+    volumes:
+      - /workspace/app/admin/node_modules # Persist docker containers modules so that localhost are not used
+      - ./src:/workspace/app/admin/src
+      - ./package.json:/workspace/app/admin/package.json
+    restart: on-failure
+    networks:
+      - api-net
+
+networks:
+  api-net: # here we set the network name
+    driver: bridge

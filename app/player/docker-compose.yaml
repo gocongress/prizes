@@ -1,0 +1,27 @@
+name: api
+
+services:
+  player:
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - '3002:3002'
+    command: npm run dev -w app/player
+    # Use shell for troubleshooting
+    # command: /bin/sh
+    # tty: true
+    # stdin_open: true
+    environment:
+      SERVICE_NAME: player
+      NODE_ENV: development
+      DEBUG: true
+    volumes:
+      - /workspace/app/player/node_modules # Persist docker containers modules so that localhost are not used
+      - ./:/workspace/app/player
+    restart: on-failure
+    networks:
+      - api-net
+
+networks:
+  api-net: # here we set the network name
+    driver: bridge

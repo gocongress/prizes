@@ -1,0 +1,53 @@
+name: api
+
+services:
+  api:
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - '3001:3001'
+      - '9229:9229'
+    command: npm run dev -w app/api
+    # Use shell for troubleshooting
+    # command: /bin/sh
+    # tty: true
+    # stdin_open: true
+    environment:
+      SERVICE_NAME: api
+      NODE_ENV: development
+      DEBUG: true
+      LOG_LEVEL: info # Default 'debug'
+      JWT_SECRET_KEY: secret
+      JWT_EXPIRES_IN: 7d # JWT expiration time like '1h', '7d'
+      SEED_DATA: true # Load seed data on start
+      CHOKIDAR_USEPOLLING: true # Supports "tsx watch" for live reloading
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 3001
+      CORS_ALLOWED_ORIGINS: 'http://localhost:3000,http://localhost:3001,http://localhost:3002'
+      # COOKIE_NAME: auth
+      # COOKIE_DOMAIN: .superheavy.industries # Allow subdomains
+      # COOKIE_MAXAGE: 604800000 # 1 week in milliseconds
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_SCHEMA: api
+      ADMIN_EMAILS: 'user@example.com'
+      OTP_CODE_LENGTH: 8
+      # DB_DEBUG: 1
+      # DB_SSL: postgres # Production
+    volumes:
+      - /workspace/app/api/node_modules # Persist docker containers modules so that localhost are not used
+      - ./src:/workspace/app/api/src
+      - ./package.json:/workspace/app/api/package.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - api-net
+
+networks:
+  api-net: # here we set the network name
+    driver: bridge

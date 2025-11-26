@@ -1,0 +1,19 @@
+meta {
+  name: Get By Player Id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/users/awards/player/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{player4Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}

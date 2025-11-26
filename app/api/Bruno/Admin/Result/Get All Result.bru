@@ -1,0 +1,21 @@
+meta {
+  name: Get All Result
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/results?orderBy=createdAt&pageSize=12&orderDirection=desc
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:query {
+  orderBy: createdAt
+  pageSize: 12
+  orderDirection: desc
+}

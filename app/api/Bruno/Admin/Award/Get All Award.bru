@@ -1,0 +1,21 @@
+meta {
+  name: Get All Award
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/awards?orderBy=createdAt&pageSize=12&orderDirection=asc
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:query {
+  orderBy: createdAt
+  pageSize: 12
+  orderDirection: asc
+}

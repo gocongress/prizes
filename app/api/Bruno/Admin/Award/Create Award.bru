@@ -1,0 +1,24 @@
+meta {
+  name: Create Award
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/awards
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "playerId": null,
+    "prizeId": "{{prizeBookSetId}}",
+    "value": 1,
+    "redeemCode": "NEW-AWARD-001"
+  }
+}

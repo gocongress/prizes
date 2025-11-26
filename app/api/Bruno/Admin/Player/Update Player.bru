@@ -1,0 +1,25 @@
+meta {
+  name: Update Player
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/players/:id
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id: {{player2Id}}
+}
+
+body:json {
+  {
+    "agaId": "12345"
+  }
+}

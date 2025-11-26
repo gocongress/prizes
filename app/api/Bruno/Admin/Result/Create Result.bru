@@ -1,0 +1,38 @@
+meta {
+  name: Create Result
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/results
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "eventId": "{{eventSpring2025Id}}",
+    "winners": [
+      {
+        "division": "DAN",
+        "agaId": "12345",
+        "place": 1
+      },
+      {
+        "division": "SDK",
+        "agaId": "12346",
+        "place": 1
+      },
+      {
+        "division": "DDK",
+        "agaId": "12347",
+        "place": 1
+      }
+    ]
+  }
+}

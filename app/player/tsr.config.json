@@ -1,0 +1,5 @@
+{
+  "atomicWrite": false,
+  "routesDirectory": "/workspace/app/player/src/routes",
+  "generatedRouteTree": "/workspace/app/player/src/routeTree.gen.ts"
+}

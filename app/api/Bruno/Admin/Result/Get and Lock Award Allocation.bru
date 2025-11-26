@@ -1,0 +1,19 @@
+meta {
+  name: Get and Lock Award Allocation
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/results/:id/allocateAwards
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{resultWinter2025Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}

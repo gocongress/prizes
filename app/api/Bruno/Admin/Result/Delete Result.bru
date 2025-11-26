@@ -1,0 +1,19 @@
+meta {
+  name: Delete Result
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/admin/results/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{resultWinter2025Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}

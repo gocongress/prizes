@@ -1,0 +1,23 @@
+meta {
+  name: Create Event
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/events
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "new event",
+    "startAt": "2020-01-01T12:00:00Z",
+    "endAt": "2020-01-03T12:00:00Z"
+  }
+}

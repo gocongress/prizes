@@ -1,0 +1,6 @@
+email,agaId,name,rank
+imported-user-1@example.com,999991,Imported User 1, 9
+imported-user-2@example.com,999992,Imported User 2, -30
+imported-user-1@example.com,999993,Imported User 1 Child 1, -2.2
+imported-user-1@example.com,999994,Imported User 1 Child 2, -6.6
+imported-user-3@example.com,999995,Imported User 3, 1.2

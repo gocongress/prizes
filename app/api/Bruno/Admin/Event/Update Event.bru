@@ -1,0 +1,25 @@
+meta {
+  name: Update Event
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/events/:id
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id: {{eventWinter2025Id}}
+}
+
+body:json {
+  {
+    "title": "updated event"
+  }
+}

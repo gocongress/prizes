@@ -1,0 +1,19 @@
+meta {
+  name: Get AwardPreference By Player
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/awardPreferences/player/:playerId
+  body: none
+  auth: bearer
+}
+
+params:path {
+  playerId: {{player1Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}

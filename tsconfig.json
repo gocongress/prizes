@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "app/api"
+    },
+    {
+      "path": "app/admin"
+    },
+    {
+      "path": "app/player"
+    }
+  ]
+}

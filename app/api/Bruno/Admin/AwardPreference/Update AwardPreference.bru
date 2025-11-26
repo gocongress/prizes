@@ -1,0 +1,27 @@
+meta {
+  name: Update AwardPreference
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/admin/awardPreferences/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{award1Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "playerId": "{{player1Id}}",
+    "awardId": "{{award2Id}}",
+    "preferenceOrder": 1
+  }
+}

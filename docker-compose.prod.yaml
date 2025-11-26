@@ -1,0 +1,11 @@
+name: api-prod
+
+include:
+  - shared/db/docker-compose.prod.yaml
+  - app/api/docker-compose.prod.yaml
+  - app/admin/docker-compose.prod.yaml
+  - app/player/docker-compose.prod.yaml
+
+networks:
+  api-net:
+    driver: bridge

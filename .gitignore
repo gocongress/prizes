@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+openapi.yaml
+
+Screenshot*
+
+# Production environment and volumes
+.env.*
+!.env.*.example
+volumes/

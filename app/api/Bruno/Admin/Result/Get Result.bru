@@ -1,0 +1,19 @@
+meta {
+  name: Get Result
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/results/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{resultWinter2025Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}

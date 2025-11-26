@@ -1,0 +1,117 @@
+/* Login.module.css */
+
+/* Container to scope body-like styles */
+.loginContainer {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5; /* MUI-like light gray background */
+}
+
+/* Form container (MUI Card-like) */
+.form {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23); /* MUI elevation 2 */
+  width: 100%;
+  max-width: 360px; /* MUI prefers compact forms */
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* MUI spacing scale */
+}
+
+/* Email input (MUI TextField-like) */
+.emailInput {
+  padding: 12px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.23); /* MUI default border */
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 24px;
+  font-family: 'Roboto', Arial, sans-serif;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.emailInput:focus {
+  outline: none;
+  border-color: #1976d2; /* MUI primary color */
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2); /* MUI focus halo */
+}
+
+.emailInput::placeholder {
+  color: rgba(0, 0, 0, 0.54); /* MUI placeholder color */
+  opacity: 1;
+}
+
+/* OTP inputs container */
+.otpContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* OTP individual inputs */
+.otpInput {
+  width: 35px; /* Square input size */
+  height: 48px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.23); /* MUI default border */
+  border-radius: 4px;
+  font-size: 20px; /* Larger font for readability */
+  line-height: 24px;
+  font-family: 'Roboto', Arial, sans-serif;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.otpInput:focus {
+  outline: none;
+  border-color: #1976d2; /* MUI primary color */
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2); /* MUI focus halo */
+}
+
+/* Button (MUI Button-contained) */
+.submitButton {
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #1976d2; /* MUI primary color */
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Roboto', Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.submitButton:hover {
+  background-color: #1565c0; /* MUI primary darken */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Slight elevation on hover */
+}
+
+.submitButton:active {
+  background-color: #0d47a1; /* Further darken */
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .form {
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .otpInput {
+    width: 35px;
+    height: 40px;
+    font-size: 18px;
+  }
+}

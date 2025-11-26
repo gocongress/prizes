@@ -1,0 +1,20 @@
+name: api
+
+include:
+  - shared/db/docker-compose.yaml
+  - app/api/docker-compose.yaml
+  - app/admin/docker-compose.yaml
+  - app/player/docker-compose.yaml
+
+services:
+  shell:
+    profiles: [debug]
+    image: alpine:latest
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    networks:
+      - api-net
+
+networks:
+  api-net: # here we set the network name
+    driver: bridge

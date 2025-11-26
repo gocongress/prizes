@@ -1,0 +1,21 @@
+meta {
+  name: Get All Prize
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/prizes?orderBy=title&pageSize=12&orderDirection=asc
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:query {
+  orderBy: title
+  pageSize: 12
+  orderDirection: asc
+}

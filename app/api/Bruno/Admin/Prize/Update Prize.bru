@@ -1,0 +1,25 @@
+meta {
+  name: Update Prize
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/prizes/:id
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id: {{prizeGoBoardId}}
+}
+
+body:json {
+  {
+    "title": "updated prize"
+  }
+}

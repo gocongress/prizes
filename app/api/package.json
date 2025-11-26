@@ -1,0 +1,53 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "compile": "tsc && npm run lint && npm run prettier",
+    "ci": "tsc --noEmit && npm run lint && npm run prettier",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "prettier": "prettier -c .",
+    "prettier:fix": "prettier --write .",
+    "dev": "npm run knex -- migrate:latest && tsx watch --inspect=0.0.0.0 ./src/main.ts",
+    "start": "npm run knex -- migrate:latest && tsx ./src/main.ts",
+    "knex": "NODE_OPTIONS='--import tsx' knex --knexfile ./src/db/knexfile.ts"
+  },
+  "dependencies": {
+    "compression": "1.8.0",
+    "cookie-parser": "1.4.7",
+    "express": "5.1.0",
+    "express-zod-api": "^25.5.3",
+    "helmet": "8.1.0",
+    "http-errors": "2.0.0",
+    "jsonwebtoken": "9.0.2",
+    "knex": "3.1.0",
+    "nanoid": "^3.3.11",
+    "pg": "8.13.1",
+    "pino": "9.6.0",
+    "sharp": "^0.34.4",
+    "swagger-ui-express": "5.0.1",
+    "tsx": "4.19.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.25.1",
+    "@types/compression": "1.7.5",
+    "@types/cookie-parser": "1.4.10",
+    "@types/express": "5.0.1",
+    "@types/http-errors": "2.0.2",
+    "@types/jsonwebtoken": "9.0.9",
+    "@types/node": "22.13.0",
+    "@types/sharp": "^0.31.1",
+    "@types/supertest": "6.0.3",
+    "@types/swagger-ui-express": "4.1.8",
+    "eslint": "9.25.1",
+    "eslint-config-prettier": "10.1.2",
+    "globals": "16.0.0",
+    "prettier": "3.6.2",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.2",
+    "vite-tsconfig-paths": "5.1.4"
+  }
+}

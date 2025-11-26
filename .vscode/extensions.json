@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-vscode.js-debug",
+    "ms-vscode.vscode-js-profile-table",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "redhat.vscode-yaml"
+  ]
+}

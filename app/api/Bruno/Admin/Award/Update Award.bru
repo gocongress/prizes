@@ -1,0 +1,27 @@
+meta {
+  name: Update Award
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/awards/:id
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id: {{award2Id}}
+}
+
+body:json {
+  {
+    "playerId": "{{player2Id}}",
+    "prizeId": "{{prizeGoBoardId}}",
+    "value": 1
+  }
+}

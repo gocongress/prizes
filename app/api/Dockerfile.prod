@@ -1,0 +1,9 @@
+# Production stage
+FROM localhost/microservice-prod
+ENV NODE_ENV=production
+WORKDIR /workspace
+COPY package.json tsconfig.json ./app/api/
+RUN npm install --workspace=app/api --omit=dev
+COPY /src ./app/api/src
+EXPOSE 3001
+CMD ["npm", "run", "start", "-w", "app/api"]

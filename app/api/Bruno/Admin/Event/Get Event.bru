@@ -1,0 +1,19 @@
+meta {
+  name: Get Event
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/events/:id
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id: {{eventWinter2025Id}}
+}

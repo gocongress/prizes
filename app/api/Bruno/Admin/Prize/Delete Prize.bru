@@ -1,0 +1,19 @@
+meta {
+  name: Delete Prize
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/admin/prizes/:id
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id: {{prizeStonesSetId}}
+}

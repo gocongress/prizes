@@ -1,0 +1,19 @@
+meta {
+  name: Delete AwardPreference
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/awardPreferences/player/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{player1Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}

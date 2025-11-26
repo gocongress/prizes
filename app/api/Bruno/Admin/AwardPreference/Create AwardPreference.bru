@@ -1,0 +1,23 @@
+meta {
+  name: Create AwardPreference
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/awardPreferences
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "playerId": "{{player1Id}}",
+    "awardId": "{{award2Id}}",
+    "preferenceOrder": 2
+  }
+}

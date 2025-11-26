@@ -1,0 +1,41 @@
+meta {
+  name: Update Result
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/results/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{resultWinter2025Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "winners": [
+      {
+        "division": "Open",
+        "agaId": "12345",
+        "place": 1
+      },
+      {
+        "division": "Open",
+        "agaId": "67890",
+        "place": 2
+      },
+      {
+        "division": "Open",
+        "agaId": "99999",
+        "place": 3
+      }
+    ]
+  }
+}

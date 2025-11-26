@@ -1,0 +1,19 @@
+meta {
+  name: Get AwardPreference
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/awardPreferences/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{award1Id}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
