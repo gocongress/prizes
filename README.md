@@ -6,9 +6,9 @@
 - Node 22
 - Make (for convenience)
 
-## Prerequisites
+## Production Prerequisites
 
-Contact [revgum](https://github.com/revgum) for a copy of `.env` files needed for both `app/player` and `app/admin`.
+Contact [revgum](https://github.com/revgum) for a copy of `.env.production` files needed for both `app/player` and `app/admin` and `.env.production` (project root) needed for running the applications in production.
 
 ### Get Started
 

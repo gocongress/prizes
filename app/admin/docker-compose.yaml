@@ -15,6 +15,9 @@ services:
       SERVICE_NAME: admin
       NODE_ENV: development
       DEBUG: true
+      VITE_API_URL: http://localhost:3001
+      VITE_OTP_CODE_LENGTH: 8
+      FEATURE_EMAIL_NEW_CODE_ENABLED: false
     volumes:
       - /workspace/app/admin/node_modules # Persist docker containers modules so that localhost are not used
       - ./src:/workspace/app/admin/src
