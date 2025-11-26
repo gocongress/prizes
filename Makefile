@@ -43,7 +43,7 @@ routes:
 # Production targets
 prod-setup-volumes:
 	echo "\n\n***Setting up production volumes***\n\n"
-	./setup-prod-volumes.sh
+	./scripts/setup-prod-volumes.sh
 
 prod-setup:
 	echo "\n\n***Building microservice production base image***\n\n"

@@ -7,20 +7,25 @@ const alias = [
     find: '@',
     replacement: path.resolve(__dirname, './src'),
   },
-  {
-    find: 'react-admin',
-    replacement: path.resolve(__dirname, '../../node_modules/react-admin/src'),
-  },
-  {
-    find: 'ra-core',
-    replacement: path.resolve(__dirname, '../../node_modules/ra-core/src'),
-  },
-  {
-    find: 'ra-ui-materialui',
-    replacement: path.resolve(__dirname, '../../node_modules/ra-ui-materialui/src'),
-  },
-  // add any other react-admin packages you have
 ];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+if ((import.meta as any).env?.DEV) {
+  alias.push(
+    {
+      find: 'react-admin',
+      replacement: path.resolve(__dirname, './node_modules/react-admin/src'),
+    },
+    {
+      find: 'ra-core',
+      replacement: path.resolve(__dirname, './node_modules/ra-core/src'),
+    },
+    {
+      find: 'ra-ui-materialui',
+      replacement: path.resolve(__dirname, './node_modules/ra-ui-materialui/src'),
+    },
+  );
+}
 
 // https://vite.dev/config/
 export default defineConfig({
