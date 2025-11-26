@@ -6,6 +6,10 @@
 - Node 22
 - Make (for convenience)
 
+## Prerequisites
+
+Contact [revgum](https://github.com/revgum) for a copy of `.env` files needed for both `app/player` and `app/admin`.
+
 ### Get Started
 
 **Important** : The user `user@example.com` is a default configuration for a user who is granted "Admin" access to the system and API. See below for login and registration details.
