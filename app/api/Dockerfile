@@ -1,11 +1,11 @@
 # Build
-FROM localhost/microservice-build AS build
+FROM microservice-build AS build
 WORKDIR /app
 COPY package.json tsconfig.json ./
 RUN npm install
 
 # Run
-FROM localhost/microservice-build
+FROM microservice-build
 ENV NODE_ENV=development
 WORKDIR /workspace/app/api
 COPY --from=build /app /workspace/app/api

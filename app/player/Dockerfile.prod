@@ -1,5 +1,5 @@
 # Build stage
-FROM localhost/microservice-prod AS build
+FROM microservice-prod AS build
 COPY package.json tsconfig.json eslint.config.js vite.config.ts index.html tsr.config.json components.json .cta.json .env.production ./app/player/
 COPY public ./app/player/public/
 COPY src ./app/player/src/
@@ -9,7 +9,7 @@ RUN npm install --workspace=app/player
 RUN npm run build -w app/player
 
 # Production stage - serve with simple HTTP server
-FROM localhost/microservice-prod
+FROM microservice-prod
 ENV NODE_ENV=production
 RUN npm install -g serve
 WORKDIR /workspace/app/player

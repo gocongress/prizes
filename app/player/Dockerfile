@@ -1,5 +1,5 @@
 # Build
-FROM localhost/microservice-build AS build
+FROM microservice-build AS build
 ENV NODE_ENV=development
 WORKDIR /app
 COPY package.json tsconfig.json eslint.config.js vite.config.ts index.html ./
@@ -8,7 +8,7 @@ WORKDIR /app/public
 COPY public .
 
 # Run
-FROM localhost/microservice-build
+FROM microservice-build
 WORKDIR /workspace/app/player
 COPY --from=build /app /workspace/app/player
 COPY /src ./src
