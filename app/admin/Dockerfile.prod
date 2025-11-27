@@ -1,5 +1,5 @@
 # Build stage
-FROM localhost/microservice-prod as build
+FROM localhost/microservice-prod AS build
 COPY package.json tsconfig.json eslint.config.js vite.config.ts index.html tsconfig.app.json tsconfig.node.json .env.production ./app/admin/
 COPY public ./app/admin/public/
 COPY src ./app/admin/src/

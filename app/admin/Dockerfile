@@ -1,5 +1,5 @@
 # Build
-FROM localhost/microservice-build as build
+FROM localhost/microservice-build AS build
 ENV NODE_ENV=development
 WORKDIR /app
 COPY package.json tsconfig.json tsconfig.app.json tsconfig.node.json eslint.config.js vite.config.ts index.html ./
