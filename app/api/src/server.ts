@@ -83,7 +83,7 @@ export const buildServer = async () => {
   const config = serverConfig(context);
   const serverRoutes = serverRouting(context);
 
-  if (process.env.SEED_DATA) {
+  if (process.env.SEED_DATA && process.env.SEED_DATA.toLowerCase() === 'true') {
     await loadSeedData(context);
   }
 

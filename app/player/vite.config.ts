@@ -20,6 +20,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    sourcemap: import.meta.env.PROD ? false : true,
+  },
   server: {
     port: 3002,
     host: '0.0.0.0',

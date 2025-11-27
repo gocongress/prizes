@@ -31,7 +31,7 @@ if ((import.meta as any).env?.DEV) {
 export default defineConfig({
   plugins: [react()],
   build: {
-    sourcemap: true,
+    sourcemap: import.meta.env.PROD ? false : true,
   },
   resolve: {
     alias,
