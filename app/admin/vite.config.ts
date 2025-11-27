@@ -28,26 +28,28 @@ if ((import.meta as any).env?.DEV) {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    sourcemap: import.meta.env.PROD ? false : true,
-  },
-  resolve: {
-    alias,
-  },
-  server: {
-    port: 3000,
-    host: '0.0.0.0',
-    strictPort: true,
-    hmr: {
-      protocol: 'ws',
-      host: 'localhost',
+export default defineConfig((env) => {
+  return {
+    plugins: [react()],
+    build: {
+      sourcemap: env.mode !== 'production',
+    },
+    resolve: {
+      alias,
+    },
+    server: {
       port: 3000,
+      host: '0.0.0.0',
+      strictPort: true,
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 3000,
+      },
+      watch: {
+        usePolling: true, // <-- forces polling
+        interval: 100, // optional: tuning (ms)
+      },
     },
-    watch: {
-      usePolling: true, // <-- forces polling
-      interval: 100, // optional: tuning (ms)
-    },
-  },
+  };
 });

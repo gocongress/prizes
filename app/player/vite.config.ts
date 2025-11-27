@@ -5,40 +5,42 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    tanstackRouter({
-      target: 'react',
-      autoCodeSplitting: true,
-      tmpDir: './.tanstack/tmp',
-    }),
-    viteReact(),
-    tailwindcss(),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+export default defineConfig((env) => {
+  return {
+    plugins: [
+      tanstackRouter({
+        target: 'react',
+        autoCodeSplitting: true,
+        tmpDir: './.tanstack/tmp',
+      }),
+      viteReact(),
+      tailwindcss(),
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
     },
-  },
-  build: {
-    sourcemap: import.meta.env.PROD ? false : true,
-  },
-  server: {
-    port: 3002,
-    host: '0.0.0.0',
-    strictPort: true,
-    hmr: {
-      protocol: 'ws',
-      host: 'localhost',
+    build: {
+      sourcemap: env.mode !== 'production',
+    },
+    server: {
       port: 3002,
+      host: '0.0.0.0',
+      strictPort: true,
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 3002,
+      },
+      watch: {
+        usePolling: true, // <-- forces polling
+        interval: 100, // optional: tuning (ms)
+      },
     },
-    watch: {
-      usePolling: true, // <-- forces polling
-      interval: 100, // optional: tuning (ms)
+    // Ensure route changes trigger HMR
+    optimizeDeps: {
+      exclude: [], // Avoid excluding router deps
     },
-  },
-  // Ensure route changes trigger HMR
-  optimizeDeps: {
-    exclude: [], // Avoid excluding router deps
-  },
+  };
 });
