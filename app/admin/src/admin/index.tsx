@@ -5,6 +5,7 @@ import players from '@/admin/Players';
 import prizes from '@/admin/Prizes';
 import results from '@/admin/Results';
 import users from '@/admin/Users';
+import { APP_BASENAME } from '@/config';
 import LoginPage from '@/Login';
 import apiProvider from '@/providers/api';
 import { authProvider } from '@/providers/api/authProvider';
@@ -12,7 +13,7 @@ import { AccountCircle, EmojiEvents, Event, Face, Leaderboard, Tune, WorkspacePr
 import { Admin, Resource } from 'react-admin';
 
 const App = () => (
-  <Admin dataProvider={apiProvider} authProvider={authProvider} loginPage={LoginPage} requireAuth>
+  <Admin basename={APP_BASENAME} dataProvider={apiProvider} authProvider={authProvider} loginPage={LoginPage} requireAuth>
     <Resource name="users" {...users} icon={AccountCircle} recordRepresentation={(record) => record.email} />
     <Resource name="players" {...players} icon={Face} recordRepresentation={(record) => `${record.name} (${record.agaId})`} />
     <Resource name="awardPreferences" {...awardPreferences} options={{ label: "Player Award Preferences" }} icon={Tune} />

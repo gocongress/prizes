@@ -4,3 +4,4 @@ export const OTP_CODE_LENGTH = Number.parseInt(import.meta.env.VITE_OTP_CODE_LEN
 
 // Constants NOT included in the build
 export const FEATURE_EMAIL_NEW_CODE_ENABLED = !!import.meta.env.FEATURE_EMAIL_NEW_CODE_ENABLED;
+export const APP_BASENAME = import.meta.env.APP_BASENAME || '/';
