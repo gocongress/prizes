@@ -10,8 +10,8 @@ RUN npm run build -w app/admin
 # Production stage - serve with simple HTTP server
 FROM microservice-prod
 ENV NODE_ENV=production
-RUN npm install -g serve
+RUN npm install -g http-server
 WORKDIR /workspace/app/admin
 COPY --from=build /workspace/app/admin/dist ./dist
 EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["http-server", "./dist", "-p", "3000"]
