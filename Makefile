@@ -51,6 +51,8 @@ prod-setup:
 
 prod-build:
 	echo "\n\n***Building production images***\n\n"
+	$(DOCKER) compose -f docker-compose.prod.yaml --env-file .env.production build player
+	$(DOCKER) compose -f docker-compose.prod.yaml --env-file .env.production build admin
 	$(DOCKER) compose -f docker-compose.prod.yaml --env-file .env.production build
 
 prod-up:
