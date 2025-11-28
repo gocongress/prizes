@@ -52,6 +52,7 @@ export const UserCreateSchema = UserApiSchema.pick({
 });
 
 export const UserMinimalDetailsSchema = UserApiSchema.pick({
+  id: true,
   email: true,
   token: true, // required by apiResultsHandler for setting auth cookie
   kind: true,
