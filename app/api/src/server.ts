@@ -46,6 +46,8 @@ const serverConfig = (context: Context) =>
     logger: context.logger,
     errorHandler: defaultErrorHandler(context),
     beforeRouting: ({ app }) => {
+      // @ts-ignore express-zod-api types do not include set method on app
+      app.set('trust proxy', 1); // Trust first proxy when behind a proxy (e.g. Nginx)
       app.use(
         express.json({
           type: ['application/cloudevents+json', 'application/json'],
