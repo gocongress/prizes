@@ -7,6 +7,8 @@ COPY public ./app/player/public/
 COPY src ./app/player/src/
 # Create .tanstack directory for TanStack Router CLI
 RUN mkdir -p /workspace/app/player/.tanstack/tmp
+
+ENV NODE_ENV=production
 RUN npm run build -w app/player
 
 # Production stage - serve with simple HTTP server
