@@ -12,8 +12,8 @@ RUN npm run build -w app/player
 # Production stage - serve with simple HTTP server
 FROM microservice-prod
 ENV NODE_ENV=production
-RUN npm install -g http-server
+RUN npm install -g serve
 WORKDIR /workspace/app/player
 COPY --from=build /workspace/app/player/dist ./dist
 EXPOSE 3002
-CMD ["http-server", "./dist", "-p", "3002"]
+CMD ["serve", "dist", "-l", "3002"]
