@@ -31,6 +31,7 @@ if ((import.meta as any).env?.DEV) {
 export default defineConfig((env) => {
   return {
     plugins: [react()],
+    // In production, the admin panel is served from https://prizes.gocongress.org/admin
     base: env.mode === 'production' ? '/admin/' : '/',
     build: {
       sourcemap: env.mode !== 'production',

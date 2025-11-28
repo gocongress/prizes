@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  Building2,
   Gem,
   LayoutDashboard
 } from "lucide-react"
@@ -44,8 +43,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Building2 className="size-4" />
+                <div className="bg-white flex aspect-square size-10 items-center justify-center rounded-lg">
+                  <img src="/logo.png" alt="American Go Association" className="size-10 rounded-md" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">AGA</span>
