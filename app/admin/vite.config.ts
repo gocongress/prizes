@@ -31,6 +31,7 @@ if ((import.meta as any).env?.DEV) {
 export default defineConfig((env) => {
   return {
     plugins: [react()],
+    base: env.mode === 'production' ? '/admin/' : '/',
     build: {
       sourcemap: env.mode !== 'production',
     },
