@@ -118,7 +118,7 @@ export const loginUser = async ({ context, input }: ServiceParams<LoginUser>): P
   const trx = await context.db.transaction();
   try {
     let updatedUser: UserApi | undefined;
-    if (context.env === 'development' && context.runtime.adminEmails.includes(user.email)) {
+    if (context.runtime.adminEmails.includes(user.email)) {
       updatedUser = await updateById(context, trx, user.id, {
         last_login_at: new Date(),
         scope: 'ADMIN',
