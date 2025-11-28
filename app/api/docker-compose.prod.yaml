@@ -25,6 +25,7 @@ services:
       DB_SSL: ${DB_SSL:-0}
       ADMIN_EMAILS: ${ADMIN_EMAILS}
       OTP_CODE_LENGTH: ${OTP_CODE_LENGTH:-8}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN}
     depends_on:
       postgres:
         condition: service_healthy
