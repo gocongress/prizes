@@ -4,6 +4,7 @@ import type { UserApi } from '@/schemas/user';
 import { getJwtUser } from '@/services/user';
 import type { Context, ContextKind } from '@/types';
 import type { Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import {
   EndpointsFactory,
   ensureHttpError,
@@ -249,7 +250,19 @@ export const handlerFactory = <T extends ZodTypeAny>({
     .addExpressMiddleware(helmet());
 
   if (authenticateUser) {
-    return handler.addMiddleware(AuthMiddleware(getJwtUser, scopes));
+    return handler
+      .use(
+        // Rate limit authentication attempts to prevent brute-force attacks, do not limit successful requests
+        rateLimit({
+          windowMs: 1 * 60 * 1000, // 1 minute
+          max: 5, // limit each IP to 5 failed requests per windowMs
+          standardHeaders: 'draft-8',
+          legacyHeaders: false,
+          identifier: 'api-auth',
+          skipSuccessfulRequests: true,
+        }),
+      )
+      .addMiddleware(AuthMiddleware(getJwtUser, scopes));
   }
   return handler;
 };

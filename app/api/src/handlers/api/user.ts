@@ -5,6 +5,7 @@ import { UserCreateSchema, UserMinimalDetailsSchema } from '@/schemas/user';
 import * as AwardService from '@/services/award';
 import * as UserService from '@/services/user';
 import { ContextKinds, type Context } from '@/types';
+import rateLimit from 'express-rate-limit';
 import createHttpError from 'http-errors';
 
 /**
@@ -17,24 +18,34 @@ export const createUser = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserMinimalDetailsSchema,
     scopes: ScopeKinds.USER,
-  }).build({
-    method: 'post',
-    input: UserCreateSchema,
-    output: ApiPayloadSchema,
-    handler: async ({ input, options: { context } }) => {
-      try {
-        const payload = await UserService.createUser({ context, input });
-        const { oneTimePass, ...rest } = payload;
-        return buildResponse(UserMinimalDetailsSchema, context, ContextKinds.USER, {
-          ...rest,
-          isAdmin: payload.scope === 'ADMIN',
-        });
-      } catch (err) {
-        context.logger.error({ err }, 'Error creating user');
-        throw createHttpError(500, err as Error, { expose: false });
-      }
-    },
-  });
+  })
+    .use(
+      rateLimit({
+        windowMs: 5 * 60 * 1000, // 5 minutes
+        max: 5, // limit each IP to 5 requests per windowMs
+        standardHeaders: 'draft-8',
+        legacyHeaders: false,
+        identifier: 'user-registration',
+      }),
+    )
+    .build({
+      method: 'post',
+      input: UserCreateSchema,
+      output: ApiPayloadSchema,
+      handler: async ({ input, options: { context } }) => {
+        try {
+          const payload = await UserService.createUser({ context, input });
+          const { oneTimePass, ...rest } = payload;
+          return buildResponse(UserMinimalDetailsSchema, context, ContextKinds.USER, {
+            ...rest,
+            isAdmin: payload.scope === 'ADMIN',
+          });
+        } catch (err) {
+          context.logger.error({ err }, 'Error creating user');
+          throw createHttpError(500, err as Error, { expose: false });
+        }
+      },
+    });
 
 /**
  * GET /api/v1/users/awards/player/{id}

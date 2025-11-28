@@ -8,6 +8,7 @@ import {
 } from '@/schemas/user';
 import * as UserService from '@/services/user';
 import { ContextKinds, type Context } from '@/types';
+import rateLimit from 'express-rate-limit';
 import createHttpError from 'http-errors';
 
 /**
@@ -20,27 +21,37 @@ export const loginUser = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserMinimalDetailsSchema,
     scopes: ScopeKinds.USER,
-  }).build({
-    method: 'post',
-    input: UserLoginSchema,
-    output: ApiPayloadSchema,
-    handler: async ({ input, options: { context } }) => {
-      try {
-        const payload = await UserService.loginUser({ context, input });
-        if (!payload.token) {
-          throw createHttpError(500, 'User login failed, token not generated.');
+  })
+    .use(
+      rateLimit({
+        windowMs: 60 * 1000, // 1 minute
+        max: 5, // limit each IP to 5 requests per windowMs
+        standardHeaders: 'draft-8',
+        legacyHeaders: false,
+        identifier: 'user-login',
+      }),
+    )
+    .build({
+      method: 'post',
+      input: UserLoginSchema,
+      output: ApiPayloadSchema,
+      handler: async ({ input, options: { context } }) => {
+        try {
+          const payload = await UserService.loginUser({ context, input });
+          if (!payload.token) {
+            throw createHttpError(500, 'User login failed, token not generated.');
+          }
+          const { oneTimePass, ...rest } = payload;
+          return buildResponse(UserMinimalDetailsSchema, context, ContextKinds.USER, {
+            ...rest,
+            isAdmin: payload.scope === 'ADMIN',
+          });
+        } catch (err) {
+          context.logger.error({ err }, 'Error logging in user');
+          throw createHttpError(500, err as Error, { expose: false });
         }
-        const { oneTimePass, ...rest } = payload;
-        return buildResponse(UserMinimalDetailsSchema, context, ContextKinds.USER, {
-          ...rest,
-          isAdmin: payload.scope === 'ADMIN',
-        });
-      } catch (err) {
-        context.logger.error({ err }, 'Error logging in user');
-        throw createHttpError(500, err as Error, { expose: false });
-      }
-    },
-  });
+      },
+    });
 
 /**
  * POST /api/v1/auth/logout
