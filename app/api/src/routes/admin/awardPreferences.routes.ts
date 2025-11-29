@@ -11,12 +11,15 @@ export const awardPreferencesRoutes = (context: Context) =>
       post: handlers.Admin.AwardPreference.createAwardPreference(context),
     },
     {
-      player: nested({}, {
-        ':playerId': route({
-          // GET: /api/v1/admin/awardPreferences/player/{playerId}
-          get: handlers.Admin.AwardPreference.getAwardPreferencesByPlayer(context),
-        }),
-      }),
+      player: nested(
+        {},
+        {
+          ':playerId': route({
+            // GET: /api/v1/admin/awardPreferences/player/{playerId}
+            get: handlers.Admin.AwardPreference.getAwardPreferencesByPlayer(context),
+          }),
+        },
+      ),
       ':id': route({
         // GET: /api/v1/admin/awardPreferences/{id}
         get: handlers.Admin.AwardPreference.getAwardPreferenceById(context),

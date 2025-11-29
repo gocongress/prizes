@@ -78,7 +78,7 @@ export const loadSeedData = async (context: Context) => {
   ];
 
   const userResults = await Promise.all(
-    users.map((user, idx) => insertRow('users', user, `user ${idx + 1} (${user.email})`))
+    users.map((user, idx) => insertRow('users', user, `user ${idx + 1} (${user.email})`)),
   );
   const createdUsers = userResults.filter((r) => r.success).length;
   console.log(`✓ Users: ${createdUsers} created, ${users.length - createdUsers} already existed`);
@@ -121,12 +121,12 @@ export const loadSeedData = async (context: Context) => {
 
   const playerResults = await Promise.all(
     players.map((player, idx) =>
-      insertRow('players', player, `player ${idx + 1} (${player.name})`)
-    )
+      insertRow('players', player, `player ${idx + 1} (${player.name})`),
+    ),
   );
   const createdPlayers = playerResults.filter((r) => r.success).length;
   console.log(
-    `✓ Players: ${createdPlayers} created, ${players.length - createdPlayers} already existed`
+    `✓ Players: ${createdPlayers} created, ${players.length - createdPlayers} already existed`,
   );
 
   // 3. Create Events
@@ -150,11 +150,11 @@ export const loadSeedData = async (context: Context) => {
   ];
 
   const eventResults = await Promise.all(
-    events.map((event, idx) => insertRow('events', event, `event ${idx + 1} (${event.title})`))
+    events.map((event, idx) => insertRow('events', event, `event ${idx + 1} (${event.title})`)),
   );
   const createdEvents = eventResults.filter((r) => r.success).length;
   console.log(
-    `✓ Events: ${createdEvents} created, ${events.length - createdEvents} already existed`
+    `✓ Events: ${createdEvents} created, ${events.length - createdEvents} already existed`,
   );
 
   // 4. Create Prizes
@@ -202,11 +202,11 @@ export const loadSeedData = async (context: Context) => {
   ];
 
   const prizeResults = await Promise.all(
-    prizes.map((prize, idx) => insertRow('prizes', prize, `prize ${idx + 1} (${prize.title})`))
+    prizes.map((prize, idx) => insertRow('prizes', prize, `prize ${idx + 1} (${prize.title})`)),
   );
   const createdPrizes = prizeResults.filter((r) => r.success).length;
   console.log(
-    `✓ Prizes: ${createdPrizes} created, ${prizes.length - createdPrizes} already existed`
+    `✓ Prizes: ${createdPrizes} created, ${prizes.length - createdPrizes} already existed`,
   );
 
   // 5. Create Awards (unassigned prizes)
@@ -247,12 +247,12 @@ export const loadSeedData = async (context: Context) => {
 
   const awardResults = await Promise.all(
     awards.map((award, idx) =>
-      insertRow('awards', award, `award ${idx + 1} (${award.redeem_code})`)
-    )
+      insertRow('awards', award, `award ${idx + 1} (${award.redeem_code})`),
+    ),
   );
   const createdAwards = awardResults.filter((r) => r.success).length;
   console.log(
-    `✓ Awards: ${createdAwards} created, ${awards.length - createdAwards} already existed`
+    `✓ Awards: ${createdAwards} created, ${awards.length - createdAwards} already existed`,
   );
 
   // 6. Create Results
@@ -272,12 +272,12 @@ export const loadSeedData = async (context: Context) => {
 
   const resultResults = await Promise.all(
     results.map((result, idx) =>
-      insertRow('results', result, `result ${idx + 1} (event ${result.event_id})`)
-    )
+      insertRow('results', result, `result ${idx + 1} (event ${result.event_id})`),
+    ),
   );
   const createdResults = resultResults.filter((r) => r.success).length;
   console.log(
-    `✓ Results: ${createdResults} created, ${results.length - createdResults} already existed`
+    `✓ Results: ${createdResults} created, ${results.length - createdResults} already existed`,
   );
 
   console.log('✅ Seed data creation complete');

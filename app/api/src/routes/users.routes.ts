@@ -9,13 +9,19 @@ export const usersRoutes = (context: Context) =>
       post: handlers.User.createUser(context),
     },
     {
-      awards: nested({}, {
-        player: nested({}, {
-          ':id': route({
-            // GET: /api/v1/users/awards/player/{id}
-            get: handlers.User.getUserAwards(context),
-          }),
-        }),
-      }),
+      awards: nested(
+        {},
+        {
+          player: nested(
+            {},
+            {
+              ':id': route({
+                // GET: /api/v1/users/awards/player/{id}
+                get: handlers.User.getUserAwards(context),
+              }),
+            },
+          ),
+        },
+      ),
     },
   );

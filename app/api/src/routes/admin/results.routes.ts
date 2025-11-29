@@ -15,12 +15,15 @@ export const resultsRoutes = (context: Context) =>
       import: route({
         post: handlers.Admin.Result.importResults(context),
       }),
-      event: nested({}, {
-        ':eventId': route({
-          // GET: /api/v1/admin/results/event/{eventId}
-          get: handlers.Admin.Result.getResultByEventId(context),
-        }),
-      }),
+      event: nested(
+        {},
+        {
+          ':eventId': route({
+            // GET: /api/v1/admin/results/event/{eventId}
+            get: handlers.Admin.Result.getResultByEventId(context),
+          }),
+        },
+      ),
       ':id': nested(
         {
           // GET: /api/v1/admin/results/{id}

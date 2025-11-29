@@ -73,10 +73,7 @@ export const getAll = async (
   };
 };
 
-export const getById = async (
-  context: Context,
-  id: EventApi['id'],
-): Promise<EventApi> => {
+export const getById = async (context: Context, id: EventApi['id']): Promise<EventApi> => {
   const rows = await context
     .db<EventDb>(TABLE_NAME)
     .where({ id, deleted_at: null })

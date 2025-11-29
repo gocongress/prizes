@@ -157,10 +157,7 @@ export const getAll = async (
   };
 };
 
-export const getById = async (
-  context: Context,
-  id: PrizeApi['id'],
-): Promise<PrizeApi> => {
+export const getById = async (context: Context, id: PrizeApi['id']): Promise<PrizeApi> => {
   const rows: PrizeWithAwards[] = await prizeWithAwardsQuery(context)
     .where(`${TABLE_NAME}.id`, id)
     .where(`${TABLE_NAME}.deleted_at`, null)

@@ -37,7 +37,10 @@ const db = {
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'postgres',
   schema: `${process.env.DB_SCHEMA || 'public'}${env === 'test' ? '_test' : ''}`,
-  ssl: process.env.DB_SSL === 'true' || process.env.DB_SSL === '1' ? { rejectUnauthorized: false } : false,
+  ssl:
+    process.env.DB_SSL === 'true' || process.env.DB_SSL === '1'
+      ? { rejectUnauthorized: false }
+      : false,
   debug: !!process.env.DB_DEBUG,
 };
 const runtime = {
