@@ -5,7 +5,7 @@ services:
     build:
       dockerfile: ./Dockerfile.prod
     ports:
-      - '${ADMIN_APP_HOST_PORT}:3000'
+      - '${ADMIN_APP_HOST_PORT}:80'
     environment:
       SERVICE_NAME: admin
       NODE_ENV: production

@@ -9,11 +9,9 @@ COPY src ./app/admin/src/
 ENV NODE_ENV=production
 RUN npm run build -w app/admin
 
-# Production stage - serve with simple HTTP server
-FROM microservice-prod
-ENV NODE_ENV=production
-RUN npm install -g serve
-WORKDIR /workspace/app/admin
-COPY --from=build /workspace/app/admin/dist ./dist
-EXPOSE 3000
-CMD ["serve", "dist", "-l", "3000"]
+FROM nginx:alpine
+COPY --from=build /workspace/app/admin/dist /usr/share/nginx/html
+# Replace default nginx config
+COPY nginx.prod.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
