@@ -1,6 +1,13 @@
 # Use podman if available, otherwise fall back to docker
 DOCKER  ?= $(shell command -v podman 2>/dev/null || command -v docker 2>/dev/null || echo docker)
 
+# Set env file path only if production secrets exist
+ifneq (,$(wildcard /opt/secrets/prizes.env.production))
+    PROD_ENV_FILE := --env-file /opt/secrets/prizes.env.production
+else
+    PROD_ENV_FILE := --env-file .env.production
+endif
+
 # Don't output the makefile errors
 .IGNORE:
 # Don't output the makefile commands being executed
@@ -18,6 +25,8 @@ setup:
 
 build:
 	$(DOCKER) compose --parallel 3 build
+	$(DOCKER) builder prune -f
+	$(DOCKER) image prune -f
 
 up:
 	echo "\n\n***Bringing up the stack***\n\n"
@@ -51,13 +60,15 @@ prod-setup:
 
 prod-build:
 	echo "\n\n***Building production images***\n\n"
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production build player
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production build admin
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production build
+	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build player
+	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build admin
+	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build
+	$(DOCKER) builder prune -f
+	$(DOCKER) image prune -f
 
 prod-up:
 	echo "\n\n***Bringing up the production stack***\n\n"
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production up -d
+	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) up -d
 
 prod-down:
 	$(DOCKER) compose -f docker-compose.prod.yaml down
