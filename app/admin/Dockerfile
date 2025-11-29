@@ -2,8 +2,9 @@
 FROM microservice-build AS build
 ENV NODE_ENV=development
 WORKDIR /app
-COPY package.json tsconfig.json tsconfig.app.json tsconfig.node.json eslint.config.js vite.config.ts index.html ./
+COPY package.json ./
 RUN npm install
+COPY tsconfig.json tsconfig.app.json tsconfig.node.json eslint.config.js vite.config.ts index.html ./
 WORKDIR /app/public
 COPY public .
 

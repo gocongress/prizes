@@ -18,6 +18,10 @@ endif
 # Default target to bring up a fresh stack
 all: up
 
+prune:
+	$(DOCKER) builder prune -f
+	$(DOCKER) image prune -f
+
 # Build the microservice base image
 setup:
 	echo "\n\n***Building microservice base image***\n\n"
@@ -25,8 +29,6 @@ setup:
 
 build:
 	$(DOCKER) compose --parallel 3 build
-	$(DOCKER) builder prune -f
-	$(DOCKER) image prune -f
 
 up:
 	echo "\n\n***Bringing up the stack***\n\n"
@@ -63,8 +65,6 @@ prod-build:
 	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build player
 	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build admin
 	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build
-	$(DOCKER) builder prune -f
-	$(DOCKER) image prune -f
 
 prod-up:
 	echo "\n\n***Bringing up the production stack***\n\n"
