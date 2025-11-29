@@ -4,7 +4,7 @@ This software is available under two different licenses:
 
 ## 1. Non-Commercial License (for individuals and open-source projects)
 
-Copyright (c) 2025 SuperHeavy Industries, LLC
+Copyright (c) 2025-present SuperHeavy Industries, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to use,
