@@ -2,6 +2,8 @@
 
 Contact [revgum](https://github.com/revgum) for a copy of `.env.production` files needed for both `app/player` and `app/admin` and `.env.production` (project root) needed for running the applications in production.
 
+The project root .env.production file needs to be placed in `/opt/secrets/prizes.env.production`.
+
 ## Build the applications
 
 - `make prod-setup-volumes` : Setup DB data volumes to persist database data.

@@ -51,13 +51,13 @@ prod-setup:
 
 prod-build:
 	echo "\n\n***Building production images***\n\n"
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file .env.production build player
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file .env.production build admin
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file .env.production build
+	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production build player
+	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production build admin
+	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production build
 
 prod-up:
 	echo "\n\n***Bringing up the production stack***\n\n"
-	$(DOCKER) compose -f docker-compose.prod.yaml --env-file .env.production up -d
+	$(DOCKER) compose -f docker-compose.prod.yaml --env-file /opt/secrets/prizes.env.production up -d
 
 prod-down:
 	$(DOCKER) compose -f docker-compose.prod.yaml down
