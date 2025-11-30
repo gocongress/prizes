@@ -1,0 +1,215 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  BASE_IMAGE_NAME: ${{ github.repository }}/microservice-build
+
+jobs:
+  build-base:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for base image
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}
+          tags: |
+            type=sha,prefix={{branch}}-
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Build and push base image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:buildcache,mode=max
+
+  build-api:
+    runs-on: ubuntu-latest
+    needs: build-base
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for api
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/api
+          tags: |
+            type=sha,prefix={{branch}}-
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Build and push api image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app/api
+          file: ./app/api/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BASE_IMAGE=${{ needs.build-base.outputs.image-tag }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/api:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/api:buildcache,mode=max
+
+  build-admin:
+    runs-on: ubuntu-latest
+    needs: build-base
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create .env.production for admin
+        run: |
+          cat > ./app/admin/.env.production << EOF
+          VITE_API_URL=${{ secrets.ADMIN_VITE_API_URL }}
+          VITE_OTP_CODE_LENGTH=${{ secrets.ADMIN_VITE_OTP_CODE_LENGTH || '8' }}
+          FEATURE_EMAIL_NEW_CODE_ENABLED=${{ secrets.ADMIN_FEATURE_EMAIL_NEW_CODE_ENABLED || 'false' }}
+          EOF
+          # Conditionally add APP_BASENAME if secret is set
+          if [ -n "${{ secrets.ADMIN_APP_BASENAME }}" ]; then
+            echo "APP_BASENAME=${{ secrets.ADMIN_APP_BASENAME }}" >> ./app/admin/.env.production
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for admin
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/admin
+          tags: |
+            type=sha,prefix={{branch}}-
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Build and push admin image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app/admin
+          file: ./app/admin/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BASE_IMAGE=${{ needs.build-base.outputs.image-tag }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/admin:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/admin:buildcache,mode=max
+
+  build-player:
+    runs-on: ubuntu-latest
+    needs: build-base
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create .env.production for player
+        run: |
+          cat > ./app/player/.env.production << EOF
+          VITE_API_URL=${{ secrets.PLAYER_VITE_API_URL }}
+          VITE_OTP_CODE_LENGTH=${{ secrets.PLAYER_VITE_OTP_CODE_LENGTH || '8' }}
+          EOF
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for player
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/player
+          tags: |
+            type=sha,prefix={{branch}}-
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Build and push player image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app/player
+          file: ./app/player/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BASE_IMAGE=${{ needs.build-base.outputs.image-tag }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/player:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/player:buildcache,mode=max
