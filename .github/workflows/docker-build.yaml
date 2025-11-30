@@ -54,11 +54,12 @@ jobs:
             type=sha,prefix=,format=short
             type=raw,value=buildcache,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Export base image with full git sha tag
+      - name: Export base image with short git sha tag
         id: set-sha
         run: |
-          echo "tag=${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
-          echo "Using immutable base: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:${{ github.sha }}"
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "tag=${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "Using immutable base: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:${SHORT_SHA}"
 
       - name: Build and push base image
         uses: docker/build-push-action@v5
