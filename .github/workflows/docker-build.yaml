@@ -54,11 +54,11 @@ jobs:
             type=sha,prefix=,format=short
             type=raw,value=buildcache,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Export base image with digest (immutable & works everywhere)
+      - name: Export base image with full git sha tag
         id: set-sha
         run: |
-          echo "tag=${{ steps.meta.outputs.imageid }}" >> $GITHUB_OUTPUT
-          echo "Using immutable base: ${{ steps.meta.outputs.imageid }}"
+          echo "tag=${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "Using immutable base: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:${{ github.sha }}"
 
       - name: Build and push base image
         uses: docker/build-push-action@v5
