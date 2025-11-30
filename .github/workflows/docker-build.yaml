@@ -42,9 +42,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}
           tags: |
-            type=sha,prefix={{branch}}-
             type=ref,event=branch
             type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
 
       - name: Build and push base image
         uses: docker/build-push-action@v5
@@ -84,11 +86,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}/api
           tags: |
-            type=sha,prefix={{branch}}-
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=sha
 
       - name: Build and push api image
         uses: docker/build-push-action@v5
@@ -142,11 +144,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}/admin
           tags: |
-            type=sha,prefix={{branch}}-
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=sha
 
       - name: Build and push admin image
         uses: docker/build-push-action@v5
@@ -195,11 +197,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}/player
           tags: |
-            type=sha,prefix={{branch}}-
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=sha
 
       - name: Build and push player image
         uses: docker/build-push-action@v5
