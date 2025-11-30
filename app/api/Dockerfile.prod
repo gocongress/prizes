@@ -1,5 +1,6 @@
 # Production stage
-FROM microservice-prod
+ARG BASE_IMAGE=microservice-prod
+FROM ${BASE_IMAGE}
 ENV NODE_ENV=production
 WORKDIR /workspace
 COPY package.json tsconfig.json ./app/api/

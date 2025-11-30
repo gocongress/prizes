@@ -1,5 +1,6 @@
 # Build stage
-FROM microservice-prod AS build
+ARG BASE_IMAGE=microservice-prod
+FROM ${BASE_IMAGE} AS build
 COPY package.json ./app/player/
 RUN npm install --workspace=app/player
 COPY tsconfig.json eslint.config.js vite.config.ts index.html tsr.config.json components.json .cta.json .env.production ./app/player/

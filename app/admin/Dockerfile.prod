@@ -1,5 +1,6 @@
 # Build stage
-FROM microservice-prod AS build
+ARG BASE_IMAGE=microservice-prod
+FROM ${BASE_IMAGE} AS build
 COPY package.json ./app/admin/
 RUN npm install --workspace=app/admin
 COPY tsconfig.json eslint.config.js vite.config.ts index.html tsconfig.app.json tsconfig.node.json .env.production ./app/admin/
