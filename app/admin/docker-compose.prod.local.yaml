@@ -1,4 +1,4 @@
-name: api-prod
+name: api-prod-local
 
 services:
   admin:
