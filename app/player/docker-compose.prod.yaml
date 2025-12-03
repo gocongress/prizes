@@ -2,7 +2,7 @@ name: api-prod
 
 services:
   player:
-    image: ghcr.io/aga-prizes/player:main
+    image: ghcr.io/gocongress/prizes/player:main
     ports:
       - '${PLAYER_APP_HOST_PORT}:80'
     environment:

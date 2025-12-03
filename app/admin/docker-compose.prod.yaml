@@ -2,7 +2,7 @@ name: api-prod
 
 services:
   admin:
-    image: ghcr.io/aga-prizes/admin:main
+    image: ghcr.io/gocongress/prizes/admin:main
     ports:
       - '${ADMIN_APP_HOST_PORT}:80'
     environment:
