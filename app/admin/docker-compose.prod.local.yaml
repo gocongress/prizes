@@ -1,0 +1,18 @@
+name: api-prod-local
+
+services:
+  admin:
+    build:
+      dockerfile: ./Dockerfile.prod
+    ports:
+      - '${ADMIN_APP_HOST_PORT}:80'
+    environment:
+      SERVICE_NAME: admin
+      NODE_ENV: production
+    restart: unless-stopped
+    networks:
+      - api-net
+
+networks:
+  api-net:
+    driver: bridge

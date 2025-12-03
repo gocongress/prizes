@@ -1,0 +1,11 @@
+name: api-prod-local
+
+include:
+  - shared/db/docker-compose.prod.yaml
+  - app/api/docker-compose.prod.local.yaml
+  - app/admin/docker-compose.prod.local.yaml
+  - app/player/docker-compose.prod.local.yaml
+
+networks:
+  api-net:
+    driver: bridge
