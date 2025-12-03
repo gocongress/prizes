@@ -1,12 +1,12 @@
 ## Quick start
 
+This guide describes the **development environment** workflow. For production deployment instructions, see [Production Setup](./PRODUCTION_SETUP.md).
+
 ### Dependencies
 
 - Podman (or Docker)
 - Node 22
 - Make (for convenience)
-
-## [Production Setup](./PRODUCTION_SETUP.md)
 
 ### Get Started
 
