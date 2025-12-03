@@ -2,8 +2,7 @@ name: api-prod
 
 services:
   api:
-    build:
-      dockerfile: ./Dockerfile.prod
+    image: ghcr.io/gocongress/prizes/api:main
     ports:
       - '${API_HOST_PORT}:3001'
     environment:
