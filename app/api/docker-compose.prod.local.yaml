@@ -2,7 +2,8 @@ name: api-prod
 
 services:
   api:
-    image: ghcr.io/aga-prizes/api:main
+    build:
+      dockerfile: ./Dockerfile.prod
     ports:
       - '${API_HOST_PORT}:3001'
     environment:

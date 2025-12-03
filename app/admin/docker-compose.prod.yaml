@@ -2,8 +2,7 @@ name: api-prod
 
 services:
   admin:
-    build:
-      dockerfile: ./Dockerfile.prod
+    image: ghcr.io/aga-prizes/admin:main
     ports:
       - '${ADMIN_APP_HOST_PORT}:80'
     environment:
