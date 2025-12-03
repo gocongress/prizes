@@ -13,7 +13,7 @@ endif
 # Don't output the makefile commands being executed
 .SILENT:
 # Makefile targets don't correspond to actual files
-.PHONY: setup build up up-db down psql routes prod-setup prod-setup-volumes prod-build prod-up prod-down prod-logs
+.PHONY: setup build up up-db down psql routes prod-setup-volumes prod-setup-local prod-build-local prod-up-local prod-down-local prod-logs-local prod-up prod-down prod-logs
 
 # Default target to bring up a fresh stack
 all: up
@@ -56,15 +56,25 @@ prod-setup-volumes:
 	echo "\n\n***Setting up production volumes***\n\n"
 	./scripts/setup-prod-volumes.sh
 
-prod-setup:
+prod-setup-local:
 	echo "\n\n***Building microservice production base image***\n\n"
 	$(DOCKER) build -f Dockerfile -t microservice-prod .
 
-prod-build:
+prod-build-local:
 	echo "\n\n***Building production images***\n\n"
-	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build player
-	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build admin
-	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) build
+	$(DOCKER) compose -f docker-compose.prod.local.yaml $(PROD_ENV_FILE) build player
+	$(DOCKER) compose -f docker-compose.prod.local.yaml $(PROD_ENV_FILE) build admin
+	$(DOCKER) compose -f docker-compose.prod.local.yaml $(PROD_ENV_FILE) build
+
+prod-up-local:
+	echo "\n\n***Bringing up the production stack***\n\n"
+	$(DOCKER) compose -f docker-compose.prod.local.yaml $(PROD_ENV_FILE) up -d
+
+prod-down-local:
+	$(DOCKER) compose -f docker-compose.prod.local.yaml down
+
+prod-logs-local:
+	$(DOCKER) compose -f docker-compose.prod.local.yaml logs -f
 
 prod-up:
 	echo "\n\n***Bringing up the production stack***\n\n"

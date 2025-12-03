@@ -1,8 +1,9 @@
-name: api-prod
+name: api-prod-local
 
 services:
   player:
-    image: ghcr.io/aga-prizes/player:main
+    build:
+      dockerfile: ./Dockerfile.prod
     ports:
       - '${PLAYER_APP_HOST_PORT}:80'
     environment:
