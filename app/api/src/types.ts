@@ -42,6 +42,17 @@ export type Context = {
     jwtSecretKey: string;
     jwtExpiresIn: SignOptions['expiresIn']; // ie. '1h', '7d'
     adminEmails: string[];
+    smtp: {
+      enabled: boolean;
+      apiKey: string;
+      fromEmail: string;
+      fromName: string;
+    };
+    turnstile?: {
+      enabled: boolean;
+      secretKey: string;
+      timeout: number;
+    };
   };
   server: {
     host: string;

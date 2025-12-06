@@ -17,7 +17,7 @@ services:
       DEBUG: true
       VITE_API_URL: http://localhost:3001
       VITE_OTP_CODE_LENGTH: 8
-      FEATURE_EMAIL_NEW_CODE_ENABLED: false
+      VITE_TURNSTILE_SITE_KEY: 1x00000000000000000000AA # Site key for local development, always passes
     volumes:
       - /workspace/app/admin/node_modules # Persist docker containers modules so that localhost are not used
       - ./src:/workspace/app/admin/src

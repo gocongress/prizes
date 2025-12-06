@@ -35,6 +35,11 @@ services:
       DB_SCHEMA: api
       ADMIN_EMAILS: 'user@example.com'
       OTP_CODE_LENGTH: 8
+      SMTP2GO_ENABLED: ${SMTP2GO_ENABLED:-false}
+      SMTP2GO_API_KEY: ${SMTP2GO_API_KEY}
+      TURNSTILE_ENABLED: true
+      TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA # Secret key for local development, always passes
+      TURNSTILE_TIMEOUT: 3000
       # DB_DEBUG: 1
       # DB_SSL: postgres # Production
     volumes:

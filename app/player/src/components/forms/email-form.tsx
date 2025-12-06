@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { env } from "@/env";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Label } from "@radix-ui/react-label";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -15,9 +17,11 @@ type EmailFormData = z.infer<typeof emailSchema>;
 interface EmailFormProps {
   onSubmit: (email: string) => Promise<void>;
   isLoading: boolean;
+  verifyCallback: (token: string) => void;
+  handleVerifyError: () => void;
 }
 
-export function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
+export function EmailForm({ onSubmit, isLoading, verifyCallback, handleVerifyError }: EmailFormProps) {
   const form = useForm<EmailFormData>({
     resolver: zodResolver(emailSchema),
   });
@@ -26,7 +30,7 @@ export function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
     await onSubmit(data.email);
   };
 
-  return (
+  return (<>
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">E-mail</Label>
@@ -54,5 +58,7 @@ export function EmailForm({ onSubmit, isLoading }: EmailFormProps) {
         )}
       </Button>
     </form>
+    <Turnstile siteKey={env.VITE_TURNSTILE_SITE_KEY} onSuccess={verifyCallback} onError={handleVerifyError} className="flex justify-center pt-2" />
+  </>
   );
 }

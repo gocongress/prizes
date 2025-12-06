@@ -1,4 +1,3 @@
-import { FEATURE_EMAIL_NEW_CODE_ENABLED } from '@/config';
 import { Email } from '@mui/icons-material';
 import { Button, DeleteWithConfirmButton, Edit, Labeled, SaveButton, SelectInput, SimpleForm, TextField, TextInput, Toolbar, required, useCreate, useNotify, useRecordContext, useRedirect } from 'react-admin';
 
@@ -27,7 +26,7 @@ const UserEditToolbar = () => {
   return (
     <Toolbar sx={{ justifyContent: 'space-between' }}>
       <SaveButton />
-      {FEATURE_EMAIL_NEW_CODE_ENABLED && <Button type='button' label="Send new code" onClick={handleClick} disabled={isPending} color='success' variant='contained' size='large'><Email /></Button>}
+      <Button type='button' label="Send new code" onClick={handleClick} disabled={isPending} color='success' variant='contained' size='large'><Email /></Button>
       <DeleteWithConfirmButton />
     </Toolbar>
   );

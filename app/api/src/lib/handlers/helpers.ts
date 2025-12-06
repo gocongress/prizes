@@ -1,5 +1,6 @@
 import { AuthMiddleware } from '@/middlewares/auth';
 import { RequestMiddleware } from '@/middlewares/request';
+import { TurnstileMiddleware } from '@/middlewares/turnstile';
 import type { UserApi } from '@/schemas/user';
 import { getJwtUser } from '@/services/user';
 import type { Context, ContextKind } from '@/types';
@@ -216,6 +217,7 @@ export const handlerFactory = <T extends ZodTypeAny>({
   itemSchema,
   scopes,
   authenticateUser = true,
+  useBotProtection = false,
   rawOutput = false,
   clearCookie = false,
 }: {
@@ -223,11 +225,12 @@ export const handlerFactory = <T extends ZodTypeAny>({
   context: Context;
   itemSchema: T;
   authenticateUser?: boolean;
+  useBotProtection?: boolean;
   scopes: ScopeKind;
   rawOutput?: boolean;
   clearCookie?: boolean;
 }) => {
-  const handler = new EndpointsFactory(apiResultsHandler(kind, itemSchema, rawOutput, clearCookie))
+  let handler = new EndpointsFactory(apiResultsHandler(kind, itemSchema, rawOutput, clearCookie))
     .addOptions(async () => {
       const requestId = randomID(8);
       const requestContext: Context = {
@@ -249,8 +252,12 @@ export const handlerFactory = <T extends ZodTypeAny>({
     .addMiddleware(RequestMiddleware)
     .addExpressMiddleware(helmet());
 
+  if (useBotProtection) {
+    handler = handler.addMiddleware(TurnstileMiddleware);
+  }
+
   if (authenticateUser) {
-    return handler
+    handler = handler
       .use(
         // Rate limit authentication attempts to prevent brute-force attacks, do not limit successful requests
         rateLimit({
@@ -264,6 +271,7 @@ export const handlerFactory = <T extends ZodTypeAny>({
       )
       .addMiddleware(AuthMiddleware(getJwtUser, scopes));
   }
+
   return handler;
 };
 
