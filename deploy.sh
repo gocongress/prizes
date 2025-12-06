@@ -8,25 +8,15 @@ echo "========================================="
 
 # Pull latest changes from git
 echo ""
-echo "[1/4] Pulling latest changes from git..."
+echo "[1/2] Pulling latest changes from git..."
 git pull
-
-# Build production images
-echo ""
-echo "[2/4] Building production images..."
-make prod-build
-
-# Stop running containers
-echo ""
-echo "[3/4] Stopping production containers..."
-make prod-down
 
 # Start production containers
 echo ""
-echo "[4/4] Starting production containers..."
+echo "[2/2] Starting latest production containers..."
 make prod-up
 
 echo ""
 echo "========================================="
-echo "Deployment completed successfully!"
+echo "Deployment completed successfully! Run `make prod-logs` to view logs."
 echo "========================================="

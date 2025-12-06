@@ -104,13 +104,7 @@ export async function sendEmail(
     payload.custom_headers = customHeaders;
   }
 
-  context.logger.info(
-    {
-      to: to.map((r) => r.email),
-      subject,
-    },
-    'Sending email via SMTP2Go',
-  );
+  context.logger.info({ to: to.map((r) => r.email) }, 'Sending email via SMTP2Go');
 
   try {
     const response = await fetch('https://api.smtp2go.com/v3/email/send', {
