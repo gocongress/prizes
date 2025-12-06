@@ -78,7 +78,7 @@ prod-logs-local:
 
 prod-up:
 	echo "\n\n***Bringing up the production stack***\n\n"
-	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) up -d
+	$(DOCKER) compose -f docker-compose.prod.yaml $(PROD_ENV_FILE) up -d --pull always
 
 prod-down:
 	$(DOCKER) compose -f docker-compose.prod.yaml down
