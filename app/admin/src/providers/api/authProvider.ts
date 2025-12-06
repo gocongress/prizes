@@ -2,12 +2,20 @@ import { API_URL } from '@/config';
 import { HttpError } from 'react-admin';
 
 export const authProvider = {
-  async login({ email, password }: { email: string; password: string }) {
+  async login({
+    email,
+    password,
+    verificationToken,
+  }: {
+    email: string;
+    password: string;
+    verificationToken: string;
+  }) {
     try {
       localStorage.removeItem('token');
       const response = await fetch(`${API_URL}/api/v1/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'cf-turnstile-response': verificationToken },
         body: JSON.stringify({ email, oneTimePass: password }),
       });
 
@@ -78,11 +86,17 @@ export const authProvider = {
       throw new HttpError('Unauthorized', 401);
     }
   },
-  async getOtp({ email }: { email: string }): Promise<boolean> {
+  async getOtp({
+    email,
+    verificationToken,
+  }: {
+    email: string;
+    verificationToken: string;
+  }): Promise<boolean> {
     try {
       const response = await fetch(`${API_URL}/api/v1/users`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'cf-turnstile-response': verificationToken },
         body: JSON.stringify({ email }),
       });
 

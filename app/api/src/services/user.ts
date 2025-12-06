@@ -1,6 +1,6 @@
-import { featureFlags } from '@/config';
 import { getUserJwt } from '@/lib/auth';
 import { randomID } from '@/lib/crypto';
+import { sendOtpEmail } from '@/lib/email';
 import { TABLE_NAME as PLAYERS_TABLE_NAME } from '@/models/player';
 import {
   create,
@@ -50,16 +50,18 @@ const getNewOneTimePass = async ({
   try {
     const oneTimePass = randomID();
     const updatedUser = await updateById(context, trx, user.id, {
-      one_time_passes: [oneTimePass],
+      add_one_time_pass: oneTimePass,
     });
     if (!updatedUser) {
       throw createHttpError(404, 'User invalid or not found.');
     }
     await trx.commit();
-    context.logger.debug(
-      { userId: user.id, oneTimePass },
-      'Generated new one-time password for user',
-    );
+    if (context.env !== 'production') {
+      context.logger.info(
+        { userId: user.id, oneTimePass },
+        'Generated new one-time password for user',
+      );
+    }
     return updatedUser;
   } catch (error) {
     await trx.rollback();
@@ -78,28 +80,22 @@ export const createUser = async ({
   const trx = await context.db.transaction();
   try {
     const user = await create(context, trx, input);
-    if (!user) {
+    if (!user || !user.oneTimePass?.length) {
       throw createHttpError(400, 'User create failed.');
     }
+    await sendOtpEmail(context, user.email, user.oneTimePass[0]);
     await trx.commit();
     return user;
   } catch (error) {
     await trx.rollback();
     if (error instanceof Error && error.message.includes('users_lower_email_unique')) {
-      if (!featureFlags.otp.issueNewCodeOnUserCreateEnabled) {
-        const existingUser = await find(context, input.email);
-        context.logger.info(
-          { oneTimePass: existingUser?.oneTimePass },
-          'User already exists with one-time passwords',
-        );
-        if (!existingUser) {
-          throw createHttpError(400, 'User create failed.');
-        }
-        return existingUser;
-      } else {
-        context.logger.info('User already exists, generating new one-time password');
-        return getNewOneTimePass({ context, input });
+      context.logger.info('User already exists, generating new one-time password.');
+      const existingUser = await getNewOneTimePass({ context, input });
+      if (!existingUser || !existingUser.oneTimePass?.length) {
+        throw createHttpError(400, 'User create failed.');
       }
+      await sendOtpEmail(context, existingUser.email, existingUser.oneTimePass[0]);
+      return existingUser;
     }
     throw error;
   }
@@ -122,9 +118,13 @@ export const loginUser = async ({ context, input }: ServiceParams<LoginUser>): P
       updatedUser = await updateById(context, trx, user.id, {
         last_login_at: new Date(),
         scope: 'ADMIN',
+        clear_one_time_passes: true,
       });
     } else {
-      updatedUser = await updateById(context, trx, user.id, { last_login_at: new Date() });
+      updatedUser = await updateById(context, trx, user.id, {
+        last_login_at: new Date(),
+        clear_one_time_passes: true,
+      });
     }
     if (!updatedUser) {
       throw createHttpError(500, 'User update failed.');

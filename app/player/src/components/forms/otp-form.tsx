@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { env } from "@/env";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Label } from "@radix-ui/react-label";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState, type KeyboardEvent } from "react";
@@ -10,9 +12,11 @@ interface OTPFormProps {
   onSubmit: (otp: string) => Promise<void>;
   onBack: () => void;
   isLoading: boolean;
+  handleVerifyError: () => void;
+  verifyCallback: (token: string) => void;
 }
 
-export function OTPForm({ onSubmit, onBack, isLoading }: OTPFormProps) {
+export function OTPForm({ onSubmit, onBack, isLoading, verifyCallback, handleVerifyError }: OTPFormProps) {
   const initialOtpState = Array(OTP_CODE_LENGTH).fill('');
   const [otp, setOtp] = useState<string[]>(initialOtpState);
 
@@ -69,49 +73,52 @@ export function OTPForm({ onSubmit, onBack, isLoading }: OTPFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label>One-time password</Label>
-        <div className="flex gap-2 justify-center" onPaste={handlePaste}>
-          {otp.map((character, index) => (
-            <Input
-              key={index}
-              id={`otp-${index}`}
-              type="text"
-              maxLength={1}
-              value={character}
-              onChange={(e) => handleOtpChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-              className="w-12 h-12 text-center text-lg font-semibold"
-              autoComplete="off"
-            />
-          ))}
+    <>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label>One-time password</Label>
+          <div className="flex gap-2 justify-center" onPaste={handlePaste}>
+            {otp.map((character, index) => (
+              <Input
+                key={index}
+                id={`otp-${index}`}
+                type="text"
+                maxLength={1}
+                value={character}
+                onChange={(e) => handleOtpChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                className="w-12 h-12 text-center text-lg font-semibold"
+                autoComplete="off"
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={isLoading || otp.join('').length !== OTP_CODE_LENGTH}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Verifying…
-          </>
-        ) : (
-          'Login'
-        )}
-      </Button>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isLoading || otp.join('').length !== OTP_CODE_LENGTH}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Verifying…
+            </>
+          ) : (
+            'Login'
+          )}
+        </Button>
 
-      <Button
-        type="button"
-        variant="ghost"
-        className="w-full"
-        onClick={handleBackClick}
-      >
-        Back to email
-      </Button>
-    </form>
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full"
+          onClick={handleBackClick}
+        >
+          Back to email
+        </Button>
+      </form>
+      <Turnstile siteKey={env.VITE_TURNSTILE_SITE_KEY} onSuccess={verifyCallback} onError={handleVerifyError} className="flex justify-center pt-2" />
+    </>
   );
 }

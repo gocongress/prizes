@@ -17,6 +17,7 @@ import createHttpError from 'http-errors';
 export const loginUser = (context: Context) =>
   handlerFactory({
     authenticateUser: false,
+    useBotProtection: true,
     context,
     kind: ContextKinds.USER,
     itemSchema: UserMinimalDetailsSchema,

@@ -21,11 +21,13 @@ export interface User {
 
 interface CreateUserInput {
   email: string;
+  verificationToken?: string;
 }
 
 interface LoginUserInput {
   email: string;
   oneTimePass: string;
+  verificationToken?: string;
 }
 
 interface ApiResponse<T> {
@@ -94,6 +96,7 @@ export const useAuth = () => {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'cf-turnstile-response': input.verificationToken || '',
         },
         body: JSON.stringify(input),
       });
@@ -128,6 +131,7 @@ export const useAuth = () => {
         credentials: 'include', // Important: include cookies
         headers: {
           'Content-Type': 'application/json',
+          'cf-turnstile-response': input.verificationToken || '',
         },
         body: JSON.stringify(input),
       });

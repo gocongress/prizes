@@ -2,9 +2,10 @@ import { EmailForm } from "@/components/forms/email-form";
 import { OTPForm } from "@/components/forms/otp-form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
 import { Route } from "@/routes/login";
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // ---------- Page component ----------
 function LoginPage() {
@@ -12,8 +13,12 @@ function LoginPage() {
   const [showOtp, setShowOtp] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
   const navigate = useNavigate();
+  const toast = useToast();
 
   const { createUser, login, createUserState, loginState } = useAuth();
+
+  const [token, setToken] = useState<string | null>(null);
+  const [isVerified, setIsVerified] = useState(false);
 
   // When the login page goes out of scope, by a redirection, invalidate the profile query
   // to cause the root router to fetch new user details
@@ -24,19 +29,39 @@ function LoginPage() {
   }, [queryClient]);
 
   const handleEmailSubmit = async (email: string) => {
-    await createUser({ email });
+    if (!isVerified || !token) {
+      toast.error('Site verification not completed, please refresh the page and try again before contacting support.');
+      return;
+    }
+    await createUser({ email, verificationToken: token });
     setSubmittedEmail(email);
     setShowOtp(true);
   };
 
   const handleOtpSubmit = async (otp: string) => {
-    await login({ email: submittedEmail, oneTimePass: otp }).then(() => {
+    if (!isVerified || !token) {
+      toast.error('Site verification not completed, please refresh the page and try again before contacting support.');
+      return;
+    }
+    await login({ email: submittedEmail, oneTimePass: otp, verificationToken: token }).then(() => {
       navigate({ to: '/', replace: true, reloadDocument: true })
     });
   };
 
   const handleBack = () => {
     setShowOtp(false);
+  };
+
+  const verifyCallback = useCallback((verificationToken: string) => {
+    if (verificationToken) {
+      setToken(verificationToken);
+      setIsVerified(true);
+    }
+  }, [])
+
+  const handleVerifyError = () => {
+    setToken(null);
+    setIsVerified(false);
   };
 
   return (
@@ -59,12 +84,16 @@ function LoginPage() {
             <EmailForm
               onSubmit={handleEmailSubmit}
               isLoading={createUserState.isLoading}
+              verifyCallback={verifyCallback}
+              handleVerifyError={handleVerifyError}
             />
           ) : (
             <OTPForm
               onSubmit={handleOtpSubmit}
               onBack={handleBack}
               isLoading={loginState.isLoading}
+              verifyCallback={verifyCallback}
+              handleVerifyError={handleVerifyError}
             />
           )}
         </CardContent>

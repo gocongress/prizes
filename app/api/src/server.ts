@@ -31,7 +31,7 @@ const serverConfig = (context: Context) =>
       const headers: Record<string, string> = {
         ...defaultHeaders,
         'Access-Control-Max-Age': '86400', // Cache preflight OPTIONS requests for 24hr
-        'Access-Control-Allow-Headers': 'Authorization,Content-Type',
+        'Access-Control-Allow-Headers': 'Authorization,Content-Type,cf-turnstile-response',
         'Access-Control-Allow-Credentials': 'true',
       };
 

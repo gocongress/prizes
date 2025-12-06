@@ -1,4 +1,3 @@
-import { featureFlags } from '@/config';
 import { randomID } from '@/lib/crypto';
 import { getQueryParams } from '@/lib/handlers';
 import { TABLE_NAME as PLAYER_TABLE_NAME } from '@/models/player';
@@ -66,7 +65,12 @@ const asModel = (item: UserWithPlayers): UserApi => {
     updatedAt: item.updated_at?.toISOString(),
     lastLoginAt: item.last_login_at?.toISOString(),
     scope: item.scope,
-    oneTimePass: item.one_time_passes as unknown as string[],
+    oneTimePass:
+      typeof item.one_time_passes === 'string'
+        ? JSON.parse(item.one_time_passes)
+        : Array.isArray(item.one_time_passes)
+          ? item.one_time_passes
+          : [],
     players: item.players?.map(
       (p) =>
         ({
@@ -201,10 +205,12 @@ export const create = async (
     return;
   }
 
-  context.logger.debug(
-    { id: rows[0].id, one_time_passes: rows[0].one_time_passes },
-    'New user created',
-  );
+  if (context.env !== 'production') {
+    context.logger.info(
+      { email: input.email, one_time_pass },
+      'Created new user with one-time password',
+    );
+  }
   return asModel(rows[0]);
 };
 
@@ -212,7 +218,13 @@ export const updateById = async (
   context: Context,
   trx: Knex.Transaction,
   id: UserApi['id'],
-  input: Partial<UpdateUser & { last_login_at?: Date; one_time_passes?: string[] }>,
+  input: Partial<
+    UpdateUser & {
+      last_login_at?: Date;
+      clear_one_time_passes?: boolean;
+      add_one_time_pass?: string;
+    }
+  >,
 ): Promise<UserApi | undefined> => {
   const userRows = await context
     .db<UserDb>(TABLE_NAME)
@@ -227,13 +239,21 @@ export const updateById = async (
   // these will be cleared once one of the passes is used to login.
   // TODO: Consider storing these as an array of objects with { pass, expires_at } for better safety
   const user = userRows[0];
-  let one_time_passes = user.one_time_passes;
-  if (featureFlags.otp.clearCodesOnLoginEnabled) {
-    one_time_passes = JSON.stringify(
-      input.one_time_passes
-        ? (user.one_time_passes as unknown as string[]).concat(input.one_time_passes)
-        : [],
-    );
+
+  let one_time_passes: string[] =
+    typeof user.one_time_passes === 'string'
+      ? JSON.parse(user.one_time_passes)
+      : user.one_time_passes || [];
+  if (input.add_one_time_pass) {
+    try {
+      one_time_passes.unshift(input.add_one_time_pass);
+      one_time_passes = one_time_passes.slice(0, 5); // Limit to 5 active passes
+    } catch (error) {
+      one_time_passes = [input.add_one_time_pass];
+    }
+  }
+  if (input.clear_one_time_passes) {
+    one_time_passes = [];
   }
 
   const rows = await trx<UserDb>(TABLE_NAME)

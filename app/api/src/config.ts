@@ -52,14 +52,17 @@ const runtime = {
     ? process.env.ADMIN_EMAILS.split(',').map((e) => e.trim().toLowerCase())
     : [],
   otpCodeLength: Number.parseInt(process.env.OTP_CODE_LENGTH || '8', 10),
-};
-
-const featureFlags = {
-  otp: {
-    emailDeliveryEnabled: !!process.env.FEATURE_EMAIL_ENABLED,
-    clearCodesOnLoginEnabled: !!process.env.FEATURE_CLEAR_CODES_ENABLED,
-    issueNewCodeOnUserCreateEnabled: !!process.env.FEATURE_ISSUE_NEW_CODE_ENABLED,
+  smtp: {
+    enabled: process.env.SMTP2GO_ENABLED === 'true' || process.env.SMTP2GO_ENABLED === '1',
+    apiKey: process.env.SMTP2GO_API_KEY || '',
+    fromEmail: process.env.SMTP2GO_FROM_EMAIL || 'noreply@gocongress.org',
+    fromName: process.env.SMTP2GO_FROM_NAME || 'AGA Prizes',
+  },
+  turnstile: {
+    enabled: process.env.TURNSTILE_ENABLED === 'true' || process.env.TURNSTILE_ENABLED === '1',
+    secretKey: process.env.TURNSTILE_SECRET_KEY || '',
+    timeout: Number.parseInt(process.env.TURNSTILE_TIMEOUT || '3000', 10),
   },
 };
 
-export { db, env, featureFlags, runtime, server, serviceName };
+export { db, env, runtime, server, serviceName };

@@ -1,14 +1,17 @@
 import styles from '@/Login.module.css';
 import { authProvider } from '@/providers/api/authProvider';
-import { useEffect, useState, type KeyboardEvent } from 'react';
+import { Turnstile } from "@marsidev/react-turnstile";
+import { useCallback, useEffect, useState, type KeyboardEvent } from 'react';
 import { useLogin, useNotify, useRedirect } from 'react-admin';
-import { OTP_CODE_LENGTH } from './config';
+import { OTP_CODE_LENGTH, TURNSTILE_SITE_KEY } from './config';
 
 const LoginPage = () => {
   const initialState = Array(OTP_CODE_LENGTH).fill('');
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState<string[]>(initialState);
   const [requestOtp, setRequestOtp] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [isVerified, setIsVerified] = useState(false);
   const login = useLogin();
   const notify = useNotify();
   const redirect = useRedirect();
@@ -22,8 +25,12 @@ const LoginPage = () => {
 
   const handleOtp = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    if (!isVerified || !token) {
+      notify('Site verification not completed, please refresh the page and try again before contacting support.', { type: 'error' });
+      return;
+    }
     authProvider
-      .getOtp({ email })
+      .getOtp({ email, verificationToken: token })
       .then((otpSent) => {
         setRequestOtp(!otpSent);
         notify('A one-time code sent to your email, use it to login to the system.');
@@ -37,8 +44,12 @@ const LoginPage = () => {
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    if (!isVerified || !token) {
+      notify('Site verification not completed, please refresh the page and try again before contacting support.', { type: 'error' });
+      return;
+    }
     const password = otp.join('');
-    login({ email, password }, '/').catch((error) => {
+    login({ email, password, verificationToken: token }, '/').catch((error) => {
       notify(error.message, { type: 'error' });
       // HTTP 400 (Bad Request) could be a mistyped code, while >400 are auth failures so redirect the user away
       if (error.status > 400) {
@@ -80,39 +91,56 @@ const LoginPage = () => {
     document.getElementById(`otp-${OTP_CODE_LENGTH - 1}`)?.focus();
   };
 
+  const verifyCallback = useCallback((verificationToken: string) => {
+    if (verificationToken) {
+      setToken(verificationToken);
+      setIsVerified(true);
+    }
+  }, [])
+
+  const handleVerifyError = () => {
+    setToken(null);
+    setIsVerified(false);
+  };
+
   return (
     <div className={styles.loginContainer}>
       {' '}
       {/* Wrap form to scope body styles */}
       <form className={styles.form} onSubmit={requestOtp ? handleOtp : handleSubmit}>
         {requestOtp ? (
-          <input
-            name="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className={styles.emailInput}
-          />
+          <>
+            <input
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className={styles.emailInput}
+            />
+            <button type="submit" className={styles.submitButton}>Login with Email</button>
+            <Turnstile siteKey={TURNSTILE_SITE_KEY} onSuccess={verifyCallback} onError={handleVerifyError} className="flex justify-center pt-2" />
+          </>
         ) : (
-          <div className={styles.otpContainer} onPaste={handlePaste}>
-            {otp.map((character, index) => (
-              <input
-                key={index}
-                id={`otp-${index}`}
-                type="text"
-                maxLength={1}
-                value={character}
-                onChange={(e) => handleOtpChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                className={styles.otpInput}
-              />
-            ))}
-          </div>
+          <>
+            <div className={styles.otpContainer} onPaste={handlePaste}>
+              {otp.map((character, index) => (
+                <input
+                  key={index}
+                  id={`otp-${index}`}
+                  type="text"
+                  maxLength={1}
+                  value={character}
+                  onChange={(e) => handleOtpChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  className={styles.otpInput}
+                />
+              ))}
+            </div>
+            <button type="submit" className={styles.submitButton}>Submit Code</button>
+            <Turnstile siteKey={TURNSTILE_SITE_KEY} onSuccess={verifyCallback} onError={handleVerifyError} className="flex justify-center pt-2" />
+          </>
         )}
-        <button type="submit" className={styles.submitButton}>
-          {requestOtp ? 'Login with Email' : 'Submit Code'}
-        </button>
       </form>
     </div>
   );

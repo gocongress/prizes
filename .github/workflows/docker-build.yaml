@@ -132,7 +132,7 @@ jobs:
           cat > ./app/admin/.env.production << 'EOF'
           VITE_API_URL=${{ secrets.ADMIN_VITE_API_URL }}
           VITE_OTP_CODE_LENGTH=${{ secrets.ADMIN_VITE_OTP_CODE_LENGTH || '8' }}
-          FEATURE_EMAIL_NEW_CODE_ENABLED=${{ secrets.ADMIN_FEATURE_EMAIL_NEW_CODE_ENABLED || 'false' }}
+          VITE_TURNSTILE_SITE_KEY=${{ secrets.ADMIN_VITE_TURNSTILE_SITE_KEY }}
           EOF
           [[ -n "${{ secrets.ADMIN_APP_BASENAME }}" ]] && echo "APP_BASENAME=${{ secrets.ADMIN_APP_BASENAME }}" >> ./app/admin/.env.production
       - name: Set up Buildx
@@ -183,6 +183,7 @@ jobs:
           cat > ./app/player/.env.production << 'EOF'
           VITE_API_URL=${{ secrets.PLAYER_VITE_API_URL }}
           VITE_OTP_CODE_LENGTH=${{ secrets.PLAYER_VITE_OTP_CODE_LENGTH || '8' }}
+          VITE_TURNSTILE_SITE_KEY=${{ secrets.PLAYER_VITE_TURNSTILE_SITE_KEY }}
           EOF
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
