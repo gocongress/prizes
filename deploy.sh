@@ -18,5 +18,5 @@ make prod-up
 
 echo ""
 echo "========================================="
-echo "Deployment completed successfully! Run `make prod-logs` to view logs."
+echo "Deployment completed successfully! Run 'make prod-logs' to view logs."
 echo "========================================="
