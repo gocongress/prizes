@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "ci": "tsc --noEmit && npm run lint",
     "generate-routes": "tsr generate",
     "build": "vite build && tsc",
     "compile": "vite build && tsc",

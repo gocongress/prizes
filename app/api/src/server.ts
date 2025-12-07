@@ -1,7 +1,9 @@
 import * as serviceConfig from '@/config';
 import { buildServiceContext } from '@/context';
+import regfox from '@/handlers/webhooks/regfox';
 import { defaultErrorHandler } from '@/lib/handlers';
 import { buildOpenApiSpec } from '@/lib/openapi';
+import { route } from '@/lib/routing-helpers';
 import { loadSeedData } from '@/lib/seed';
 import {
   adminRoutes,
@@ -30,13 +32,14 @@ const serverConfig = (context: Context) =>
       // express-zod-api doesn't use explicit http header type
       const headers: Record<string, string> = {
         ...defaultHeaders,
-        'Access-Control-Max-Age': '86400', // Cache preflight OPTIONS requests for 24hr
-        'Access-Control-Allow-Headers': 'Authorization,Content-Type,cf-turnstile-response',
-        'Access-Control-Allow-Credentials': 'true',
       };
 
       const origin = request.headers.origin;
       if (origin && context.server.corsAllowedOrigins.includes(origin)) {
+        headers['Access-Control-Max-Age'] = '86400'; // Cache preflight OPTIONS requests for 24hr
+        headers['Access-Control-Allow-Headers'] =
+          'Authorization,Content-Type,cf-turnstile-response';
+        headers['Access-Control-Allow-Credentials'] = 'true';
         headers['Access-Control-Allow-Origin'] = origin;
       }
 
@@ -49,9 +52,19 @@ const serverConfig = (context: Context) =>
       // @ts-ignore express-zod-api types do not include set method on app
       app.set('trust proxy', 1); // Trust first proxy when behind a proxy (e.g. Nginx)
       app.use(
+        // Express5.x dropped rawBody which is necessary for webhook payload signature verification,
+        // include rawBody to every request. **MUST HAPPEN BEFORE express.json PARSING**
+        express.raw({
+          type: 'application/json',
+          verify: (req, res, buf) => {
+            req.rawBody = buf;
+          },
+          limit: context.server.maxBodySize,
+        }),
+        // Parse request.body to json
         express.json({
           type: ['application/cloudevents+json', 'application/json'],
-          limit: '1500kb',
+          limit: context.server.maxBodySize,
         }),
       );
       app.use(cookieParser());
@@ -70,6 +83,9 @@ const serverRouting = (context: Context) =>
         users: usersRoutes(context),
         admin: adminRoutes(context),
       },
+    },
+    webhooks: {
+      regfox: route({ post: regfox(context) }),
     },
     // path /public serves static files from /public
     public: new ServeStatic(join(__dirname, 'public'), {

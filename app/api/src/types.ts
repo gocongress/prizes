@@ -53,10 +53,16 @@ export type Context = {
       secretKey: string;
       timeout: number;
     };
+    webhooks: {
+      regfox: {
+        signingSecret: string;
+      };
+    };
   };
   server: {
     host: string;
     port: string;
+    maxBodySize: string; // ie. 1500kb
     cookieName: string;
     cookieDomain: string;
     cookieMaxAge: number;
