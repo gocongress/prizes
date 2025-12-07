@@ -1,34 +1,51 @@
-import SortablePrizeItem from "@/components//ui/sortable-prize-item";
-import PlayerSelect from "@/components/ui/player-select";
-import { useAwardPreferences, useSaveAwardPreferences } from "@/hooks/use-award-preferences";
-import { useBreadcrumb } from "@/hooks/use-breadcrumb";
-import { usePlayer } from "@/hooks/use-player";
-import { usePrizes, type PrizeAwardCombination } from "@/hooks/use-prizes";
-import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { ArrowDownAZ, Star, UserCircle2 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Skeleton } from "../ui/skeleton";
+import SortablePrizeItem from '@/components//ui/sortable-prize-item';
+import PlayerSelect from '@/components/ui/player-select';
+import { useAwardPreferences, useSaveAwardPreferences } from '@/hooks/use-award-preferences';
+import { useBreadcrumb } from '@/hooks/use-breadcrumb';
+import { usePlayer } from '@/hooks/use-player';
+import { usePrizes, type PrizeAwardCombination } from '@/hooks/use-prizes';
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { ArrowDownAZ, Star, UserCircle2 } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Skeleton } from '../ui/skeleton';
 
 export function DashboardPage() {
   const { setBreadcrumbs } = useBreadcrumb();
   const { prizes, isLoading: isLoadingPrizes } = usePrizes();
   const { selectedPlayer, isLoading: isLoadingPlayers } = usePlayer();
-  const { awardPreferences, isLoading: isLoadingAwardPreferences } = useAwardPreferences(selectedPlayer?.id);
+  const { awardPreferences, isLoading: isLoadingAwardPreferences } = useAwardPreferences(
+    selectedPlayer?.id,
+  );
   const { saveAwardPreferences } = useSaveAwardPreferences();
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    setBreadcrumbs([
-      { title: 'Dashboard', href: '/dashboard' },
-    ]);
+    setBreadcrumbs([{ title: 'Dashboard', href: '/dashboard' }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Create a preference map for easy lookup
   const preferenceMap = useMemo(() => {
     if (awardPreferences.length > 0) {
       return new Map(
-        awardPreferences.map(pref => [`${pref.prizeId}-${pref.awardValue}`, pref.preferenceOrder])
+        awardPreferences.map((pref) => [
+          `${pref.prizeId}-${pref.awardValue}`,
+          pref.preferenceOrder,
+        ]),
       );
     }
     return null;
@@ -42,14 +59,12 @@ export function DashboardPage() {
       if (prize.awards && prize.awards.length > 0) {
         // Get unique award values for this prize, but only for available awards
         const uniqueValues = new Set(
-          prize.awards
-            .filter(award => award.available)
-            .map(award => award.value)
+          prize.awards.filter((award) => award.available).map((award) => award.value),
         );
 
-        uniqueValues.forEach(value => {
+        uniqueValues.forEach((value) => {
           // Find the first available award with this value to get the awardId
-          const award = prize.awards!.find(a => a.value === value && a.available);
+          const award = prize.awards!.find((a) => a.value === value && a.available);
           if (award) {
             combinations.push({
               id: `${prize.id}-${value}`,
@@ -106,7 +121,7 @@ export function DashboardPage() {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // Function to save the current order of preferences with debouncing
@@ -114,7 +129,7 @@ export function DashboardPage() {
     if (!selectedPlayer) return;
 
     // Filter out combinations without awardId (prizes with no awards)
-    const validCombinations = orderedCombinations.filter(c => c.awardId);
+    const validCombinations = orderedCombinations.filter((c) => c.awardId);
 
     if (validCombinations.length === 0) return;
 
@@ -179,7 +194,7 @@ export function DashboardPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -188,13 +203,15 @@ export function DashboardPage() {
         {/* Player Selector */}
         {!isLoadingPlayers && <PlayerSelect variant="standalone" />}
 
-        {selectedPlayer && (<div className="mb-6">
-          <h1 className="text-2xl font-bold mb-1">Available Prizes</h1>
-          <p className="text-sm text-muted-foreground">
-            Only showing prizes that are still available to win.
-            Drag items or use arrows to sort your prize preferences.
-          </p>
-        </div>)}
+        {selectedPlayer && (
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold mb-1">Available Prizes</h1>
+            <p className="text-sm text-muted-foreground">
+              Only showing prizes that are still available to win. Drag items or use arrows to sort
+              your prize preferences.
+            </p>
+          </div>
+        )}
 
         {/* No Player Selected Message */}
         {!isLoadingPlayers && !selectedPlayer && (
@@ -211,9 +228,7 @@ export function DashboardPage() {
         {selectedPlayer && (
           <>
             {prizeAwardCombinations.length === 0 ? (
-              <div className="text-center text-muted-foreground py-8">
-                No prizes available
-              </div>
+              <div className="text-center text-muted-foreground py-8">No prizes available</div>
             ) : (
               <>
                 {/* Order Indicator Label */}
@@ -270,4 +285,4 @@ export function DashboardPage() {
   );
 }
 
-export default DashboardPage
+export default DashboardPage;

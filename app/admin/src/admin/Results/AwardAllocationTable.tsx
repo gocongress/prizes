@@ -25,7 +25,6 @@ export const AwardAllocationTable = ({
   availableAwards,
   onAwardChange,
 }: AwardAllocationTableProps) => {
-
   return (
     <TableContainer component={Paper} sx={{ mb: 2 }}>
       <Table>

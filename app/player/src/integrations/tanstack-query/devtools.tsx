@@ -10,5 +10,5 @@ export default [
   {
     name: 'Tanstack Router',
     render: <TanStackRouterDevtoolsPanel />,
-  }
+  },
 ];

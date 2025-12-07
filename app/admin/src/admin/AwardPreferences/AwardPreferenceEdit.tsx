@@ -44,7 +44,13 @@ const AwardPreferenceEdit = () => {
         <ReferenceInput source="awardId" reference="awards">
           <AutocompleteInput validate={required()} disabled />
         </ReferenceInput>
-        <NumberInput source="preferenceOrder" label="Preference Order" validate={[required()]} min={1} step={1} />
+        <NumberInput
+          source="preferenceOrder"
+          label="Preference Order"
+          validate={[required()]}
+          min={1}
+          step={1}
+        />
       </SimpleForm>
     </Edit>
   );

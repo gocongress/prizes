@@ -8,87 +8,81 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/_dashboard'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardMyPrizesRouteImport } from './routes/_dashboard/my-prizes'
-import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard'
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as TermsRouteImport } from './routes/terms';
+import { Route as PrivacyRouteImport } from './routes/privacy';
+import { Route as LoginRouteImport } from './routes/login';
+import { Route as DashboardRouteImport } from './routes/_dashboard';
+import { Route as IndexRouteImport } from './routes/index';
+import { Route as DashboardMyPrizesRouteImport } from './routes/_dashboard/my-prizes';
+import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard';
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DashboardRoute = DashboardRouteImport.update({
   id: '/_dashboard',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DashboardMyPrizesRoute = DashboardMyPrizesRouteImport.update({
   id: '/my-prizes',
   path: '/my-prizes',
   getParentRoute: () => DashboardRoute,
-} as any)
+} as any);
 const DashboardDashboardRoute = DashboardDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => DashboardRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
-  '/dashboard': typeof DashboardDashboardRoute
-  '/my-prizes': typeof DashboardMyPrizesRoute
+  '/': typeof IndexRoute;
+  '/login': typeof LoginRoute;
+  '/privacy': typeof PrivacyRoute;
+  '/terms': typeof TermsRoute;
+  '/dashboard': typeof DashboardDashboardRoute;
+  '/my-prizes': typeof DashboardMyPrizesRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
-  '/dashboard': typeof DashboardDashboardRoute
-  '/my-prizes': typeof DashboardMyPrizesRoute
+  '/': typeof IndexRoute;
+  '/login': typeof LoginRoute;
+  '/privacy': typeof PrivacyRoute;
+  '/terms': typeof TermsRoute;
+  '/dashboard': typeof DashboardDashboardRoute;
+  '/my-prizes': typeof DashboardMyPrizesRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_dashboard': typeof DashboardRouteWithChildren
-  '/login': typeof LoginRoute
-  '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
-  '/_dashboard/dashboard': typeof DashboardDashboardRoute
-  '/_dashboard/my-prizes': typeof DashboardMyPrizesRoute
+  __root__: typeof rootRouteImport;
+  '/': typeof IndexRoute;
+  '/_dashboard': typeof DashboardRouteWithChildren;
+  '/login': typeof LoginRoute;
+  '/privacy': typeof PrivacyRoute;
+  '/terms': typeof TermsRoute;
+  '/_dashboard/dashboard': typeof DashboardDashboardRoute;
+  '/_dashboard/my-prizes': typeof DashboardMyPrizesRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/login'
-    | '/privacy'
-    | '/terms'
-    | '/dashboard'
-    | '/my-prizes'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/privacy' | '/terms' | '/dashboard' | '/my-prizes'
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: '/' | '/login' | '/privacy' | '/terms' | '/dashboard' | '/my-prizes';
+  fileRoutesByTo: FileRoutesByTo;
+  to: '/' | '/login' | '/privacy' | '/terms' | '/dashboard' | '/my-prizes';
   id:
     | '__root__'
     | '/'
@@ -97,84 +91,82 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/_dashboard/dashboard'
-    | '/_dashboard/my-prizes'
-  fileRoutesById: FileRoutesById
+    | '/_dashboard/my-prizes';
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  PrivacyRoute: typeof PrivacyRoute
-  TermsRoute: typeof TermsRoute
+  IndexRoute: typeof IndexRoute;
+  DashboardRoute: typeof DashboardRouteWithChildren;
+  LoginRoute: typeof LoginRoute;
+  PrivacyRoute: typeof PrivacyRoute;
+  TermsRoute: typeof TermsRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/terms';
+      path: '/terms';
+      fullPath: '/terms';
+      preLoaderRoute: typeof TermsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/privacy';
+      path: '/privacy';
+      fullPath: '/privacy';
+      preLoaderRoute: typeof PrivacyRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof LoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/_dashboard': {
-      id: '/_dashboard'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/_dashboard';
+      path: '';
+      fullPath: '';
+      preLoaderRoute: typeof DashboardRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/_dashboard/my-prizes': {
-      id: '/_dashboard/my-prizes'
-      path: '/my-prizes'
-      fullPath: '/my-prizes'
-      preLoaderRoute: typeof DashboardMyPrizesRouteImport
-      parentRoute: typeof DashboardRoute
-    }
+      id: '/_dashboard/my-prizes';
+      path: '/my-prizes';
+      fullPath: '/my-prizes';
+      preLoaderRoute: typeof DashboardMyPrizesRouteImport;
+      parentRoute: typeof DashboardRoute;
+    };
     '/_dashboard/dashboard': {
-      id: '/_dashboard/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardDashboardRouteImport
-      parentRoute: typeof DashboardRoute
-    }
+      id: '/_dashboard/dashboard';
+      path: '/dashboard';
+      fullPath: '/dashboard';
+      preLoaderRoute: typeof DashboardDashboardRouteImport;
+      parentRoute: typeof DashboardRoute;
+    };
   }
 }
 
 interface DashboardRouteChildren {
-  DashboardDashboardRoute: typeof DashboardDashboardRoute
-  DashboardMyPrizesRoute: typeof DashboardMyPrizesRoute
+  DashboardDashboardRoute: typeof DashboardDashboardRoute;
+  DashboardMyPrizesRoute: typeof DashboardMyPrizesRoute;
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardDashboardRoute: DashboardDashboardRoute,
   DashboardMyPrizesRoute: DashboardMyPrizesRoute,
-}
+};
 
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
-)
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(DashboardRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -182,7 +174,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();

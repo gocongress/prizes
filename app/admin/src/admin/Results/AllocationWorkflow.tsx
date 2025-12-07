@@ -17,7 +17,7 @@ export interface Award {
   awardAt: string;
   eventTitle: string;
   awardPreferenceOrder?: number | null;
-  allocationKind: "DEFAULT" | "PREFERENCE" | "OVERRIDE";
+  allocationKind: 'DEFAULT' | 'PREFERENCE' | 'OVERRIDE';
   manualOverride?: boolean; // Track if admin manually changed the award
 }
 
@@ -89,4 +89,3 @@ const AllocationWorkflow = () => {
 };
 
 export default AllocationWorkflow;
-

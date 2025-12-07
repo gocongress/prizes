@@ -54,14 +54,20 @@ export const useBreadcrumb = () => {
   const { breadcrumbs, setBreadcrumbs: setContextBreadcrumbs } = context;
 
   // Memoize the setter to prevent unnecessary re-renders
-  const setBreadcrumbs = useCallback((items: BreadcrumbItem[]) => {
-    setContextBreadcrumbs(items);
-  }, [setContextBreadcrumbs]);
+  const setBreadcrumbs = useCallback(
+    (items: BreadcrumbItem[]) => {
+      setContextBreadcrumbs(items);
+    },
+    [setContextBreadcrumbs],
+  );
 
   // Add a single breadcrumb item to the existing list
-  const addBreadcrumb = useCallback((item: BreadcrumbItem) => {
-    setContextBreadcrumbs([...breadcrumbs, item]);
-  }, [setContextBreadcrumbs, breadcrumbs]);
+  const addBreadcrumb = useCallback(
+    (item: BreadcrumbItem) => {
+      setContextBreadcrumbs([...breadcrumbs, item]);
+    },
+    [setContextBreadcrumbs, breadcrumbs],
+  );
 
   return {
     breadcrumbs,

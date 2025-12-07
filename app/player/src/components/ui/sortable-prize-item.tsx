@@ -1,9 +1,8 @@
-import type { PrizeAwardCombination } from "@/hooks/use-prizes";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { ChevronDown, ChevronUp, ChevronsDownUp, ExternalLink, GripVertical } from "lucide-react";
-import { useState } from "react";
-
+import type { PrizeAwardCombination } from '@/hooks/use-prizes';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { ChevronDown, ChevronUp, ChevronsDownUp, ExternalLink, GripVertical } from 'lucide-react';
+import { useState } from 'react';
 
 interface SortablePrizeItemProps {
   combination: PrizeAwardCombination;
@@ -15,28 +14,32 @@ interface SortablePrizeItemProps {
   index: number;
 }
 
-function SortablePrizeItem({ combination, onMoveUp, onMoveDown, isFirst, isLast, preferenceOrder, index }: SortablePrizeItemProps) {
+function SortablePrizeItem({
+  combination,
+  onMoveUp,
+  onMoveDown,
+  isFirst,
+  isLast,
+  preferenceOrder,
+  index,
+}: SortablePrizeItemProps) {
   const { prize, awardValue } = combination;
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: combination.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: combination.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    overflow: 'visible'
+    overflow: 'visible',
   };
 
-  const thumbnailSrc = prize.imageThumbnailEncoded && prize.imageType
-    ? `data:${prize.imageType};base64,${prize.imageThumbnailEncoded}`
-    : null;
+  const thumbnailSrc =
+    prize.imageThumbnailEncoded && prize.imageType
+      ? `data:${prize.imageType};base64,${prize.imageThumbnailEncoded}`
+      : null;
 
   return (
     <li
@@ -56,11 +59,7 @@ function SortablePrizeItem({ combination, onMoveUp, onMoveDown, isFirst, isLast,
       )}
       {thumbnailSrc && (
         <div className="flex-shrink-0 self-start p-1.5 bg-white dark:bg-gray-100 rounded shadow-md border border-gray-200">
-          <img
-            src={thumbnailSrc}
-            alt={prize.title}
-            className="w-18 h-18 object-cover"
-          />
+          <img src={thumbnailSrc} alt={prize.title} className="w-18 h-18 object-cover" />
         </div>
       )}
       <div className="flex-1 min-w-0">
@@ -82,8 +81,9 @@ function SortablePrizeItem({ combination, onMoveUp, onMoveDown, isFirst, isLast,
           {prize.description && (
             <>
               <div
-                className={`text-xs text-muted-foreground whitespace-pre-wrap ${!isDescriptionExpanded ? 'max-h-[50px] overflow-hidden' : ''
-                  }`}
+                className={`text-xs text-muted-foreground whitespace-pre-wrap ${
+                  !isDescriptionExpanded ? 'max-h-[50px] overflow-hidden' : ''
+                }`}
               >
                 {!isDescriptionExpanded && prize.description.length > 200
                   ? prize.description.substring(0, 200) + '...'
@@ -109,19 +109,27 @@ function SortablePrizeItem({ combination, onMoveUp, onMoveDown, isFirst, isLast,
         </div>
         {prize.eventTitle && (
           <div className="flex gap-4 text-sm mb-3">
-            <span className="text-muted-foreground">
-              Event: {prize.eventTitle}
-            </span>
+            <span className="text-muted-foreground">Event: {prize.eventTitle}</span>
           </div>
         )}
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5 text-green-700 dark:text-green-500 font-semibold">
             <span>Retail value:</span>
-            <span>${awardValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span>
+              $
+              {awardValue.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
           </div>
           {prize.recommendedRank !== 'ALL' && (
             <span className="text-muted-foreground">
-              Suggested for {prize.recommendedRank === 'SDK' || prize.recommendedRank === 'DDK' ? 'KYU' : prize.recommendedRank} players
+              Suggested for{' '}
+              {prize.recommendedRank === 'SDK' || prize.recommendedRank === 'DDK'
+                ? 'KYU'
+                : prize.recommendedRank}{' '}
+              players
             </span>
           )}
         </div>

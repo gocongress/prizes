@@ -24,9 +24,7 @@ export const AwardAutocomplete = ({
   selectedAwardIds,
   onChange,
 }: AwardAutocompleteProps) => {
-  const currentAward = award.awardId
-    ? availableAwards.find((a) => a.id === award.awardId)
-    : null;
+  const currentAward = award.awardId ? availableAwards.find((a) => a.id === award.awardId) : null;
 
   // Filter out awards that are already selected by other winners
   const allOptions = availableAwards

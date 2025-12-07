@@ -1,9 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useBreadcrumb } from "@/hooks/use-breadcrumb";
-import { usePlayer } from "@/hooks/use-player";
-import { usePlayerAwards } from "@/hooks/use-player-awards";
-import { ExternalLink, Gem, Trophy } from "lucide-react";
-import { useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useBreadcrumb } from '@/hooks/use-breadcrumb';
+import { usePlayer } from '@/hooks/use-player';
+import { usePlayerAwards } from '@/hooks/use-player-awards';
+import { ExternalLink, Gem, Trophy } from 'lucide-react';
+import { useEffect } from 'react';
 
 export function MyPrizesPage() {
   const { setBreadcrumbs } = useBreadcrumb();
@@ -11,9 +11,8 @@ export function MyPrizesPage() {
   const { awards, isLoading, isError, error } = usePlayerAwards(selectedPlayer?.id);
 
   useEffect(() => {
-    setBreadcrumbs([
-      { title: 'My Prizes', href: '/my-prizes' },
-    ]);
+    setBreadcrumbs([{ title: 'My Prizes', href: '/my-prizes' }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!selectedPlayer) {
@@ -29,9 +28,7 @@ export function MyPrizesPage() {
   if (isLoading) {
     return (
       <div className="p-4 sm:p-6 flex flex-col items-center">
-        <div className="text-center text-muted-foreground">
-          Loading prizes...
-        </div>
+        <div className="text-center text-muted-foreground">Loading prizes...</div>
       </div>
     );
   }
@@ -39,9 +36,7 @@ export function MyPrizesPage() {
   if (isError) {
     return (
       <div className="p-4 sm:p-6 flex flex-col items-center">
-        <div className="text-center text-destructive">
-          Error loading prizes: {error?.message}
-        </div>
+        <div className="text-center text-destructive">Error loading prizes: {error?.message}</div>
       </div>
     );
   }
@@ -107,9 +102,7 @@ export function MyPrizesPage() {
                   {award.redeemCode && (
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">Redeem Code:</span>
-                      <code className="text-sm bg-muted px-2 py-1 rounded">
-                        {award.redeemCode}
-                      </code>
+                      <code className="text-sm bg-muted px-2 py-1 rounded">{award.redeemCode}</code>
                     </div>
                   )}
                   {award.value !== null && award.value !== undefined && (
@@ -118,7 +111,6 @@ export function MyPrizesPage() {
                       <span className="text-sm text-muted-foreground">${award.value}</span>
                     </div>
                   )}
-
                 </CardContent>
               </div>
 
@@ -147,4 +139,4 @@ export function MyPrizesPage() {
   );
 }
 
-export default MyPrizesPage
+export default MyPrizesPage;

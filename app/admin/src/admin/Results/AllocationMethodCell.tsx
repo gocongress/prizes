@@ -1,5 +1,5 @@
-import type { Award } from "@/admin/Results/AllocationWorkflow";
-import { Chip } from "@mui/material";
+import type { Award } from '@/admin/Results/AllocationWorkflow';
+import { Chip } from '@mui/material';
 
 const AllocationMethodCell = ({ award }: { award: Award }) => {
   switch (award.allocationKind) {
@@ -8,14 +8,12 @@ const AllocationMethodCell = ({ award }: { award: Award }) => {
     case 'OVERRIDE':
       return <Chip label="Override" color="warning" size="small" />;
     case 'PREFERENCE':
-      return <Chip
-        label={`Preference #${award.awardPreferenceOrder}`}
-        color="success"
-        size="small"
-      />;
+      return (
+        <Chip label={`Preference #${award.awardPreferenceOrder}`} color="success" size="small" />
+      );
     default:
-      return <Chip label="No Award" color="error" size="small" />
+      return <Chip label="No Award" color="error" size="small" />;
   }
-}
+};
 
 export default AllocationMethodCell;

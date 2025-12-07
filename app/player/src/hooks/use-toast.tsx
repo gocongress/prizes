@@ -111,7 +111,7 @@ export const useToast = () => {
         loading: string;
         success: string | ((data: T) => string);
         error: string | ((error: Error) => string);
-      }
+      },
     ) => {
       return toast.promise(promise, messages);
     },

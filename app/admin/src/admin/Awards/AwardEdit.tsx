@@ -1,4 +1,17 @@
-import { AutocompleteInput, DeleteWithConfirmButton, Edit, Labeled, minValue, NumberInput, ReferenceInput, SaveButton, SimpleForm, TextField, TextInput, Toolbar } from 'react-admin';
+import {
+  AutocompleteInput,
+  DeleteWithConfirmButton,
+  Edit,
+  Labeled,
+  minValue,
+  NumberInput,
+  ReferenceInput,
+  SaveButton,
+  SimpleForm,
+  TextField,
+  TextInput,
+  Toolbar,
+} from 'react-admin';
 
 const AwardEditToolbar = () => {
   return (
@@ -7,7 +20,7 @@ const AwardEditToolbar = () => {
       <DeleteWithConfirmButton />
     </Toolbar>
   );
-}
+};
 
 const AwardEdit = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,9 +49,7 @@ const AwardEdit = () => {
           step={0.01}
           min={0.1}
           validate={[minValue(0.01)]}
-          format={(value) =>
-            value == null ? 0.01 : Number(value).toFixed(2)
-          }
+          format={(value) => (value == null ? 0.01 : Number(value).toFixed(2))}
           parse={(value) => parseFloat(value)}
         />
         <TextInput source="redeemCode" label="Redeem Code" />

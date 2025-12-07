@@ -1,9 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-  acceptAllCookies,
-  rejectAllCookies,
-  shouldShowCookieBanner,
-} from '@/lib/cookie-consent';
+import { acceptAllCookies, rejectAllCookies, shouldShowCookieBanner } from '@/lib/cookie-consent';
 import { Link } from '@tanstack/react-router';
 import { CookieIcon } from 'lucide-react';
 import * as React from 'react';
@@ -41,8 +37,9 @@ function CookieConsent() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-50 transition-all duration-300 ease-in-out ${isClosing ? 'translate-y-full opacity-0' : 'translate-y-0 opacity-100'
-        }`}
+      className={`fixed inset-x-0 bottom-0 z-50 transition-all duration-300 ease-in-out ${
+        isClosing ? 'translate-y-full opacity-0' : 'translate-y-0 opacity-100'
+      }`}
     >
       <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t shadow-lg">
         <div className="container mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
@@ -53,11 +50,10 @@ function CookieConsent() {
                 <CookieIcon className="h-5 w-5" />
               </div>
               <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium leading-none">
-                  We use cookies
-                </p>
+                <p className="text-sm font-medium leading-none">We use cookies</p>
                 <p className="text-muted-foreground text-sm">
-                  We use essential cookies to make our site work. With your consent, we may also use non-essential cookies to improve user experience.{' '}
+                  We use essential cookies to make our site work. With your consent, we may also use
+                  non-essential cookies to improve user experience.{' '}
                   <Link
                     to="/privacy"
                     className="underline underline-offset-4 hover:text-foreground"
@@ -79,11 +75,7 @@ function CookieConsent() {
               >
                 Reject All
               </Button>
-              <Button
-                size="sm"
-                onClick={handleAcceptAll}
-                className="w-full sm:w-auto"
-              >
+              <Button size="sm" onClick={handleAcceptAll} className="w-full sm:w-auto">
                 Accept All
               </Button>
             </div>

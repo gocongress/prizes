@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { env } from "@/env";
-import { Turnstile } from "@marsidev/react-turnstile";
-import { Label } from "@radix-ui/react-label";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { env } from '@/env';
+import { Turnstile } from '@marsidev/react-turnstile';
+import { Label } from '@radix-ui/react-label';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState, type KeyboardEvent } from 'react';
 
 const OTP_CODE_LENGTH = 8;
 
@@ -16,7 +16,13 @@ interface OTPFormProps {
   verifyCallback: (token: string) => void;
 }
 
-export function OTPForm({ onSubmit, onBack, isLoading, verifyCallback, handleVerifyError }: OTPFormProps) {
+export function OTPForm({
+  onSubmit,
+  onBack,
+  isLoading,
+  verifyCallback,
+  handleVerifyError,
+}: OTPFormProps) {
   const initialOtpState = Array(OTP_CODE_LENGTH).fill('');
   const [otp, setOtp] = useState<string[]>(initialOtpState);
 
@@ -109,16 +115,16 @@ export function OTPForm({ onSubmit, onBack, isLoading, verifyCallback, handleVer
           )}
         </Button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          className="w-full"
-          onClick={handleBackClick}
-        >
+        <Button type="button" variant="ghost" className="w-full" onClick={handleBackClick}>
           Back to email
         </Button>
       </form>
-      <Turnstile siteKey={env.VITE_TURNSTILE_SITE_KEY} onSuccess={verifyCallback} onError={handleVerifyError} className="flex justify-center pt-2" />
+      <Turnstile
+        siteKey={env.VITE_TURNSTILE_SITE_KEY}
+        onSuccess={verifyCallback}
+        onError={handleVerifyError}
+        className="flex justify-center pt-2"
+      />
     </>
   );
 }

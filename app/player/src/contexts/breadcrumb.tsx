@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useState } from "react";
+import { createContext, type ReactNode, useState } from 'react';
 
 export interface BreadcrumbItem {
   title: string;
@@ -10,6 +10,7 @@ interface BreadcrumbContextValue {
   setBreadcrumbs: (breadcrumbs: BreadcrumbItem[]) => void;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const BreadcrumbContext = createContext<BreadcrumbContextValue | undefined>(undefined);
 
 /**

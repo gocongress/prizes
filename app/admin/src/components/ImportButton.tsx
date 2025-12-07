@@ -11,13 +11,7 @@ import {
 } from '@mui/material';
 import Papa from 'papaparse';
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  HttpError,
-  useDataProvider,
-  useNotify,
-  useRefresh
-} from 'react-admin';
+import { Button, HttpError, useDataProvider, useNotify, useRefresh } from 'react-admin';
 
 interface ReferenceSelector {
   reference: string;
@@ -43,7 +37,7 @@ const ImportButton = ({
   importUrl,
   payloadKey = 'users',
   referenceSelector,
-  confirmMessage
+  confirmMessage,
 }: ImportButtonProps) => {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -59,11 +53,12 @@ const ImportButton = ({
   useEffect(() => {
     if (open && referenceSelector) {
       setLoading(true);
-      dataProvider.getList(referenceSelector.reference, {
-        pagination: { page: 1, perPage: 100 },
-        sort: { field: 'title', order: 'ASC' },
-        filter: {},
-      })
+      dataProvider
+        .getList(referenceSelector.reference, {
+          pagination: { page: 1, perPage: 100 },
+          sort: { field: 'title', order: 'ASC' },
+          filter: {},
+        })
         .then(({ data }) => {
           setReferenceOptions(data);
         })
@@ -138,7 +133,7 @@ const ImportButton = ({
           const token = localStorage.getItem('token');
           const response = await fetch(importUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ [payloadKey]: data }),
           });
 
@@ -174,11 +169,7 @@ const ImportButton = ({
           </DialogContent>
           <DialogActions>
             <Button onClick={handleConfirmClose} label="Cancel" />
-            <Button
-              onClick={handleConfirmAccept}
-              label="Confirm"
-              variant="contained"
-            />
+            <Button onClick={handleConfirmAccept} label="Confirm" variant="contained" />
           </DialogActions>
         </Dialog>
       )}
@@ -202,11 +193,7 @@ const ImportButton = ({
                 onChange={(_, newValue) => setSelectedReference(newValue)}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={referenceSelector.label}
-                    required
-                  />
+                  <TextField {...params} label={referenceSelector.label} required />
                 )}
                 fullWidth
               />
@@ -220,17 +207,19 @@ const ImportButton = ({
           />
           {file && <p>Uploading: {file.name}</p>}
           <ul style={{ display: 'flex', flexDirection: 'column' }}>
-            <li>
-              CSV must have headers matching field names.
-            </li>
+            <li>CSV must have headers matching field names.</li>
             <li>
               Required CSV fields: <b>{csvFields}</b>
             </li>
             {csvNotes && (
               <ul>
-                {Object.entries(csvNotes).map(([key, value]) => <li key={key}><b>{key}</b>: {value}</li>)}
-              </ul>)}
-
+                {Object.entries(csvNotes).map(([key, value]) => (
+                  <li key={key}>
+                    <b>{key}</b>: {value}
+                  </li>
+                ))}
+              </ul>
+            )}
           </ul>
         </DialogContent>
         <DialogActions>

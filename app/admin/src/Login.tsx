@@ -1,6 +1,6 @@
 import styles from '@/Login.module.css';
 import { authProvider } from '@/providers/api/authProvider';
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile } from '@marsidev/react-turnstile';
 import { useCallback, useEffect, useState, type KeyboardEvent } from 'react';
 import { useLogin, useNotify, useRedirect } from 'react-admin';
 import { OTP_CODE_LENGTH, TURNSTILE_SITE_KEY } from './config';
@@ -26,7 +26,10 @@ const LoginPage = () => {
   const handleOtp = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!isVerified || !token) {
-      notify('Site verification not completed, please refresh the page and try again before contacting support.', { type: 'error' });
+      notify(
+        'Site verification not completed, please refresh the page and try again before contacting support.',
+        { type: 'error' },
+      );
       return;
     }
     authProvider
@@ -45,7 +48,10 @@ const LoginPage = () => {
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!isVerified || !token) {
-      notify('Site verification not completed, please refresh the page and try again before contacting support.', { type: 'error' });
+      notify(
+        'Site verification not completed, please refresh the page and try again before contacting support.',
+        { type: 'error' },
+      );
       return;
     }
     const password = otp.join('');
@@ -65,7 +71,7 @@ const LoginPage = () => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    if (value && index < (OTP_CODE_LENGTH - 1)) {
+    if (value && index < OTP_CODE_LENGTH - 1) {
       document.getElementById(`otp-${index + 1}`)?.focus();
     }
   };
@@ -96,7 +102,7 @@ const LoginPage = () => {
       setToken(verificationToken);
       setIsVerified(true);
     }
-  }, [])
+  }, []);
 
   const handleVerifyError = () => {
     setToken(null);
@@ -118,8 +124,15 @@ const LoginPage = () => {
               placeholder="Email"
               className={styles.emailInput}
             />
-            <button type="submit" className={styles.submitButton}>Login with Email</button>
-            <Turnstile siteKey={TURNSTILE_SITE_KEY} onSuccess={verifyCallback} onError={handleVerifyError} className="flex justify-center pt-2" />
+            <button type="submit" className={styles.submitButton}>
+              Login with Email
+            </button>
+            <Turnstile
+              siteKey={TURNSTILE_SITE_KEY}
+              onSuccess={verifyCallback}
+              onError={handleVerifyError}
+              className="flex justify-center pt-2"
+            />
           </>
         ) : (
           <>
@@ -137,8 +150,15 @@ const LoginPage = () => {
                 />
               ))}
             </div>
-            <button type="submit" className={styles.submitButton}>Submit Code</button>
-            <Turnstile siteKey={TURNSTILE_SITE_KEY} onSuccess={verifyCallback} onError={handleVerifyError} className="flex justify-center pt-2" />
+            <button type="submit" className={styles.submitButton}>
+              Submit Code
+            </button>
+            <Turnstile
+              siteKey={TURNSTILE_SITE_KEY}
+              onSuccess={verifyCallback}
+              onError={handleVerifyError}
+              className="flex justify-center pt-2"
+            />
           </>
         )}
       </form>

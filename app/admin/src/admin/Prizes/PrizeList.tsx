@@ -6,13 +6,11 @@ import {
   List,
   NumberField,
   SearchInput,
-  TopToolbar
+  TopToolbar,
 } from 'react-admin';
 import ImageThumbnail from './ImageThumbnail';
 
-const prizeFilters = [
-  <SearchInput source="q" alwaysOn />
-];
+const prizeFilters = [<SearchInput source="q" alwaysOn />];
 
 const PrizeListActions = () => (
   <TopToolbar>
@@ -24,7 +22,9 @@ const PrizeListActions = () => (
 
 const PrizeList = () => (
   <List actions={<PrizeListActions />} filters={prizeFilters}>
-    <DataTable hiddenColumns={['id', 'createdAt', 'updatedAt', 'awardsSum', 'description', 'contact']}>
+    <DataTable
+      hiddenColumns={['id', 'createdAt', 'updatedAt', 'awardsSum', 'description', 'contact']}
+    >
       <DataTable.Col source="id" />
       <DataTable.Col source="title" />
       <DataTable.Col source="eventTitle" label="Event" />

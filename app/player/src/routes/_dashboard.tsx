@@ -1,16 +1,23 @@
-import { AppSidebar } from '@/components/layout/app-sidebar'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { BreadcrumbProvider } from '@/contexts/breadcrumb'
-import { PlayerProvider } from '@/contexts/player'
-import { useBreadcrumb } from '@/hooks/use-breadcrumb'
-import { Separator } from '@radix-ui/react-separator'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { Fragment, useEffect } from 'react'
+import { AppSidebar } from '@/components/layout/app-sidebar';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { BreadcrumbProvider } from '@/contexts/breadcrumb';
+import { PlayerProvider } from '@/contexts/player';
+import { useBreadcrumb } from '@/hooks/use-breadcrumb';
+import { Separator } from '@radix-ui/react-separator';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { Fragment, useEffect } from 'react';
 
 export const Route = createFileRoute('/_dashboard')({
   component: DashboardLayout,
-})
+});
 
 function DashboardContent() {
   const { queryClient } = Route.useRouteContext();
@@ -46,10 +53,7 @@ function DashboardContent() {
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
+            <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
             <Breadcrumb>
               <BreadcrumbList>
                 {breadcrumbs.length > 0 ? (
@@ -59,9 +63,7 @@ function DashboardContent() {
                         {index === breadcrumbs.length - 1 ? (
                           <BreadcrumbPage>{item.title}</BreadcrumbPage>
                         ) : (
-                          <BreadcrumbLink href={item.href}>
-                            {item.title}
-                          </BreadcrumbLink>
+                          <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
                         )}
                       </BreadcrumbItem>
                       {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
@@ -69,9 +71,7 @@ function DashboardContent() {
                   ))
                 ) : (
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="/dashboard">
-                      Dashboard
-                    </BreadcrumbLink>
+                    <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
                   </BreadcrumbItem>
                 )}
               </BreadcrumbList>
@@ -93,5 +93,5 @@ export function DashboardLayout() {
         <DashboardContent />
       </PlayerProvider>
     </BreadcrumbProvider>
-  )
+  );
 }

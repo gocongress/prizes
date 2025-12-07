@@ -3,15 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ci": "tsc --noEmit && npm run lint",
+    "ci": "tsc --noEmit && npm run lint && npm run prettier",
     "generate-routes": "tsr generate",
     "build": "vite build && tsc",
     "compile": "vite build && tsc",
     "dev": "concurrently \"tsr watch\" \"vite --port 3002\"",
     "serve": "vite preview",
     "test": "vitest run",
-    "lint": "eslint && prettier -c .",
-    "format": "prettier --write ."
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "prettier": "prettier -c .",
+    "prettier:fix": "prettier --write ."
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -8,7 +8,6 @@ import { type MyRouterContext } from '@/router';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-router';
 
-
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async ({ location, context }) => {
     // Do not check auth for the login, privacy, or terms pages
@@ -44,18 +43,18 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         retry: false,
       };
 
-      const user = await context.queryClient.fetchQuery(profileQuery)
+      const user = await context.queryClient.fetchQuery(profileQuery);
       return { auth: { user } } satisfies Partial<MyRouterContext>;
     } catch {
       throw redirect({
         to: '/login',
         search: { redirect: location.href },
-        replace: true
+        replace: true,
       });
     }
   },
   component: RootComponent,
-  errorComponent: ErrorOops
+  errorComponent: ErrorOops,
 });
 
 function RootComponent() {
@@ -68,11 +67,7 @@ function RootComponent() {
         <Footer />
       </div>
       <CookieConsent />
-      {import.meta.env.DEV && (
-        <TanStackDevtools
-          plugins={TanStackDevtoolsPlugins}
-        />
-      )}
+      {import.meta.env.DEV && <TanStackDevtools plugins={TanStackDevtoolsPlugins} />}
     </>
   );
 }

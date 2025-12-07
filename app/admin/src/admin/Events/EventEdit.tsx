@@ -1,4 +1,15 @@
-import { DateInput, DeleteWithConfirmButton, Edit, Labeled, SaveButton, SimpleForm, TextField, TextInput, Toolbar, required } from 'react-admin';
+import {
+  DateInput,
+  DeleteWithConfirmButton,
+  Edit,
+  Labeled,
+  SaveButton,
+  SimpleForm,
+  TextField,
+  TextInput,
+  Toolbar,
+  required,
+} from 'react-admin';
 
 const EventEditToolbar = () => {
   return (
@@ -7,7 +18,7 @@ const EventEditToolbar = () => {
       <DeleteWithConfirmButton />
     </Toolbar>
   );
-}
+};
 
 const EventEdit = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
