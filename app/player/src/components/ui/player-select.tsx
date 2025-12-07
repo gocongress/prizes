@@ -1,8 +1,15 @@
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
-import { usePlayer } from "@/hooks/use-player";
-import { AlertCircleIcon, ChevronsUpDown, ContactRound, UserCircle2 } from "lucide-react";
-import { Fragment } from "react/jsx-runtime";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
+import { usePlayer } from '@/hooks/use-player';
+import { AlertCircleIcon, ChevronsUpDown, ContactRound, UserCircle2 } from 'lucide-react';
+import { Fragment } from 'react/jsx-runtime';
 
 interface PlayerSelectProps {
   variant?: 'sidebar' | 'standalone';
@@ -31,9 +38,7 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
                   <UserCircle2 className="h-6 w-6 text-primary" />
                 </div>
                 <div className="flex-1 text-left">
-                  <div className="font-medium">
-                    {selectedPlayer?.name || 'Select a Player'}
-                  </div>
+                  <div className="font-medium">{selectedPlayer?.name || 'Select a Player'}</div>
                   {selectedPlayer?.rank && (
                     <div className="text-sm text-muted-foreground">
                       {selectedPlayer.agaId} - Rank: {selectedPlayer.rank}
@@ -72,9 +77,7 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
             <div className="flex-1">
               <div className="font-medium">{players[0].name}</div>
               {players[0].rank && (
-                <div className="text-sm text-muted-foreground">
-                  Rank: {players[0].rank}
-                </div>
+                <div className="text-sm text-muted-foreground">Rank: {players[0].rank}</div>
               )}
             </div>
           </div>
@@ -86,7 +89,6 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
   // Sidebar variant (original implementation)
   return (
     <Fragment>
-
       {/* Player Selector - Only show if there are players */}
       {players.length > 0 ? (
         <SidebarMenuItem>
@@ -96,7 +98,8 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground`}>
+                  className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground`}
+                >
                   <div className="h-8 w-8 rounded-lg flex items-center justify-center">
                     <UserCircle2 className="h-4 w-4" />
                   </div>
@@ -111,9 +114,7 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
                     )}
                   </div>
                   <ChevronsUpDown className={`ml-auto size-4`} />
-                  {!selectedPlayer && (
-                    <div className="ml-1 h-2 w-2 rounded-full bg-blue-500" />
-                  )}
+                  {!selectedPlayer && <div className="ml-1 h-2 w-2 rounded-full bg-blue-500" />}
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -164,16 +165,13 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
             <AlertCircleIcon className="h-8 w-8 rounded-lg text-destructive" />
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium text-destructive">No Players Setup</span>
-              <span className="truncate text-xs text-muted-foreground">
-                Contact support.
-              </span>
+              <span className="truncate text-xs text-muted-foreground">Contact support.</span>
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
       )}
     </Fragment>
-
-  )
+  );
 }
 
 export default PlayerSelect;

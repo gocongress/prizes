@@ -8,6 +8,7 @@ interface PlayerContextValue {
   isLoading: boolean;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const PlayerContext = createContext<PlayerContextValue | undefined>(undefined);
 
 interface PlayerProviderProps {
@@ -30,7 +31,7 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
 
   // Clear selection if the selected player is no longer in the list
   useEffect(() => {
-    if (selectedPlayer && !players.find(p => p.id === selectedPlayer.id)) {
+    if (selectedPlayer && !players.find((p) => p.id === selectedPlayer.id)) {
       setSelectedPlayer(undefined);
     }
   }, [players, selectedPlayer]);
@@ -42,9 +43,5 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
     isLoading: auth.isLoading,
   };
 
-  return (
-    <PlayerContext.Provider value={value}>
-      {children}
-    </PlayerContext.Provider>
-  );
+  return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }

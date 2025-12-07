@@ -1,11 +1,18 @@
-import { EmailForm } from "@/components/forms/email-form";
-import { OTPForm } from "@/components/forms/otp-form";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/hooks/use-auth";
-import { useToast } from "@/hooks/use-toast";
-import { Route } from "@/routes/login";
-import { useNavigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { EmailForm } from '@/components/forms/email-form';
+import { OTPForm } from '@/components/forms/otp-form';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
+import { Route } from '@/routes/login';
+import { useNavigate } from '@tanstack/react-router';
+import { useCallback, useEffect, useState } from 'react';
 
 // ---------- Page component ----------
 function LoginPage() {
@@ -25,12 +32,14 @@ function LoginPage() {
   useEffect(() => {
     return () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
-    }
+    };
   }, [queryClient]);
 
   const handleEmailSubmit = async (email: string) => {
     if (!isVerified || !token) {
-      toast.error('Site verification not completed, please refresh the page and try again before contacting support.');
+      toast.error(
+        'Site verification not completed, please refresh the page and try again before contacting support.',
+      );
       return;
     }
     await createUser({ email, verificationToken: token });
@@ -40,11 +49,13 @@ function LoginPage() {
 
   const handleOtpSubmit = async (otp: string) => {
     if (!isVerified || !token) {
-      toast.error('Site verification not completed, please refresh the page and try again before contacting support.');
+      toast.error(
+        'Site verification not completed, please refresh the page and try again before contacting support.',
+      );
       return;
     }
     await login({ email: submittedEmail, oneTimePass: otp, verificationToken: token }).then(() => {
-      navigate({ to: '/', replace: true, reloadDocument: true })
+      navigate({ to: '/', replace: true, reloadDocument: true });
     });
   };
 
@@ -57,7 +68,7 @@ function LoginPage() {
       setToken(verificationToken);
       setIsVerified(true);
     }
-  }, [])
+  }, []);
 
   const handleVerifyError = () => {
     setToken(null);
@@ -68,14 +79,11 @@ function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            Sign in
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
           <CardDescription className="text-center">
             {showOtp
               ? `Enter the one-time password sent to ${submittedEmail}`
-              : 'Enter your e-mail address to continue'
-            }
+              : 'Enter your e-mail address to continue'}
           </CardDescription>
         </CardHeader>
 

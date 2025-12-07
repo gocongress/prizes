@@ -18,11 +18,7 @@ const ResultShowActions = () => {
   const hasAwards = record?.awards && record.awards.length > 0;
   const isFinalized = !!record?.allocationFinalizedAt;
 
-  return (
-    <TopToolbar>
-      {!hasAwards && !isFinalized && <EditButton />}
-    </TopToolbar>
-  );
+  return <TopToolbar>{!hasAwards && !isFinalized && <EditButton />}</TopToolbar>;
 };
 
 const ResultShow = () => {

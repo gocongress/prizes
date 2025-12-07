@@ -27,14 +27,17 @@ function TermsOfServicePage() {
 
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 my-6">
             <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-              ⚠️ This is a placeholder terms of service. You should replace this with your actual terms of service drafted by legal counsel.
+              ⚠️ This is a placeholder terms of service. You should replace this with your actual
+              terms of service drafted by legal counsel.
             </p>
           </div>
 
           <section className="mt-8">
             <h2 className="text-2xl font-semibold mt-6 mb-4">1. Agreement to Terms</h2>
             <p>
-              By accessing and using this service, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+              By accessing and using this service, you accept and agree to be bound by the terms and
+              provision of this agreement. If you do not agree to abide by the above, please do not
+              use this service.
             </p>
           </section>
 
@@ -42,12 +45,14 @@ function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mt-6 mb-4">2. Use of Service</h2>
             <h3 className="text-xl font-medium mt-4 mb-2">2.1 Eligibility</h3>
             <p>
-              You must be authorized by your organization to use this service. By using this service, you represent and warrant that you have the authority to accept these terms.
+              You must be authorized by your organization to use this service. By using this
+              service, you represent and warrant that you have the authority to accept these terms.
             </p>
 
             <h3 className="text-xl font-medium mt-4 mb-2">2.2 Account Security</h3>
             <p>
-              You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to:
+              You are responsible for maintaining the confidentiality of your account credentials
+              and for all activities that occur under your account. You agree to:
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Keep your authentication credentials secure</li>
@@ -70,26 +75,34 @@ function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mt-6 mb-4">3. Prize Selection and Awards</h2>
             <h3 className="text-xl font-medium mt-4 mb-2">3.1 Prize Preferences</h3>
             <p>
-              You may express preferences for available prizes through the service. Prize preferences do not guarantee award allocation, which is subject to availability and organizational policies.
+              You may express preferences for available prizes through the service. Prize
+              preferences do not guarantee award allocation, which is subject to availability and
+              organizational policies.
             </p>
 
             <h3 className="text-xl font-medium mt-4 mb-2">3.2 Award Fulfillment</h3>
             <p>
-              Prize awards are subject to the terms and conditions set by the organization administering the awards program. We are not responsible for the fulfillment of physical prizes or awards.
+              Prize awards are subject to the terms and conditions set by the organization
+              administering the awards program. We are not responsible for the fulfillment of
+              physical prizes or awards.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mt-6 mb-4">4. Intellectual Property</h2>
             <p>
-              The service and its original content, features, and functionality are owned by us and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
+              The service and its original content, features, and functionality are owned by us and
+              are protected by international copyright, trademark, patent, trade secret, and other
+              intellectual property laws.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mt-6 mb-4">5. User Data and Privacy</h2>
             <p>
-              Your use of the service is also governed by our Privacy Policy. Please review our Privacy Policy, which explains how we collect, use, and disclose information about you.
+              Your use of the service is also governed by our Privacy Policy. Please review our
+              Privacy Policy, which explains how we collect, use, and disclose information about
+              you.
             </p>
             <p className="mt-2">
               <Link to="/privacy" className="underline underline-offset-4 hover:text-foreground">
@@ -102,19 +115,25 @@ function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mt-6 mb-4">6. Disclaimers</h2>
             <h3 className="text-xl font-medium mt-4 mb-2">6.1 Service Provided "As Is"</h3>
             <p>
-              The service is provided on an "AS IS" and "AS AVAILABLE" basis. We make no warranties, expressed or implied, and hereby disclaim all other warranties including implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
+              The service is provided on an "AS IS" and "AS AVAILABLE" basis. We make no warranties,
+              expressed or implied, and hereby disclaim all other warranties including implied
+              warranties of merchantability, fitness for a particular purpose, or non-infringement.
             </p>
 
             <h3 className="text-xl font-medium mt-4 mb-2">6.2 No Guarantee of Availability</h3>
             <p>
-              We do not guarantee that the service will be uninterrupted, timely, secure, or error-free. We reserve the right to modify or discontinue the service at any time without notice.
+              We do not guarantee that the service will be uninterrupted, timely, secure, or
+              error-free. We reserve the right to modify or discontinue the service at any time
+              without notice.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mt-6 mb-4">7. Limitation of Liability</h2>
             <p>
-              In no event shall we be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from:
+              In no event shall we be liable for any indirect, incidental, special, consequential,
+              or punitive damages, including without limitation, loss of profits, data, use,
+              goodwill, or other intangible losses, resulting from:
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Your access to or use of or inability to access or use the service</li>
@@ -127,39 +146,47 @@ function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold mt-6 mb-4">8. Modifications to Terms</h2>
             <p>
-              We reserve the right to modify these terms at any time. We will provide notice of material changes by posting the new terms on this page and updating the "Last updated" date. Your continued use of the service after any such changes constitutes your acceptance of the new terms.
+              We reserve the right to modify these terms at any time. We will provide notice of
+              material changes by posting the new terms on this page and updating the "Last updated"
+              date. Your continued use of the service after any such changes constitutes your
+              acceptance of the new terms.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mt-6 mb-4">9. Termination</h2>
             <p>
-              We may terminate or suspend your access to the service immediately, without prior notice or liability, for any reason, including without limitation if you breach the terms.
+              We may terminate or suspend your access to the service immediately, without prior
+              notice or liability, for any reason, including without limitation if you breach the
+              terms.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mt-6 mb-4">10. Governing Law</h2>
             <p>
-              These terms shall be governed and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of law provisions.
+              These terms shall be governed and construed in accordance with the laws of [Your
+              Jurisdiction], without regard to its conflict of law provisions.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mt-6 mb-4">11. Contact Information</h2>
-            <p>
-              If you have any questions about these Terms of Service, please contact us at:
-            </p>
+            <p>If you have any questions about these Terms of Service, please contact us at:</p>
             <p className="mt-2">
-              <strong>[Your Company Name]</strong><br />
-              Email: [legal@yourcompany.com]<br />
+              <strong>[Your Company Name]</strong>
+              <br />
+              Email: [legal@yourcompany.com]
+              <br />
               Address: [Your Company Address]
             </p>
           </section>
 
           <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-4 my-8">
             <p className="text-sm text-blue-800 dark:text-blue-200">
-              <strong>Note:</strong> This is a template terms of service. Please consult with legal counsel to ensure your terms of service are appropriate for your specific service, jurisdiction, and business model.
+              <strong>Note:</strong> This is a template terms of service. Please consult with legal
+              counsel to ensure your terms of service are appropriate for your specific service,
+              jurisdiction, and business model.
             </p>
           </div>
         </div>

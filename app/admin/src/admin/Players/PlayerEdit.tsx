@@ -1,4 +1,17 @@
-import { AutocompleteInput, DeleteWithConfirmButton, Edit, Labeled, NumberInput, ReferenceInput, SaveButton, SimpleForm, TextField, TextInput, Toolbar, required } from 'react-admin';
+import {
+  AutocompleteInput,
+  DeleteWithConfirmButton,
+  Edit,
+  Labeled,
+  NumberInput,
+  ReferenceInput,
+  SaveButton,
+  SimpleForm,
+  TextField,
+  TextInput,
+  Toolbar,
+  required,
+} from 'react-admin';
 
 const PlayerEditToolbar = () => {
   return (
@@ -7,7 +20,7 @@ const PlayerEditToolbar = () => {
       <DeleteWithConfirmButton />
     </Toolbar>
   );
-}
+};
 
 const PlayerEdit = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +43,14 @@ const PlayerEdit = () => {
         </ReferenceInput>
         <TextInput source="name" validate={required()} />
         <TextInput source="agaId" label="AGA ID" validate={required()} />
-        <NumberInput source="rank" label="Rank" validate={[required()]} min={-30} max={9} step={0.01} />
+        <NumberInput
+          source="rank"
+          label="Rank"
+          validate={[required()]}
+          min={-30}
+          max={9}
+          step={0.01}
+        />
       </SimpleForm>
     </Edit>
   );

@@ -1,5 +1,21 @@
 import { Email } from '@mui/icons-material';
-import { Button, DeleteWithConfirmButton, Edit, Labeled, SaveButton, SelectInput, SimpleForm, TextField, TextInput, Toolbar, required, useCreate, useNotify, useRecordContext, useRedirect } from 'react-admin';
+import {
+  Button,
+  DeleteWithConfirmButton,
+  Edit,
+  Labeled,
+  SaveButton,
+  SelectInput,
+  SimpleForm,
+  TextField,
+  TextInput,
+  Toolbar,
+  required,
+  useCreate,
+  useNotify,
+  useRecordContext,
+  useRedirect,
+} from 'react-admin';
 
 const UserEditToolbar = () => {
   const record = useRecordContext();
@@ -13,27 +29,39 @@ const UserEditToolbar = () => {
       { data: { email: record.email } },
       {
         onSuccess: () => {
-          notify(`New login code sent to ${record.email}`, { type: 'success', autoHideDuration: 5000 });
+          notify(`New login code sent to ${record.email}`, {
+            type: 'success',
+            autoHideDuration: 5000,
+          });
           redirect('/users');
         },
         onError: (error) => {
           notify(`Error: ${(error as Error).message}`, { type: 'error' });
-        }
-      }
+        },
+      },
     );
   };
 
   return (
     <Toolbar sx={{ justifyContent: 'space-between' }}>
       <SaveButton />
-      <Button type='button' label="Send new code" onClick={handleClick} disabled={isPending} color='success' variant='contained' size='large'><Email /></Button>
+      <Button
+        type="button"
+        label="Send new code"
+        onClick={handleClick}
+        disabled={isPending}
+        color="success"
+        variant="contained"
+        size="large"
+      >
+        <Email />
+      </Button>
       <DeleteWithConfirmButton />
     </Toolbar>
   );
-}
+};
 
 const UserEdit = () => {
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transform = (data: any) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,10 +81,15 @@ const UserEdit = () => {
         </Labeled>
         <TextInput disabled label="Id" source="id" sx={{ display: 'none' }} />
         <TextInput source="email" disabled />
-        <SelectInput source="scope" label="API Access Level" validate={required()} choices={[
-          { id: 'USER', name: 'USER' },
-          { id: 'ADMIN', name: 'ADMIN' }
-        ]} />
+        <SelectInput
+          source="scope"
+          label="API Access Level"
+          validate={required()}
+          choices={[
+            { id: 'USER', name: 'USER' },
+            { id: 'ADMIN', name: 'ADMIN' },
+          ]}
+        />
         <Labeled label="Access Code(s)">
           <TextField source="oneTimePass" />
         </Labeled>

@@ -7,7 +7,7 @@ import {
   DateField,
   ExportButton,
   List,
-  TopToolbar
+  TopToolbar,
 } from 'react-admin';
 
 const UserListActions = () => (
@@ -16,15 +16,16 @@ const UserListActions = () => (
     <CreateButton />
     <ExportButton maxResults={100} />
     <ImportButton
-      csvFields='email, agaId, name, rank'
+      csvFields="email, agaId, name, rank"
       csvNotes={{
-        email: "User email address (ex. bob@ross.com)",
-        agaId: "AGA ID (ex. 12298)",
-        name: "Players full name (ex. Bob Ross)",
-        rank: "Registered rank number (ex. -2.1)"
+        email: 'User email address (ex. bob@ross.com)',
+        agaId: 'AGA ID (ex. 12298)',
+        name: 'Players full name (ex. Bob Ross)',
+        rank: 'Registered rank number (ex. -2.1)',
       }}
-      dialogTitle='Import Users CSV'
-      importUrl={`${API_URL}/api/v1/admin/users/import`} />
+      dialogTitle="Import Users CSV"
+      importUrl={`${API_URL}/api/v1/admin/users/import`}
+    />
   </TopToolbar>
 );
 

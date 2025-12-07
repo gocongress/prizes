@@ -7,7 +7,7 @@ export interface Player {
   id: string;
   name: string;
   rank: number;
-  userId: User['id']
+  userId: User['id'];
 }
 
 export interface User {
@@ -16,7 +16,7 @@ export interface User {
   email: string;
   token?: string;
   isAdmin: boolean;
-  players?: Player[]
+  players?: Player[];
 }
 
 interface CreateUserInput {
@@ -112,7 +112,7 @@ export const useAuth = () => {
     onSuccess: (data) => {
       toast.success('', {
         description: `A one-time password has been sent to ${data.email}`,
-        duration: 7000
+        duration: 7000,
       });
     },
     onError: (error) => {
@@ -158,7 +158,6 @@ export const useAuth = () => {
       });
     },
   });
-
 
   // Log the user out, disabling the profile query and clearing the query client cache
   // entirely.

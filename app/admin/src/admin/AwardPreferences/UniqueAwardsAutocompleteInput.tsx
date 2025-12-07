@@ -9,7 +9,7 @@ const UniqueAwardsAutocompleteInput = () => {
     if (!awards) return [];
 
     const seen = new Set();
-    const unique = awards.filter(award => {
+    const unique = awards.filter((award) => {
       const key = `${award.prizeTitle}-${award.value}`;
       if (seen.has(key)) return false;
       seen.add(key);
@@ -24,17 +24,16 @@ const UniqueAwardsAutocompleteInput = () => {
     });
   }, [awards]);
 
-
   return (
     <AutocompleteInput
       source="awardId"
       choices={uniqueAwards}
       optionText={(record) => `${record.prizeTitle} - $${record.value}`}
-      optionValue={"awardId"}
+      optionValue={'awardId'}
       validate={required()}
       isLoading={isLoading}
     />
   );
-}
+};
 
 export default UniqueAwardsAutocompleteInput;

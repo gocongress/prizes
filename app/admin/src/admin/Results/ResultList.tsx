@@ -22,17 +22,23 @@ const ResultListActions = () => (
     <ExportButton maxResults={100} />
     {/* Give the user an easy way to import results via CSV, while providing them with a list of events to select for the imported results */}
     <ImportButton
-      dialogTitle='Import Results CSV'
-      referenceSelector={{ reference: 'events', label: 'Event', fieldName: 'eventId', optionText: 'title' }}
-      csvFields='place,agaId,division'
-      csvNotes={{
-        place: "Place/rank number (ex. 1, 2, 3)",
-        agaId: "Player AGA ID (ex. 12298)",
-        division: "Division name (ex. Open, Kyu, Dan)"
+      dialogTitle="Import Results CSV"
+      referenceSelector={{
+        reference: 'events',
+        label: 'Event',
+        fieldName: 'eventId',
+        optionText: 'title',
       }}
-      confirmMessage='BEWARE! Importing these results will destroy any previous results related to the selected event. Are you sure you want to import these results?'
+      csvFields="place,agaId,division"
+      csvNotes={{
+        place: 'Place/rank number (ex. 1, 2, 3)',
+        agaId: 'Player AGA ID (ex. 12298)',
+        division: 'Division name (ex. Open, Kyu, Dan)',
+      }}
+      confirmMessage="BEWARE! Importing these results will destroy any previous results related to the selected event. Are you sure you want to import these results?"
       importUrl={`${API_URL}/api/v1/admin/results/import`}
-      payloadKey='results' />
+      payloadKey="results"
+    />
   </TopToolbar>
 );
 
@@ -90,10 +96,7 @@ const ActionsColumn = () => {
 
 const ResultList = () => (
   <List actions={<ResultListActions />}>
-    <DataTable
-      hiddenColumns={['id', 'createdAt', 'updatedAt']}
-      rowClick="show"
-    >
+    <DataTable hiddenColumns={['id', 'createdAt', 'updatedAt']} rowClick="show">
       <DataTable.Col source="id" />
       <DataTable.Col label="Event Title">
         <ReferenceField source="eventId" reference="events" />

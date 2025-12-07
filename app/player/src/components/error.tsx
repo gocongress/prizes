@@ -1,17 +1,17 @@
-import { Button } from '@/components/ui/button'
-import { Link, useRouter, type ErrorComponentProps } from '@tanstack/react-router'
-import { ClipboardX, Home, RefreshCw } from 'lucide-react'
+import { Button } from '@/components/ui/button';
+import { Link, useRouter, type ErrorComponentProps } from '@tanstack/react-router';
+import { ClipboardX, Home, RefreshCw } from 'lucide-react';
 
 export default function ErrorOops({ error, reset }: ErrorComponentProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleReset = () => {
     if (reset) {
-      reset()
+      reset();
     } else {
-      router.invalidate()
+      router.invalidate();
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -52,5 +52,5 @@ export default function ErrorOops({ error, reset }: ErrorComponentProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

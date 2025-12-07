@@ -8,11 +8,11 @@
 export type CookieCategory = 'necessary' | 'functional' | 'analytics' | 'marketing';
 
 export interface CookieConsent {
-  necessary: boolean;      // Always true - required for app functionality
-  functional: boolean;     // UI preferences like sidebar state
-  analytics: boolean;      // Analytics and performance tracking
-  marketing: boolean;      // Marketing and advertising cookies
-  timestamp: number;       // When consent was given
+  necessary: boolean; // Always true - required for app functionality
+  functional: boolean; // UI preferences like sidebar state
+  analytics: boolean; // Analytics and performance tracking
+  marketing: boolean; // Marketing and advertising cookies
+  timestamp: number; // When consent was given
 }
 
 const CONSENT_COOKIE_NAME = 'cookie_consent';

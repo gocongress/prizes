@@ -31,10 +31,7 @@ const AwardsField = ({ source }: AwardsFieldProps) => {
 
   // Sort awards by division and then by place
   const sortedAwards = [...awards].sort(
-    (
-      a: { division: string; place: number },
-      b: { division: string; place: number },
-    ) => {
+    (a: { division: string; place: number }, b: { division: string; place: number }) => {
       const divCompare = a.division.localeCompare(b.division);
       if (divCompare !== 0) return divCompare;
       return a.place - b.place;
@@ -58,88 +55,73 @@ const AwardsField = ({ source }: AwardsFieldProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedAwards.map(
-            (
-              award: Award,
-              idx: number,
-            ) => (
-              <TableRow key={idx} hover>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <PersonIcon fontSize="small" color="action" />
-                    <Box>
-                      <Typography variant="body2" fontWeight="medium">
-                        {award.playerName}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        AGA ID: {award.playerAgaId}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    label={`#${award.place}`}
-                    color={
-                      award.place === 1
-                        ? 'primary'
-                        : award.place === 2
-                          ? 'secondary'
-                          : 'default'
-                    }
-                    size="small"
-                  />
-                </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <EmojiEventsIcon fontSize="small" color="primary" />
+          {sortedAwards.map((award: Award, idx: number) => (
+            <TableRow key={idx} hover>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <PersonIcon fontSize="small" color="action" />
+                  <Box>
                     <Typography variant="body2" fontWeight="medium">
-                      {award.division}
+                      {award.playerName}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      AGA ID: {award.playerAgaId}
                     </Typography>
                   </Box>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body2">{award.prizeTitle}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <Typography variant="body2">
-                      {award.awardValue
-                        ? `$${award.awardValue.toFixed(2)}`
-                        : 'N/A'}
-                    </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontFamily: 'monospace',
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    {award.awardRedeemCode}
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Chip
+                  label={`#${award.place}`}
+                  color={
+                    award.place === 1 ? 'primary' : award.place === 2 ? 'secondary' : 'default'
+                  }
+                  size="small"
+                />
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <EmojiEventsIcon fontSize="small" color="primary" />
+                  <Typography variant="body2" fontWeight="medium">
+                    {award.division}
                   </Typography>
-                </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <EmailIcon fontSize="small" color="action" />
-                    <Typography variant="body2">
-                      {award.userEmail || 'N/A'}
-                    </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Typography variant="body2">{award.prizeTitle}</Typography>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <Typography variant="body2">
-                    {new Date(award.awardAt).toLocaleString()}
+                    {award.awardValue ? `$${award.awardValue.toFixed(2)}` : 'N/A'}
                   </Typography>
-                </TableCell>
-                <TableCell>
-                  <AllocationMethodCell award={award} />
-                </TableCell>
-              </TableRow>
-            ),
-          )}
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontFamily: 'monospace',
+                    fontSize: '0.85rem',
+                  }}
+                >
+                  {award.awardRedeemCode}
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <EmailIcon fontSize="small" color="action" />
+                  <Typography variant="body2">{award.userEmail || 'N/A'}</Typography>
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Typography variant="body2">{new Date(award.awardAt).toLocaleString()}</Typography>
+              </TableCell>
+              <TableCell>
+                <AllocationMethodCell award={award} />
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

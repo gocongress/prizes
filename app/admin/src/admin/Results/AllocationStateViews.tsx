@@ -131,9 +131,8 @@ export const AllocationStateViews = ({
         <Alert severity="error" sx={{ mb: 2 }} icon={<Lock />}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2">
-              Prize allocation for all other results is locked until these allocations are
-              finalized or cancelled. Review the recommendations below. You can modify them before
-              finalizing.
+              Prize allocation for all other results is locked until these allocations are finalized
+              or cancelled. Review the recommendations below. You can modify them before finalizing.
             </Typography>
           </Box>
         </Alert>

@@ -1,13 +1,10 @@
-"use client"
+'use client';
 
-import {
-  Gem,
-  LayoutDashboard
-} from "lucide-react"
-import * as React from "react"
+import { Gem, LayoutDashboard } from 'lucide-react';
+import * as React from 'react';
 
-import { NavMain } from "@/components/layout/nav-main"
-import { NavUser } from "@/components/layout/nav-user"
+import { NavMain } from '@/components/layout/nav-main';
+import { NavUser } from '@/components/layout/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -16,24 +13,24 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar';
 
 const data = {
   navMain: [
     {
-      title: "Dashboard",
-      url: "/dashboard",
+      title: 'Dashboard',
+      url: '/dashboard',
       icon: LayoutDashboard,
       isActive: true,
     },
     {
-      title: "My Prizes",
-      url: "/my-prizes",
+      title: 'My Prizes',
+      url: '/my-prizes',
       icon: Gem,
       isActive: true,
-    }
+    },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -44,7 +41,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <a href="/">
                 <div className="bg-white flex aspect-square size-10 items-center justify-center rounded-lg">
-                  <img src="/logo.png" alt="American Go Association" className="size-10 rounded-md" />
+                  <img
+                    src="/logo.png"
+                    alt="American Go Association"
+                    className="size-10 rounded-md"
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">AGA</span>
@@ -62,5 +63,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
