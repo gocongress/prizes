@@ -15,6 +15,7 @@ const isVerifiedPayload = (context: Context, signature: string, payload: Buffer)
 const RegFoxMiddleware = (context: Context) =>
   new Middleware({
     handler: async ({ request }) => {
+      // TODO: See server.ts with the problem using rawBody
       const verified = isVerifiedPayload(
         context,
         request.headers['x-webconnex-signature'] as string,
