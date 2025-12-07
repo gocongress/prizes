@@ -25,6 +25,7 @@ if (!serviceName) {
 const server = {
   host: process.env.SERVER_HOST || '0.0.0.0',
   port: process.env.SERVER_PORT || '3001',
+  maxBodySize: process.env.SERVER_MAX_BODY_SIZE || '1500kb',
   cookieName: process.env.COOKIE_NAME || 'auth',
   cookieDomain: process.env.COOKIE_DOMAIN || 'localhost', // ex. .superheavy.industries
   cookieMaxAge: Number.parseInt(process.env.COOKIE_MAXAGE || (60 * 60 * 24 * 7 * 1000).toString()), // ex. 1 week in milliseconds
@@ -62,6 +63,11 @@ const runtime = {
     enabled: process.env.TURNSTILE_ENABLED === 'true' || process.env.TURNSTILE_ENABLED === '1',
     secretKey: process.env.TURNSTILE_SECRET_KEY || '',
     timeout: Number.parseInt(process.env.TURNSTILE_TIMEOUT || '3000', 10),
+  },
+  webhooks: {
+    regfox: {
+      signingSecret: process.env.REGFOX_WEBHOOK_SIGNING_SECRET || '',
+    },
   },
 };
 
