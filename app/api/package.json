@@ -13,7 +13,7 @@
     "knex": "NODE_OPTIONS='--import tsx' knex --knexfile ./src/db/knexfile.ts"
   },
   "dependencies": {
-    "compression": "1.8.0",
+    "compression": "1.8.1",
     "cookie-parser": "1.4.7",
     "express": "5.1.0",
     "express-rate-limit": "^8.2.1",
@@ -41,7 +41,7 @@
     "@types/sharp": "^0.31.1",
     "@types/supertest": "6.0.3",
     "@types/swagger-ui-express": "4.1.8",
-    "eslint": "9.25.1",
+    "eslint": "9.39.1",
     "eslint-config-prettier": "10.1.2",
     "globals": "16.0.0",
     "prettier": "3.6.2",
