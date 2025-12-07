@@ -9,13 +9,13 @@ const isVerifiedPayload = (context: Context, signature: string, payload: Buffer)
   const expected = createHmac('sha256', context.runtime.webhooks.regfox.signingSecret)
     .update(payload)
     .digest('hex');
+  context.logger.debug({ expected, signature, webhook: 'regfox' }, 'Payload verification');
   return timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
 };
 
 const RegFoxMiddleware = (context: Context) =>
   new Middleware({
     handler: async ({ request }) => {
-      // TODO: See server.ts with the problem using rawBody
       const verified = isVerifiedPayload(
         context,
         request.headers['x-webconnex-signature'] as string,

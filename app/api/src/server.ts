@@ -51,27 +51,15 @@ const serverConfig = (context: Context) =>
     beforeRouting: ({ app }) => {
       // @ts-ignore express-zod-api types do not include set method on app
       app.set('trust proxy', 1); // Trust first proxy when behind a proxy (e.g. Nginx)
-      /*
-      TODO: Breaks regular application usage, need to find a way around this to allow webhooks and
-            to work alongside the appplication.
-
       app.use(
         // Express5.x dropped rawBody which is necessary for webhook payload signature verification,
-        // include rawBody to every request. **MUST HAPPEN BEFORE express.json PARSING**
-        express.raw({
-          type: 'application/json',
-          verify: (req, res, buf) => {
-            req.rawBody = buf;
-          },
-          limit: context.server.maxBodySize,
-        }),
-      );
-      */
-      app.use(
-        // Parse request.body to json
+        // include rawBody to every request prior to parsing the body as json
         express.json({
           type: ['application/cloudevents+json', 'application/json'],
           limit: context.server.maxBodySize,
+          verify: (req, res, buf) => {
+            req.rawBody = buf;
+          },
         }),
       );
       app.use(cookieParser());
