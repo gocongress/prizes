@@ -16,7 +16,7 @@ services:
       SERVICE_NAME: api
       NODE_ENV: development
       DEBUG: true
-      LOG_LEVEL: info # Default 'debug'
+      LOG_LEVEL: debug # Default 'debug'
       JWT_SECRET_KEY: secret
       JWT_EXPIRES_IN: 7d # JWT expiration time like '1h', '7d'
       SEED_DATA: true # Load seed data on start
@@ -40,7 +40,7 @@ services:
       TURNSTILE_ENABLED: true
       TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA # Secret key for local development, always passes
       TURNSTILE_TIMEOUT: 3000
-      REGFOX_WEBHOOK_SIGNING_SECRET: regfox-signing-secret
+      REGFOX_WEBHOOK_SIGNING_SECRET: ${REGFOX_WEBHOOK_SIGNING_SECRET}
       # DB_DEBUG: 1
       # DB_SSL: postgres # Production
     volumes:

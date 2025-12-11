@@ -1,9 +1,32 @@
+import {
+  type AgaField,
+  type EmailField,
+  type NameField,
+  type RegFoxRegistrantPayload,
+  regFoxWebhookPayloadSchema,
+  type RegistrantDetails,
+} from '@/schemas/regfox';
 import type { Context } from '@/types';
 import rateLimit from 'express-rate-limit';
 import { defaultEndpointsFactory, Middleware } from 'express-zod-api';
 import createHttpError from 'http-errors';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import z from 'zod';
+
+export const extractRegistrantDetails = (
+  registrant: RegFoxRegistrantPayload,
+): RegistrantDetails => {
+  const nameField = registrant.data.find((f) => f.type === 'name') as NameField;
+  const emailField = registrant.data.find((f) => f.type === 'email') as EmailField;
+  const agaField = registrant.data.find((f) => f.key === 'aga') as AgaField;
+
+  return {
+    firstName: nameField.first.value,
+    lastName: nameField.last.value,
+    email: emailField.value,
+    aga: agaField.value,
+  };
+};
 
 const isVerifiedPayload = (context: Context, signature: string, payload: Buffer) => {
   const expected = createHmac('sha256', context.runtime.webhooks.regfox.signingSecret)
@@ -49,9 +72,22 @@ const handler = (context: Context) =>
       }),
     )
     .build({
+      input: regFoxWebhookPayloadSchema,
       output: z.object({ message: z.string(), verified: z.boolean() }),
-      handler: async ({ options: { verified } }) => {
-        // TODO: Create a service to handle individual regfox data payloads
+      handler: async ({ input, options: { verified } }) => {
+        context.logger.info(
+          {
+            eventType: input.eventType,
+            formName: input.data.formName,
+            orderNumber: input.data.orderNumber,
+            registrantCount: input.data.registrants.length,
+          },
+          'Processing RegFox webhook',
+        );
+
+        const registrants = input.data.registrants.map(extractRegistrantDetails);
+        context.logger.debug({ registrants }, 'Extracted registrant details');
+
         return { message: 'OK', verified };
       },
     });
