@@ -52,6 +52,7 @@ const runtime = {
   adminEmails: process.env.ADMIN_EMAILS
     ? process.env.ADMIN_EMAILS.split(',').map((e) => e.trim().toLowerCase())
     : [],
+  supportEmail: process.env.SUPPORT_EMAIL || 'noreply@gocongress.org',
   otpCodeLength: Number.parseInt(process.env.OTP_CODE_LENGTH || '8', 10),
   smtp: {
     enabled: process.env.SMTP2GO_ENABLED === 'true' || process.env.SMTP2GO_ENABLED === '1',

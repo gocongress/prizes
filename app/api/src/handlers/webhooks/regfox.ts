@@ -1,11 +1,16 @@
+import { sendSupportEmail } from '@/lib/email';
+import { convertStringRankToNumber } from '@/lib/player';
 import {
   type AgaField,
   type EmailField,
   type NameField,
+  type PlayingRankField,
   type RegFoxRegistrantPayload,
   regFoxWebhookPayloadSchema,
   type RegistrantDetails,
 } from '@/schemas/regfox';
+import { createPlayer } from '@/services/player';
+import { createUser } from '@/services/user';
 import type { Context } from '@/types';
 import rateLimit from 'express-rate-limit';
 import { defaultEndpointsFactory, Middleware } from 'express-zod-api';
@@ -19,12 +24,14 @@ export const extractRegistrantDetails = (
   const nameField = registrant.data.find((f) => f.type === 'name') as NameField;
   const emailField = registrant.data.find((f) => f.type === 'email') as EmailField;
   const agaField = registrant.data.find((f) => f.key === 'aga') as AgaField;
+  const rankField = registrant.data.find((f) => f.key === 'playingRank') as PlayingRankField;
 
   return {
     firstName: nameField.first.value,
     lastName: nameField.last.value,
     email: emailField.value,
     aga: agaField.value,
+    playingRank: rankField.value,
   };
 };
 
@@ -87,6 +94,53 @@ const handler = (context: Context) =>
 
         const registrants = input.data.registrants.map(extractRegistrantDetails);
         context.logger.debug({ registrants }, 'Extracted registrant details');
+
+        for (const registrant of registrants) {
+          try {
+            // Create user (or get existing user), do not email users created from the
+            // webhook yet.
+            // TODO: Should brand new users get a welcome email and a code from the Prizes app?
+            const user = await createUser({
+              context,
+              input: { email: registrant.email },
+              sendEmail: false,
+            });
+
+            context.logger.info(
+              { userId: user.id, email: registrant.email },
+              'User created or retrieved',
+            );
+
+            // Convert playing rank to integer
+            const rank = convertStringRankToNumber(registrant.playingRank);
+
+            // Create player
+            const player = await createPlayer({
+              context,
+              input: {
+                userId: user.id,
+                agaId: registrant.aga,
+                name: `${registrant.firstName} ${registrant.lastName}`,
+                rank,
+              },
+            });
+
+            context.logger.info(
+              { playerId: player.id, agaId: registrant.aga, userId: user.id },
+              'Player created successfully',
+            );
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            context.logger.error(
+              {
+                error: errorMessage,
+                registrant,
+              },
+              'Failed to create user or player for registrant',
+            );
+            await sendSupportEmail(context, { errorMessage, jsonData: registrant as any });
+          }
+        }
 
         return { message: 'OK', verified };
       },

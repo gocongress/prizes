@@ -33,7 +33,8 @@ services:
       DB_PORT: 5432
       DB_NAME: postgres
       DB_SCHEMA: api
-      ADMIN_EMAILS: 'user@example.com'
+      ADMIN_EMAILS: user@example.com
+      SUPPORT_EMAIL: revgum@gmail.com
       OTP_CODE_LENGTH: 8
       SMTP2GO_ENABLED: ${SMTP2GO_ENABLED:-false}
       SMTP2GO_API_KEY: ${SMTP2GO_API_KEY}

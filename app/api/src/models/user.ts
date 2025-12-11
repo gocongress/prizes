@@ -281,7 +281,8 @@ export const deleteById = async (
   const rows = await trx<UserDb>(TABLE_NAME)
     .where({ id, deleted_at: null })
     .update({
-      deleted_at: new Date(),
+      // TODO: Rethink full delete users/players
+      // deleted_at: new Date(),
       one_time_passes: JSON.stringify([]),
     })
     .returning<UserDb[]>('*');

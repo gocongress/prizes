@@ -30,6 +30,21 @@ const textFieldSchema = z.object({
   value: z.string(),
 });
 
+const multipleChoiceFieldSchema = z.object({
+  type: z.literal('multipleChoice'),
+  key: z.string(),
+  label: z.string(),
+  value: z.string(),
+  options: z.array(
+    z.looseObject({
+      type: z.literal('multipleChoiceOption'),
+      key: z.string(),
+      label: z.string(),
+      value: z.string(),
+    }),
+  ),
+});
+
 const genericFieldSchema = z.looseObject({
   type: z.string(),
   key: z.string(),
@@ -41,6 +56,7 @@ const registrantDataFieldSchema = z.union([
   emailFieldSchema,
   textFieldSchema,
   genericFieldSchema,
+  multipleChoiceFieldSchema,
 ]);
 
 const registrantSchema = z.object({
@@ -65,8 +81,8 @@ export const regFoxWebhookPayloadSchema = z.object({
     registrants: z.array(registrantSchema),
   }),
   meta: z.object({
-    appKey: z.string(),
-    appToken: z.string(),
+    appKey: z.string().optional(),
+    appToken: z.string().optional(),
     name: z.string(),
   }),
 });
@@ -77,10 +93,12 @@ export type RegFoxRegistrantPayload = z.infer<typeof registrantSchema>;
 export type NameField = z.infer<typeof nameFieldSchema>;
 export type EmailField = z.infer<typeof emailFieldSchema>;
 export type AgaField = z.infer<typeof textFieldSchema>;
+export type PlayingRankField = z.infer<typeof multipleChoiceFieldSchema>;
 
 export interface RegistrantDetails {
   firstName: string;
   lastName: string;
   email: string;
-  aga: string | null;
+  aga: string;
+  playingRank: string;
 }
