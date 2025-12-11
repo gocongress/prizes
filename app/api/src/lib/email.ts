@@ -1,4 +1,4 @@
-import { runtime } from '@/config';
+import { env, runtime } from '@/config';
 import type { Context } from '@/types';
 
 export interface EmailRecipient {
@@ -199,10 +199,7 @@ export async function sendHtmlEmail(
 /**
  * Generates a styled HTML email template for one-time password delivery
  */
-export function generateOtpEmailHtml(
-  otpCode: string,
-  supportEmail: string = 'support@gocongress.org',
-): string {
+export function generateOtpEmailHtml(otpCode: string, supportEmail: string): string {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -346,12 +343,235 @@ export async function sendOtpEmail(
   context: Context,
   to: string | EmailRecipient,
   otpCode: string,
-  supportEmail: string = 'support@gocongress.org',
 ): Promise<SMTP2GoResponse | void> {
   if (!context.runtime.smtp.enabled) {
     context.logger.warn('SMTP is not enabled, skipping sending OTP email');
     return;
   }
-  const htmlBody = generateOtpEmailHtml(otpCode, supportEmail);
+  const htmlBody = generateOtpEmailHtml(otpCode, context.runtime.supportEmail);
   return sendHtmlEmail(context, to, `Verification code: ${otpCode}`, htmlBody);
+}
+
+/**
+ * Generates a styled HTML email template for support notifications with error details
+ */
+export function generateSupportEmailHtml(
+  errorMessage: string,
+  jsonData?: Record<string, unknown>,
+  additionalContext?: string,
+): string {
+  const jsonDataHtml = jsonData
+    ? `
+      <div class="json-container">
+        <h3 style="margin: 0 0 15px 0; font-size: 16px; color: #333;">Additional Details:</h3>
+        <pre class="json-data">${JSON.stringify(jsonData, null, 2)}</pre>
+      </div>
+    `
+    : '';
+
+  const contextHtml = additionalContext
+    ? `
+      <div class="context-box">
+        <p><strong>Context:</strong> ${additionalContext}</p>
+      </div>
+    `
+    : '';
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      padding: 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .header p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 10px 0 0 0;
+      font-size: 14px;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .error-box {
+      background-color: #f8d7da;
+      border-left: 4px solid #dc3545;
+      padding: 20px;
+      margin: 0 0 30px 0;
+      border-radius: 4px;
+    }
+    .error-box h2 {
+      margin: 0 0 10px 0;
+      color: #721c24;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .error-box p {
+      margin: 0;
+      color: #721c24;
+      font-size: 15px;
+      word-wrap: break-word;
+    }
+    .context-box {
+      background-color: #e7f3ff;
+      border-left: 4px solid #0066cc;
+      padding: 15px 20px;
+      margin: 0 0 30px 0;
+      border-radius: 4px;
+    }
+    .context-box p {
+      margin: 0;
+      color: #004085;
+      font-size: 14px;
+    }
+    .json-container {
+      margin: 30px 0;
+    }
+    .json-container h3 {
+      margin: 0 0 15px 0;
+      font-size: 16px;
+      color: #333;
+    }
+    .json-data {
+      background-color: #282c34;
+      color: #abb2bf;
+      padding: 20px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 0;
+      border: 1px solid #3e4451;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .metadata {
+      background-color: #f8f9fa;
+      padding: 20px;
+      margin: 30px 0 0 0;
+      border-radius: 4px;
+      border: 1px solid #e9ecef;
+    }
+    .metadata p {
+      margin: 5px 0;
+      color: #6c757d;
+      font-size: 13px;
+    }
+    .metadata strong {
+      color: #495057;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 25px 30px;
+      text-align: center;
+      border-top: 1px solid #e9ecef;
+    }
+    .footer p {
+      color: #6c757d;
+      font-size: 13px;
+      margin: 5px 0;
+    }
+    @media only screen and (max-width: 600px) {
+      .container {
+        margin: 20px;
+        border-radius: 4px;
+      }
+      .header {
+        padding: 25px 20px;
+      }
+      .header h1 {
+        font-size: 24px;
+      }
+      .content {
+        padding: 30px 20px;
+      }
+      .json-data {
+        font-size: 12px;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⚠️ System Error Notification</h1>
+      <p>An error occurred that requires attention</p>
+    </div>
+    <div class="content">
+      <div class="error-box">
+        <h2>Error Message</h2>
+        <p>${errorMessage}</p>
+      </div>
+      ${contextHtml}
+      ${jsonDataHtml}
+      <div class="metadata">
+        <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+        <p><strong>Environment:</strong> ${env}</p>
+      </div>
+    </div>
+    <div class="footer">
+      <p>This is an automated support notification from AGA Prizes</p>
+      <p>© ${new Date().getFullYear()} AGA Prizes. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+}
+
+export interface SendSupportEmailParams {
+  errorMessage: string;
+  jsonData?: Record<string, unknown>;
+  additionalContext?: string;
+  subject?: string;
+}
+
+/**
+ * Sends a support notification email with error details and JSON data
+ */
+export async function sendSupportEmail(
+  context: Context,
+  params: SendSupportEmailParams,
+): Promise<SMTP2GoResponse | void> {
+  if (!context.runtime.smtp.enabled) {
+    context.logger.warn('SMTP is not enabled, skipping sending support email');
+    return;
+  }
+
+  const {
+    errorMessage,
+    jsonData,
+    additionalContext,
+    subject = '🚨 System Error Notification',
+  } = params;
+
+  const htmlBody = generateSupportEmailHtml(errorMessage, jsonData, additionalContext);
+
+  return sendHtmlEmail(context, context.runtime.supportEmail, subject, htmlBody);
 }

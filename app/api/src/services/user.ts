@@ -72,7 +72,8 @@ const getNewOneTimePass = async ({
 export const createUser = async ({
   context,
   input,
-}: ServiceParams<CreateUser>): Promise<UserApi> => {
+  sendEmail = true,
+}: ServiceParams<CreateUser> & { sendEmail?: boolean }): Promise<UserApi> => {
   if (!input) {
     throw new Error('Create user input is missing.');
   }
@@ -83,7 +84,9 @@ export const createUser = async ({
     if (!user || !user.oneTimePass?.length) {
       throw createHttpError(400, 'User create failed.');
     }
-    await sendOtpEmail(context, user.email, user.oneTimePass[0]);
+    if (sendEmail) {
+      await sendOtpEmail(context, user.email, user.oneTimePass[0]);
+    }
     await trx.commit();
     return user;
   } catch (error) {
@@ -94,7 +97,9 @@ export const createUser = async ({
       if (!existingUser || !existingUser.oneTimePass?.length) {
         throw createHttpError(400, 'User create failed.');
       }
-      await sendOtpEmail(context, existingUser.email, existingUser.oneTimePass[0]);
+      if (sendEmail) {
+        await sendOtpEmail(context, existingUser.email, existingUser.oneTimePass[0]);
+      }
       return existingUser;
     }
     throw error;
