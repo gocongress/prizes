@@ -81,8 +81,9 @@ function SortablePrizeItem({
           {prize.description && (
             <>
               <div
-                className={`text-xs text-muted-foreground whitespace-pre-wrap ${!isDescriptionExpanded ? 'max-h-[50px] overflow-hidden' : ''
-                  }`}
+                className={`text-xs text-muted-foreground whitespace-pre-wrap ${
+                  !isDescriptionExpanded ? 'max-h-[50px] overflow-hidden' : ''
+                }`}
               >
                 {!isDescriptionExpanded && prize.description.length > 200
                   ? prize.description.substring(0, 200) + '...'
