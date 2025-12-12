@@ -277,19 +277,12 @@ export const deleteById = async (
   _context: Context,
   trx: Knex.Transaction,
   id: UserApi['id'],
-): Promise<UserApi | undefined> => {
-  const rows = await trx<UserDb>(TABLE_NAME)
-    .where({ id, deleted_at: null })
-    .update({
-      // TODO: Rethink full delete users/players
-      // deleted_at: new Date(),
-      one_time_passes: JSON.stringify([]),
-    })
-    .returning<UserDb[]>('*');
+): Promise<number | undefined> => {
+  const rows = await trx<UserDb>(TABLE_NAME).where({ id }).del();
 
-  if (!rows.length) {
+  if (!rows) {
     return;
   }
 
-  return asModel(rows[0]);
+  return rows;
 };

@@ -222,18 +222,12 @@ export const deleteById = async (
   _context: Context,
   trx: Knex.Transaction,
   id: PlayerApi['id'],
-): Promise<PlayerApi | undefined> => {
-  const rows = await trx<PlayerDb>(TABLE_NAME)
-    .where({ id, deleted_at: null })
-    .update({
-      // TODO: Rethink full delete users and players
-      // deleted_at: new Date(),
-    })
-    .returning<PlayerDb[]>('*');
+): Promise<number | undefined> => {
+  const rows = await trx<PlayerDb>(TABLE_NAME).where({ id }).del();
 
-  if (!rows.length) {
+  if (!rows) {
     return;
   }
 
-  return asModel(rows[0]);
+  return rows;
 };

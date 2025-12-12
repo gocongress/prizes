@@ -3,8 +3,8 @@ import { ScopeKinds } from '@/lib/handlers/constants';
 import {
   UserApiSchema,
   UserCreateSchema,
-  UserImportApiSchema,
   UserImportSchema,
+  UserMessageSchema,
   UserMinimalDetailsSchema,
   UserQuerySchema,
   UserUpdateSchema,
@@ -126,7 +126,7 @@ export const deleteUserById = (context: Context) =>
   handlerFactory({
     context,
     kind: ContextKinds.USER,
-    itemSchema: UserApiSchema,
+    itemSchema: UserMessageSchema,
     scopes: ScopeKinds.ADMIN,
   }).build({
     method: 'delete',
@@ -134,8 +134,10 @@ export const deleteUserById = (context: Context) =>
     output: ApiPayloadSchema,
     handler: async ({ input, options: { context } }) => {
       try {
-        const payload = await UserService.deleteUserById({ context, input: input.id });
-        return buildResponse(UserApiSchema, context, ContextKinds.USER, payload);
+        const rows = await UserService.deleteUserById({ context, input: input.id });
+        return buildResponse(UserMessageSchema, context, ContextKinds.USER, {
+          message: `${rows} users deleted.`,
+        });
       } catch (err) {
         context.logger.error({ err, id: input.id }, 'Error deleting user');
         throw createHttpError(500, err as Error, { expose: false });
@@ -150,7 +152,7 @@ export const importUsers = (context: Context) =>
   handlerFactory({
     context,
     kind: ContextKinds.USER,
-    itemSchema: UserImportSchema,
+    itemSchema: UserMessageSchema,
     scopes: ScopeKinds.ADMIN,
   }).build({
     method: 'post',
@@ -159,7 +161,7 @@ export const importUsers = (context: Context) =>
     handler: async ({ options: { context }, input }) => {
       try {
         await UserService.bulkUpsertUsers(context, input);
-        return buildResponse(UserImportApiSchema, context, ContextKinds.USER, {
+        return buildResponse(UserMessageSchema, context, ContextKinds.USER, {
           message: 'Imported',
         });
       } catch (err) {

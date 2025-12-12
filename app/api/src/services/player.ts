@@ -83,21 +83,24 @@ export const updatePlayerById = async ({
 export const deletePlayerById = async ({
   context,
   input,
-}: ServiceParams<PlayerApi['id']>): Promise<PlayerApi> => {
+}: ServiceParams<PlayerApi['id']>): Promise<number> => {
   if (!input) {
     throw new Error('Player ID is missing.');
   }
 
   const trx = await context.db.transaction();
   try {
-    const player = await deleteById(context, trx, input);
-    if (!player) {
+    const rows = await deleteById(context, trx, input);
+    if (!rows) {
       throw createHttpError(404, 'Player invalid or not found.');
     }
     await trx.commit();
-    return player;
+    return rows;
   } catch (error) {
     await trx.rollback();
+    if ((error as any).detail?.includes('is still referenced')) {
+      throw new Error('Cannot delete a player who has been awarded prizes.');
+    }
     throw error;
   }
 };
