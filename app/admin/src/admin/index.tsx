@@ -39,6 +39,9 @@ const App = () => (
       {...players}
       icon={Face}
       recordRepresentation={(record) => `${record.name} (${record.agaId})`}
+      hasCreate={false}
+      hasEdit={false}
+      hasShow={false}
     />
     <Resource
       name="awardPreferences"

@@ -74,7 +74,7 @@ export const UserLoginSchema = UserCreateSchema.extend({
   oneTimePass: z.string().min(runtime.otpCodeLength).max(runtime.otpCodeLength),
 });
 
-export const UserAuthApiSchema = z.object({
+export const UserMessageSchema = z.object({
   message: z.string(),
 });
 
@@ -88,8 +88,6 @@ export const UserImportSchema = z.object({
     }),
   ),
 });
-
-export const UserImportApiSchema = UserAuthApiSchema;
 
 export const UserQuerySchema = z.object({
   page: z.coerce.number().min(0).max(9999).default(0),

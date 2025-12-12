@@ -4,6 +4,7 @@ export const AwardQueryFields = {
   id: 'id',
   prizeId: 'prize_id',
   prizeTitle: 'prizeTitle',
+  eventTitle: 'eventTitle',
   playerId: 'player_id',
   playerName: 'playerName',
   redeemCode: 'redeem_code',

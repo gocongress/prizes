@@ -88,7 +88,8 @@ export const getAll = async (
       `${PLAYER_TABLE_NAME}.name`,
     )
     .leftJoin(PLAYER_TABLE_NAME, `${TABLE_NAME}.player_id`, `${PLAYER_TABLE_NAME}.id`)
-    .leftJoin(PRIZE_TABLE_NAME, `${TABLE_NAME}.prize_id`, `${PRIZE_TABLE_NAME}.id`);
+    .leftJoin(PRIZE_TABLE_NAME, `${TABLE_NAME}.prize_id`, `${PRIZE_TABLE_NAME}.id`)
+    .leftJoin(EVENT_TABLE_NAME, `${PRIZE_TABLE_NAME}.event_id`, `${EVENT_TABLE_NAME}.id`);
 
   if (queryParams.prize_id) {
     query.where(`${TABLE_NAME}.prize_id`, queryParams.prize_id);
@@ -102,6 +103,9 @@ export const getAll = async (
       break;
     case 'prizeTitle':
       orderByTable = `${PRIZE_TABLE_NAME}.title`;
+      break;
+    case 'eventTitle':
+      orderByTable = `${EVENT_TABLE_NAME}.title`;
       break;
 
     default:

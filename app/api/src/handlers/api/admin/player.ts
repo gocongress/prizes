@@ -9,6 +9,7 @@ import { ScopeKinds } from '@/lib/handlers/constants';
 import {
   PlayerApiSchema,
   PlayerCreateSchema,
+  PlayerMessageSchema,
   PlayerQueryKeys,
   PlayerUpdateSchema,
   type PlayerQueryParams,
@@ -124,7 +125,7 @@ export const deletePlayerById = (context: Context) =>
   handlerFactory({
     context,
     kind: ContextKinds.PLAYER,
-    itemSchema: PlayerApiSchema,
+    itemSchema: PlayerMessageSchema,
     scopes: ScopeKinds.ADMIN,
   }).build({
     method: 'delete',
@@ -132,8 +133,10 @@ export const deletePlayerById = (context: Context) =>
     output: ApiPayloadSchema,
     handler: async ({ input, options: { context } }) => {
       try {
-        const payload = await PlayerService.deletePlayerById({ context, input: input.id });
-        return buildResponse(PlayerApiSchema, context, ContextKinds.PLAYER, payload);
+        const rows = await PlayerService.deletePlayerById({ context, input: input.id });
+        return buildResponse(PlayerMessageSchema, context, ContextKinds.PLAYER, {
+          message: `${rows} player deleted.`,
+        });
       } catch (err) {
         context.logger.error({ err, id: input.id }, 'Error deleting player');
         throw createHttpError(500, err as Error, { expose: false });

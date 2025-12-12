@@ -65,6 +65,10 @@ export const PlayerMinimalDetailsSchema = PlayerApiSchema.pick({
   rank: true,
 });
 
+export const PlayerMessageSchema = z.object({
+  message: z.string(),
+});
+
 export const PlayerQuerySchema = z.object({
   page: z.coerce.number().min(0).max(9999).default(0),
   pageSize: z.coerce.number().min(1).max(100).default(10),

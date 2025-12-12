@@ -1,8 +1,8 @@
 import { ApiPayloadSchema, buildResponse, handlerFactory } from '@/lib/handlers';
 import { ScopeKinds } from '@/lib/handlers/constants';
 import {
-  UserAuthApiSchema,
   UserLoginSchema,
+  UserMessageSchema,
   UserMinimalDetailsSchema,
   UserProfileSchema,
 } from '@/schemas/user';
@@ -62,7 +62,7 @@ export const logoutUser = (context: Context) =>
     authenticateUser: false,
     context,
     kind: ContextKinds.USER,
-    itemSchema: UserAuthApiSchema,
+    itemSchema: UserMessageSchema,
     scopes: ScopeKinds.USER,
     clearCookie: true,
   }).build({
@@ -70,7 +70,7 @@ export const logoutUser = (context: Context) =>
     output: ApiPayloadSchema,
     handler: async ({ options: { context } }) => {
       try {
-        return buildResponse(UserAuthApiSchema, context, ContextKinds.USER, {
+        return buildResponse(UserMessageSchema, context, ContextKinds.USER, {
           message: 'User logged out.',
         });
       } catch (err) {

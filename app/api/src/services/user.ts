@@ -201,21 +201,24 @@ export const updateUserById = async ({
 export const deleteUserById = async ({
   context,
   input,
-}: ServiceParams<UserApi['id']>): Promise<UserApi> => {
+}: ServiceParams<UserApi['id']>): Promise<number> => {
   if (!input) {
     throw new Error('User ID is missing.');
   }
 
   const trx = await context.db.transaction();
   try {
-    const user = await deleteById(context, trx, input);
-    if (!user) {
+    const rows = await deleteById(context, trx, input);
+    if (!rows) {
       throw createHttpError(404, 'User invalid or not found.');
     }
     await trx.commit();
-    return user;
+    return rows;
   } catch (error) {
     await trx.rollback();
+    if ((error as any).detail?.includes('is still referenced')) {
+      throw new Error('Cannot delete a user who is related to players.');
+    }
     throw error;
   }
 };
