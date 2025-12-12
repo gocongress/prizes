@@ -57,11 +57,11 @@ function SortablePrizeItem({
           </span>
         </div>
       )}
-      {thumbnailSrc && (
-        <div className="flex-shrink-0 self-start p-1.5 bg-white dark:bg-gray-100 rounded shadow-md border border-gray-200">
+      <div className="flex-shrink-0 self-start p-1.5 bg-white dark:bg-gray-100 rounded shadow-md border border-gray-200">
+        {thumbnailSrc && (
           <img src={thumbnailSrc} alt={prize.title} className="w-18 h-18 object-cover" />
-        </div>
-      )}
+        )}
+      </div>
       <div className="flex-1 min-w-0">
         <h3 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <span>{prize.title}</span>
@@ -81,9 +81,8 @@ function SortablePrizeItem({
           {prize.description && (
             <>
               <div
-                className={`text-xs text-muted-foreground whitespace-pre-wrap ${
-                  !isDescriptionExpanded ? 'max-h-[50px] overflow-hidden' : ''
-                }`}
+                className={`text-xs text-muted-foreground whitespace-pre-wrap ${!isDescriptionExpanded ? 'max-h-[50px] overflow-hidden' : ''
+                  }`}
               >
                 {!isDescriptionExpanded && prize.description.length > 200
                   ? prize.description.substring(0, 200) + '...'
