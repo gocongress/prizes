@@ -57,7 +57,9 @@ function SortablePrizeItem({
           </span>
         </div>
       )}
-      <div className="flex-shrink-0 self-start p-1.5 bg-white dark:bg-gray-100 rounded shadow-md border border-gray-200">
+      <div
+        className={`flex-shrink-0 self-start p-1.5 ${thumbnailSrc ? 'bg-white dark:bg-gray-100 rounded shadow-md border border-gray-200' : ''}`}
+      >
         {thumbnailSrc && (
           <img src={thumbnailSrc} alt={prize.title} className="w-18 h-18 object-cover" />
         )}
