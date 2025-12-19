@@ -1,8 +1,13 @@
 FROM alpine:3.19
 
+# Use edge repositories to get the latest packages, including PostgreSQL 17 client
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    apk update
+
 # Install required packages
 RUN apk add --no-cache \
-    postgresql-client \
+    postgresql17-client \
     aws-cli \
     bash \
     gzip \
