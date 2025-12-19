@@ -12,6 +12,7 @@ DB_HOST="${DB_HOST:-postgres}"
 DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-postgres}"
 DB_USER="${DB_USER:-postgres}"
+DB_PASSWORD="${DB_PASSWORD:-postgres}"
 S3_BUCKET="${S3_BUCKET}"
 S3_PATH="${S3_PATH}"  # Path within the bucket
 BACKUP_DIR="${BACKUP_DIR:-/database-backups}"

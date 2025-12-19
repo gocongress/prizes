@@ -41,6 +41,7 @@ services:
       DB_PORT: ${POSTGRES_PORT:-5432}
       DB_NAME: ${DB_NAME:-postgres}
       DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD}
       S3_BUCKET: ${S3_BUCKET}
       S3_PATH: ${S3_PATH}
       BACKUP_DIR: ${BACKUP_DIR:-/database-backups}
