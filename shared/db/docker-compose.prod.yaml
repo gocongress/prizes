@@ -31,6 +31,26 @@ services:
     networks:
       - api-net
 
+  postgres-backup-db:
+    build:
+      context: ./backup-db
+    volumes:
+      - backup-db-data-prod:/database-backups
+    environment:
+      - DB_HOST="${DB_HOST:-postgres}"
+      - DB_PORT="${POSTGRES_PORT:-5432}"
+      - DB_NAME="${DB_NAME:-postgres}"
+      - DB_USER="${DB_USER:-postgres}"
+      - S3_BUCKET="${S3_BUCKET}"
+      - S3_PATH="${S3_PATH}"
+      - BACKUP_DIR="${BACKUP_DIR:-/database-backups}"
+      - RETENTION_DAYS="${RETENTION_DAYS:-30}"
+      - AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
+      - AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+      - AWS_REGION="${AWS_REGION}"
+    networks:
+      - api-net
+
 volumes:
   db-data-prod:
     driver: local
@@ -44,6 +64,12 @@ volumes:
       type: none
       o: bind
       device: ${DB_BUILD_VOLUME_PATH:-../../volumes/prod/build-db-data}
+  backup-db-data-prod:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DB_BUILD_VOLUME_PATH:-../../volumes/prod/backup-db-data}
 
 networks:
   api-net:
