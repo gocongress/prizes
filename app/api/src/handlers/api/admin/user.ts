@@ -58,7 +58,11 @@ export const createUser = (context: Context) =>
     output: ApiPayloadSchema,
     handler: async ({ input, options: { context } }) => {
       try {
-        const payload = await UserService.createUser({ context, input });
+        const payload = await UserService.createUser({
+          context,
+          input,
+          sendEmail: input.emailPasscode,
+        });
         const { oneTimePass, ...rest } = payload;
         return buildResponse(UserMinimalDetailsSchema, context, ContextKinds.USER, {
           ...rest,
