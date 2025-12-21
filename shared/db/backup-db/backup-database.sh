@@ -4,6 +4,13 @@
 # This script creates a timestamped, compressed backup of a PostgreSQL database
 # and uploads it to an S3 bucket using the AWS CLI
 
+# Early output for debugging cron issues
+echo "Script started at $(date)" >&2
+
+# Set a reasonable PATH for cron environments
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+
 set -e  # Exit on error
 set -u  # Exit on undefined variable
 
@@ -42,14 +49,22 @@ check_requirements() {
 
     if ! command -v pg_dump &> /dev/null; then
         missing_commands+=("pg_dump")
+        error "pg_dump not found in PATH: $PATH"
     fi
 
     if ! command -v aws &> /dev/null; then
         missing_commands+=("aws")
+        error "aws not found in PATH: $PATH"
+    fi
+
+    if ! command -v gzip &> /dev/null; then
+        missing_commands+=("gzip")
+        error "gzip not found in PATH: $PATH"
     fi
 
     if [ ${#missing_commands[@]} -ne 0 ]; then
         error "Missing required commands: ${missing_commands[*]}"
+        error "Current PATH: $PATH"
         exit 1
     fi
 }
@@ -112,5 +127,9 @@ main() {
     log "=== Backup completed successfully ==="
 }
 
-# Run main function
-main
+# Run main function and catch any errors
+if ! main; then
+    exit_code=$?
+    echo "Script failed with exit code: $exit_code" >&2
+    exit $exit_code
+fi

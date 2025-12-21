@@ -19,11 +19,9 @@ RUN chmod +x /scripts/backup-database.sh
 # Copy and install the crontab
 COPY crontab /etc/crontabs/root
 
-# Create a startup script to run cron in foreground
-RUN echo '#!/bin/sh' > /entrypoint.sh && \
-    echo 'echo "Starting cron daemon..."' >> /entrypoint.sh && \
-    echo 'crond -f -l 2' >> /entrypoint.sh && \
-    chmod +x /entrypoint.sh
+# Create a startup script that exports environment variables to cron at runtime
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

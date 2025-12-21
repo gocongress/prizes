@@ -1,2 +1,2 @@
 # Run every day at 1am
-0 1 * * * root /scripts/backup-database.sh
+0 1 * * * . /etc/environment; /scripts/backup-database.sh >> /var/log/cron/backup.log 2>&1
