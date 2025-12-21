@@ -49,6 +49,8 @@ export const UserApiSchema = z.object({
 
 export const UserCreateSchema = UserApiSchema.pick({
   email: true,
+}).extend({
+  emailPasscode: z.boolean().default(true).optional(),
 });
 
 export const UserMinimalDetailsSchema = UserApiSchema.pick({
