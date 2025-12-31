@@ -10,8 +10,8 @@ import { Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-ro
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async ({ location, context }) => {
-    // Do not check auth for the login, privacy, or terms pages
-    if (['/login', '/privacy', '/terms'].includes(location.pathname)) return;
+    // Do not check auth for the login, welcome, privacy, or terms pages
+    if (['/login', '/welcome', '/privacy', '/terms'].includes(location.pathname)) return;
 
     try {
       // Before every route change or application load, use cached profile data or fetch
@@ -47,7 +47,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       return { auth: { user } } satisfies Partial<MyRouterContext>;
     } catch {
       throw redirect({
-        to: '/login',
+        to: '/welcome',
         search: { redirect: location.href },
         replace: true,
       });

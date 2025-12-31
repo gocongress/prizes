@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LoginRouteImport } from './routes/login'
@@ -17,6 +18,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardMyPrizesRouteImport } from './routes/_dashboard/my-prizes'
 import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard'
 
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/welcome': typeof WelcomeRoute
   '/dashboard': typeof DashboardDashboardRoute
   '/my-prizes': typeof DashboardMyPrizesRoute
 }
@@ -65,6 +72,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/welcome': typeof WelcomeRoute
   '/dashboard': typeof DashboardDashboardRoute
   '/my-prizes': typeof DashboardMyPrizesRoute
 }
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/welcome': typeof WelcomeRoute
   '/_dashboard/dashboard': typeof DashboardDashboardRoute
   '/_dashboard/my-prizes': typeof DashboardMyPrizesRoute
 }
@@ -85,10 +94,18 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/welcome'
     | '/dashboard'
     | '/my-prizes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/privacy' | '/terms' | '/dashboard' | '/my-prizes'
+  to:
+    | '/'
+    | '/login'
+    | '/privacy'
+    | '/terms'
+    | '/welcome'
+    | '/dashboard'
+    | '/my-prizes'
   id:
     | '__root__'
     | '/'
@@ -96,6 +113,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/welcome'
     | '/_dashboard/dashboard'
     | '/_dashboard/my-prizes'
   fileRoutesById: FileRoutesById
@@ -106,10 +124,18 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -182,6 +208,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
