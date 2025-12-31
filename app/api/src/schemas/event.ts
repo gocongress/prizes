@@ -36,6 +36,13 @@ export const EventApiSchema = z.object({
   updatedAt: z.iso.datetime().nullish().example('2025-01-01T12:00:00.000Z'),
 });
 
+export const EventMinimalDetailsSchema = EventApiSchema.pick({
+  id: true,
+  title: true,
+  startAt: true,
+  endAt: true,
+});
+
 // Has data object with fields appropriate for creating a new Event. ({ data }).
 export const EventCreateSchema = z.object({
   title: z.string().min(1).trim(),

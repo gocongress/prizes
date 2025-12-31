@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { EventApiSchema, EventMinimalDetailsSchema } from './event';
 
 export const PlayerQueryFields = {
   id: 'id',
@@ -39,6 +40,7 @@ export const PlayerApiSchema = z.object({
   createdAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
   deletedAt: z.iso.datetime().nullish().example('2025-01-01T12:00:00.000Z'),
   updatedAt: z.iso.datetime().nullish().example('2025-01-01T12:00:00.000Z'),
+  events: z.array(EventApiSchema).optional(), // Nested events data when player is part of user profile query
 });
 
 export const PlayerCreateSchema = PlayerApiSchema.pick({
@@ -63,6 +65,8 @@ export const PlayerMinimalDetailsSchema = PlayerApiSchema.pick({
   agaId: true,
   name: true,
   rank: true,
+}).extend({
+  events: z.array(EventMinimalDetailsSchema).optional(),
 });
 
 export const PlayerMessageSchema = z.object({
