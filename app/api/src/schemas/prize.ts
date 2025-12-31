@@ -34,7 +34,7 @@ export type PrizeQueryKey = keyof typeof PrizeQueryFields;
 export const PrizeDbSchema = z.object({
   id: z.guid(),
   title: z.string().min(1).trim(),
-  event_id: z.guid().nullable().optional(),
+  event_id: z.guid(),
   description: z.string().nullable().optional(),
   url: z.string().nullable().optional(),
   contact: z.string().nullable().optional(),
@@ -56,7 +56,7 @@ export const PrizeApiSchema = z.object({
   url: z.string().trim().nullish().optional(),
   contact: z.string().trim().nullish().optional(),
   recommendedRank: z.enum(RecommendedRanks).default('ALL'),
-  eventId: z.guid().nullable().optional(),
+  eventId: z.guid(),
   eventTitle: z.string().nullable().optional(), // Field joined from events table by event_id
   createdAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
   deletedAt: z.iso.datetime().nullish().example('2025-01-01T12:00:00.000Z'),

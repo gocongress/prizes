@@ -19,7 +19,7 @@ const PrizeCreate = () => {
     <Create transform={transform} redirect="edit">
       <SimpleForm>
         <ReferenceInput source="eventId" reference="events">
-          <AutocompleteInput />
+          <AutocompleteInput validate={[required()]} />
         </ReferenceInput>
         <TextInput source="title" validate={[required()]} />
         <TextInput source="url" />
