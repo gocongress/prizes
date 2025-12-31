@@ -10,6 +10,7 @@ import {
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { BreadcrumbProvider } from '@/contexts/breadcrumb';
 import { PlayerProvider } from '@/contexts/player';
+import { EventProvider } from '@/contexts/event';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { Separator } from '@radix-ui/react-separator';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
@@ -90,7 +91,9 @@ export function DashboardLayout() {
   return (
     <BreadcrumbProvider>
       <PlayerProvider>
-        <DashboardContent />
+        <EventProvider>
+          <DashboardContent />
+        </EventProvider>
       </PlayerProvider>
     </BreadcrumbProvider>
   );

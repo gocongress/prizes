@@ -1,8 +1,10 @@
 import SortablePrizeItem from '@/components//ui/sortable-prize-item';
 import PlayerSelect from '@/components/ui/player-select';
+import EventSelect from '@/components/ui/event-select';
 import { useAwardPreferences, useSaveAwardPreferences } from '@/hooks/use-award-preferences';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { usePlayer } from '@/hooks/use-player';
+import { useEvent } from '@/hooks/use-event';
 import { usePrizes, type PrizeAwardCombination } from '@/hooks/use-prizes';
 import {
   closestCenter,
@@ -27,6 +29,7 @@ export function DashboardPage() {
   const { setBreadcrumbs } = useBreadcrumb();
   const { prizes, isLoading: isLoadingPrizes } = usePrizes();
   const { selectedPlayer, isLoading: isLoadingPlayers } = usePlayer();
+  const { selectedEvent, setSelectedEvent, availableEvents } = useEvent();
   const { awardPreferences, isLoading: isLoadingAwardPreferences } = useAwardPreferences(
     selectedPlayer?.id,
   );
@@ -202,6 +205,15 @@ export function DashboardPage() {
       <div className="w-full max-w-[700px]">
         {/* Player Selector */}
         {!isLoadingPlayers && <PlayerSelect variant="standalone" />}
+
+        {/* Event Selector - Only show if player has events */}
+        {selectedPlayer && availableEvents.length > 0 && (
+          <EventSelect
+            events={availableEvents}
+            selectedEvent={selectedEvent}
+            onSelectEvent={setSelectedEvent}
+          />
+        )}
 
         {selectedPlayer && (
           <div className="mb-6">

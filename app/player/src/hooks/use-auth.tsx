@@ -2,12 +2,20 @@ import { env } from '@/env';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+export interface PlayerEvent {
+  id: string;
+  title: string;
+  startAt: string;
+  endAt: string;
+}
+
 export interface Player {
   agaId: string;
   id: string;
   name: string;
   rank: number;
   userId: User['id'];
+  events?: PlayerEvent[];
 }
 
 export interface User {
