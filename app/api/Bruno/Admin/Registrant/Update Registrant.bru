@@ -1,0 +1,26 @@
+meta {
+  name: Update Registrant
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/registrants/:id
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id: {{testRegistrantId}}
+}
+
+body:json {
+  {
+    "status": "cancelled",
+    "notes": "Updated test registrant"
+  }
+}

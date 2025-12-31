@@ -3,6 +3,7 @@ import awards from '@/admin/Awards';
 import events from '@/admin/Events';
 import players from '@/admin/Players';
 import prizes from '@/admin/Prizes';
+import registrants from '@/admin/Registrants';
 import results from '@/admin/Results';
 import users from '@/admin/Users';
 import { APP_BASENAME } from '@/config';
@@ -15,6 +16,7 @@ import {
   Event,
   Face,
   Leaderboard,
+  PersonAdd,
   Tune,
   WorkspacePremium,
 } from '@mui/icons-material';
@@ -54,6 +56,12 @@ const App = () => (
       {...events}
       icon={Event}
       recordRepresentation={(record) => record.title}
+    />
+    <Resource
+      name="registrants"
+      {...registrants}
+      icon={PersonAdd}
+      recordRepresentation={(record) => `${record.playerName} - ${record.eventTitle}`}
     />
     <Resource
       name="prizes"

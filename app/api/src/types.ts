@@ -79,6 +79,7 @@ export const ContextKinds = {
   AWARD_PREFERENCE: 'awardPreference',
   EVENT: 'event',
   PRIZE: 'prize',
+  REGISTRANT: 'registrant',
   RESULT: 'result',
   USER: 'user',
   PLAYER: 'player',

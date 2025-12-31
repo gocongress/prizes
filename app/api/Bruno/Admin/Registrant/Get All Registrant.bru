@@ -1,0 +1,21 @@
+meta {
+  name: Get All Registrant
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/registrants?orderBy=createdAt&pageSize=100&orderDirection=asc
+  body: none
+  auth: bearer
+}
+
+params:query {
+  orderBy: createdAt
+  pageSize: 100
+  orderDirection: asc
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -3,7 +3,8 @@ import * as AwardPreference from '@/handlers/api/admin/awardPreference';
 import * as Event from '@/handlers/api/admin/event';
 import * as Player from '@/handlers/api/admin/player';
 import * as Prize from '@/handlers/api/admin/prize';
+import * as Registrant from '@/handlers/api/admin/registrant';
 import * as Result from '@/handlers/api/admin/result';
 import * as User from '@/handlers/api/admin/user';
 
-export { Award, AwardPreference, Event, Player, Prize, Result, User };
+export { Award, AwardPreference, Event, Player, Prize, Registrant, Result, User };
