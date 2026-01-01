@@ -5,7 +5,7 @@ import {
   ReferenceInput,
   SimpleForm,
   TextInput,
-  required
+  required,
 } from 'react-admin';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

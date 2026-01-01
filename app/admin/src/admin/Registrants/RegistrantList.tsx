@@ -6,7 +6,7 @@ import {
   ExportButton,
   List,
   ReferenceField,
-  TopToolbar
+  TopToolbar,
 } from 'react-admin';
 
 const RegistrantListActions = () => (

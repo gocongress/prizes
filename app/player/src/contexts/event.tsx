@@ -20,10 +20,7 @@ export function EventProvider({ children }: EventProviderProps) {
   const [selectedEvent, setSelectedEvent] = useState<PlayerEvent | null>(null);
 
   // Get available events from the selected player
-  const availableEvents = useMemo(
-    () => selectedPlayer?.events || [],
-    [selectedPlayer?.events],
-  );
+  const availableEvents = useMemo(() => selectedPlayer?.events || [], [selectedPlayer?.events]);
 
   // Auto-select the first event if there's only one
   useEffect(() => {

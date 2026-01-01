@@ -94,6 +94,7 @@ export interface SaveAwardPreferenceItem {
 }
 
 export interface SaveAwardPreferencesRequest {
+  eventId: string;
   items: SaveAwardPreferenceItem[];
 }
 

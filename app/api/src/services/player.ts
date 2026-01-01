@@ -92,7 +92,8 @@ export const deletePlayerById = async ({
   const trx = await context.db.transaction();
   try {
     // Delete this players award preferences first
-    await deleteByPlayer(context, trx, input);
+    await deleteByPlayer(context, trx, { playerId: input });
+
     const rows = await deleteById(context, trx, input);
     if (!rows) {
       throw createHttpError(404, 'Player invalid or not found.');

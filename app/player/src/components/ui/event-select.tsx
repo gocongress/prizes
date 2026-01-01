@@ -30,14 +30,18 @@ function EventSelect({ events, selectedEvent, onSelectEvent }: EventSelectProps)
         </div>
         <div className="flex-1">
           <div className="font-medium">{events[0].title}</div>
-          <div className="text-sm text-muted-foreground">{startDate} - {endDate}</div>
+          <div className="text-sm text-muted-foreground">
+            {startDate} - {endDate}
+          </div>
         </div>
       </div>
     );
   }
 
   // Multiple events - show dropdown
-  const selectedStartDate = selectedEvent ? new Date(selectedEvent.startAt).toLocaleDateString() : '';
+  const selectedStartDate = selectedEvent
+    ? new Date(selectedEvent.startAt).toLocaleDateString()
+    : '';
   const selectedEndDate = selectedEvent ? new Date(selectedEvent.endAt).toLocaleDateString() : '';
 
   return (

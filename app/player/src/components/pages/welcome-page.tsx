@@ -79,10 +79,10 @@ function WelcomePage() {
           <div className="mt-12 text-center">
             <Card className="border-primary/20 bg-primary/5">
               <CardContent className="py-8">
-                <h3 className="text-xl font-semibold mb-2">Registered for one of these tournaments?</h3>
-                <p className="text-muted-foreground mb-4">
-                  Log in to set your prize preferences.
-                </p>
+                <h3 className="text-xl font-semibold mb-2">
+                  Registered for one of these tournaments?
+                </h3>
+                <p className="text-muted-foreground mb-4">Log in to set your prize preferences.</p>
                 <Button asChild size="lg">
                   <Link to="/login">
                     <LogIn />

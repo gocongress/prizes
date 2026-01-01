@@ -3,6 +3,7 @@ import {
   create,
   deleteById,
   deleteByPlayer,
+  deleteByPlayerAndEvent,
   getAll,
   getById,
   updateById,
@@ -130,15 +131,18 @@ export const getAwardPreferencesByPlayer = async (args: {
   }
 };
 
-export const syncAwardPreferencesByPlayer = async ({
+export const syncAwardPreferences = async ({
   context,
   input,
-}: ServiceParams<{ items: CreateAwardPreference[] }>) => {
-  if (!input || !Array.isArray(input.items) || input.items.length === 0) {
+}: ServiceParams<{ eventId: string; items: CreateAwardPreference[] }>) => {
+  if (!input || !Array.isArray(input.items) || input.items.length === 0 || !input.eventId) {
     throw new Error('Create award preference input is missing or invalid.');
   }
 
-  await deleteAwardPreferencesByPlayer({ context, input: input.items[0].playerId });
+  await deleteAwardPreferences({
+    context,
+    input: { playerId: input.items[0].playerId, eventId: input.eventId },
+  });
 
   const trx = await context.db.transaction();
   try {
@@ -166,17 +170,25 @@ export const syncAwardPreferencesByPlayer = async ({
   }
 };
 
-export const deleteAwardPreferencesByPlayer = async ({
+export const deleteAwardPreferences = async ({
   context,
   input,
-}: ServiceParams<string>): Promise<number> => {
+}: ServiceParams<{ playerId: string; eventId?: string }>): Promise<number> => {
   if (!input) {
     throw new Error('Player ID is missing.');
   }
 
   const trx = await context.db.transaction();
   try {
-    const deleted = await deleteByPlayer(context, trx, input);
+    let deleted: number;
+    if (input.eventId) {
+      deleted = await deleteByPlayerAndEvent(context, trx, {
+        playerId: input.playerId,
+        eventId: input.eventId,
+      });
+    } else {
+      deleted = await deleteByPlayer(context, trx, { playerId: input.playerId });
+    }
     await trx.commit();
     return deleted;
   } catch (error) {
