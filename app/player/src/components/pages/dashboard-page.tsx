@@ -41,6 +41,13 @@ export function DashboardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Auto-select event if there's only one available
+  useEffect(() => {
+    if (availableEvents.length === 1 && !selectedEvent) {
+      setSelectedEvent(availableEvents[0]);
+    }
+  }, [availableEvents, selectedEvent, setSelectedEvent]);
+
   // Create a preference map for easy lookup
   const preferenceMap = useMemo(() => {
     if (awardPreferences.length > 0) {
