@@ -22,24 +22,28 @@ export function EventProvider({ children }: EventProviderProps) {
   // Get available events from the selected player
   const availableEvents = useMemo(() => selectedPlayer?.events || [], [selectedPlayer?.events]);
 
-  // Auto-select the first event if there's only one
+  // Handle event selection logic when available events or player changes
   useEffect(() => {
-    if (availableEvents.length === 1 && !selectedEvent) {
+    // Auto-select the first event if there's only one
+    if (availableEvents.length === 1) {
       setSelectedEvent(availableEvents[0]);
+      return;
     }
-  }, [availableEvents, selectedEvent]);
 
-  // Clear selection if the selected event is no longer in the list
-  useEffect(() => {
-    if (selectedEvent && !availableEvents.find((e) => e.id === selectedEvent.id)) {
+    // Clear selection if no events available
+    if (availableEvents.length === 0) {
       setSelectedEvent(null);
+      return;
     }
-  }, [availableEvents, selectedEvent]);
 
-  // Clear selection when player changes
-  useEffect(() => {
-    setSelectedEvent(null);
-  }, [selectedPlayer?.id]);
+    // Clear selection if the selected event is no longer in the list
+    setSelectedEvent((current) => {
+      if (current && !availableEvents.find((e) => e.id === current.id)) {
+        return null;
+      }
+      return current;
+    });
+  }, [availableEvents, selectedPlayer?.id]);
 
   const value: EventContextValue = {
     selectedEvent,

@@ -49,7 +49,9 @@ export function MyPrizesPage() {
           <Trophy className="w-16 h-16 mx-auto opacity-50" />
           <div>
             <h3 className="font-semibold text-lg">No prizes yet</h3>
-            <p className="text-sm">You haven't won any prizes yet. Keep playing!</p>
+            <p className="text-sm">
+              {selectedPlayer.name} hasn't won any prizes yet. Keep playing!
+            </p>
           </div>
         </div>
       </div>

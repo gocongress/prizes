@@ -68,6 +68,7 @@ const userWithPlayersQuery = (context: Context) => {
                 WHERE ${REGISTRANT_TABLE_NAME}.player_id = ${PLAYER_TABLE_NAME}.id
                   AND ${REGISTRANT_TABLE_NAME}.deleted_at IS NULL
                   AND ${EVENT_TABLE_NAME}.deleted_at IS NULL
+                  AND ${EVENT_TABLE_NAME}.end_at >= CURRENT_DATE
                 ),
                 '[]'::json
               )

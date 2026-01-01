@@ -21,7 +21,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { ArrowDownAZ, Star, UserCircle2 } from 'lucide-react';
+import { ArrowDownAZ, Calendar, Star, UserCircle2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 
@@ -40,13 +40,6 @@ export function DashboardPage() {
     setBreadcrumbs([{ title: 'Dashboard', href: '/dashboard' }]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Auto-select event if there's only one available
-  useEffect(() => {
-    if (availableEvents.length === 1 && !selectedEvent) {
-      setSelectedEvent(availableEvents[0]);
-    }
-  }, [availableEvents, selectedEvent, setSelectedEvent]);
 
   // Create a preference map for easy lookup
   const preferenceMap = useMemo(() => {
@@ -229,6 +222,19 @@ export function DashboardPage() {
               selectedEvent={selectedEvent}
               onSelectEvent={setSelectedEvent}
             />
+          </div>
+        )}
+
+        {/* No Events Available Message */}
+        {selectedPlayer && availableEvents.length === 0 && (
+          <div className="text-center text-muted-foreground space-y-4">
+            <Calendar className="h-16 w-16 mx-auto opacity-50" />
+            <div>
+              <h3 className="font-semibold text-lg">No events found</h3>
+              <p className="text-sm">
+                {selectedPlayer.name} isn't a registered player in any events.
+              </p>
+            </div>
           </div>
         )}
 
