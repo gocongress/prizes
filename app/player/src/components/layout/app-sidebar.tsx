@@ -1,6 +1,6 @@
 'use client';
 
-import { Gem, LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, Medal } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/layout/nav-main';
@@ -26,7 +26,7 @@ const data = {
     {
       title: 'My Prizes',
       url: '/my-prizes',
-      icon: Gem,
+      icon: Medal,
       isActive: true,
     },
   ],

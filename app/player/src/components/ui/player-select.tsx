@@ -33,7 +33,7 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
         {hasMultiplePlayers ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-800 rounded-lg p-4 flex items-center gap-3 hover:border-primary/50 hover:shadow-md transition-all">
+              <button className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-800 rounded-lg p-4 flex items-center gap-3 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <UserCircle2 className="h-6 w-6 text-primary" />
                 </div>
@@ -98,7 +98,7 @@ function PlayerSelect({ variant = 'sidebar' }: PlayerSelectProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground`}
+                  className={`cursor-pointer data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground`}
                 >
                   <div className="h-8 w-8 rounded-lg flex items-center justify-center">
                     <UserCircle2 className="h-4 w-4" />

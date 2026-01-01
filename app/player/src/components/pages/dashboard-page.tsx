@@ -214,15 +214,22 @@ export function DashboardPage() {
     <div className="p-4 sm:p-6 flex flex-col items-center">
       <div className="w-full max-w-[700px]">
         {/* Player Selector */}
-        {!isLoadingPlayers && <PlayerSelect variant="standalone" />}
+        {!isLoadingPlayers && (
+          <div className="md:hidden">
+            <PlayerSelect variant="standalone" />
+          </div>
+        )}
 
         {/* Event Selector - Only show if player has events */}
         {selectedPlayer && availableEvents.length > 0 && (
-          <EventSelect
-            events={availableEvents}
-            selectedEvent={selectedEvent}
-            onSelectEvent={setSelectedEvent}
-          />
+          <div className="md:hidden">
+            <EventSelect
+              variant="standalone"
+              events={availableEvents}
+              selectedEvent={selectedEvent}
+              onSelectEvent={setSelectedEvent}
+            />
+          </div>
         )}
 
         {selectedPlayer && selectedEvent && (

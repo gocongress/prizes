@@ -1,8 +1,9 @@
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { usePlayer } from '@/hooks/use-player';
 import { usePlayerAwards } from '@/hooks/use-player-awards';
-import { ExternalLink, Gem, Trophy } from 'lucide-react';
+import { ExternalLink, Medal, Trophy } from 'lucide-react';
 import { useEffect } from 'react';
 
 export function MyPrizesPage() {
@@ -58,10 +59,10 @@ export function MyPrizesPage() {
   return (
     <div className="p-4 sm:p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">My Prizes</h1>
-        <p className="text-muted-foreground">
-          You have {awards.length} {awards.length === 1 ? 'prize' : 'prizes'}
-        </p>
+        <h1 className="text-2xl font-bold mb-2 flex items-center gap-3">
+          My Prizes
+          <Badge className="bg-blue-500 text-white border-transparent">{awards.length}</Badge>
+        </h1>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -72,7 +73,7 @@ export function MyPrizesPage() {
               <div className="flex-1 flex flex-col">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-xl">
-                    <Gem className="w-5 h-5" />
+                    <Medal className="w-5 h-5" />
                     {award.prize?.title || 'Prize'}
                     {award.prize?.url && (
                       <a
@@ -129,7 +130,7 @@ export function MyPrizesPage() {
             {/* Footer spanning full width */}
             {award.updatedAt && (
               <div className="px-5 pt-3 border-t text-xs text-muted-foreground">
-                Won on {new Date(award.updatedAt).toLocaleDateString()}
+                Awarded on {new Date(award.updatedAt).toLocaleDateString()}
               </div>
             )}
           </Card>
