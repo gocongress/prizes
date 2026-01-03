@@ -17,6 +17,7 @@ export const getAllPrize = (context: Context) =>
   handlerFactory({
     kind: ContextKinds.PRIZE,
     scopes: ScopeKinds.USER,
+    authenticateUser: false,
     context,
     itemSchema: PrizeListUserApiSchema, // Minimized response payload appropriate for non-admin users
   }).build({

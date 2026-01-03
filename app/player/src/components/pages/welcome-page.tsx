@@ -2,11 +2,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEvents } from '@/hooks/use-events';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { Calendar, LogIn } from 'lucide-react';
 
 function WelcomePage() {
   const { events, isLoading } = useEvents();
+  const navigate = useNavigate();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -15,6 +16,10 @@ function WelcomePage() {
       day: 'numeric',
       year: 'numeric',
     });
+  };
+
+  const handleEventClick = (eventId: string) => {
+    navigate({ to: '/event/$id', params: { id: eventId } });
   };
 
   if (isLoading) {
@@ -54,7 +59,11 @@ function WelcomePage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
-              <Card key={event.id} className="flex flex-col">
+              <Card
+                key={event.id}
+                className="flex flex-col cursor-pointer transition-all duration-300 hover:border-blue-500 hover:shadow-xl hover:-translate-y-2"
+                onClick={() => handleEventClick(event.id)}
+              >
                 <CardHeader>
                   <CardTitle>{event.title}</CardTitle>
                   <CardDescription className="flex items-center gap-1.5 text-xs">
@@ -76,9 +85,9 @@ function WelcomePage() {
 
         {/* Call to Action */}
         {events.length > 0 && (
-          <div className="mt-12 text-center">
-            <Card className="border-primary/20 bg-primary/5">
-              <CardContent className="py-8">
+          <div className="mt-12 flex justify-center">
+            <Card className="border-primary/20 bg-primary/5 inline-block">
+              <CardContent className="py-2 px-8 text-center">
                 <h3 className="text-xl font-semibold mb-2">
                   Registered for one of these tournaments?
                 </h3>

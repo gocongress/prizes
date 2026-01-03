@@ -15,6 +15,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/_dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EventIdRouteImport } from './routes/event.$id'
 import { Route as DashboardMyPrizesRouteImport } from './routes/_dashboard/my-prizes'
 import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard'
 
@@ -47,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventIdRoute = EventIdRouteImport.update({
+  id: '/event/$id',
+  path: '/event/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardMyPrizesRoute = DashboardMyPrizesRouteImport.update({
   id: '/my-prizes',
   path: '/my-prizes',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/dashboard': typeof DashboardDashboardRoute
   '/my-prizes': typeof DashboardMyPrizesRoute
+  '/event/$id': typeof EventIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof WelcomeRoute
   '/dashboard': typeof DashboardDashboardRoute
   '/my-prizes': typeof DashboardMyPrizesRoute
+  '/event/$id': typeof EventIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/_dashboard/dashboard': typeof DashboardDashboardRoute
   '/_dashboard/my-prizes': typeof DashboardMyPrizesRoute
+  '/event/$id': typeof EventIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/dashboard'
     | '/my-prizes'
+    | '/event/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/dashboard'
     | '/my-prizes'
+    | '/event/$id'
   id:
     | '__root__'
     | '/'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/_dashboard/dashboard'
     | '/_dashboard/my-prizes'
+    | '/event/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -125,6 +137,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   WelcomeRoute: typeof WelcomeRoute
+  EventIdRoute: typeof EventIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/event/$id': {
+      id: '/event/$id'
+      path: '/event/$id'
+      fullPath: '/event/$id'
+      preLoaderRoute: typeof EventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_dashboard/my-prizes': {
       id: '/_dashboard/my-prizes'
       path: '/my-prizes'
@@ -209,6 +229,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   WelcomeRoute: WelcomeRoute,
+  EventIdRoute: EventIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
