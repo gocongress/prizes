@@ -24,6 +24,7 @@ const asModel = (item: EventDb): EventApi => {
     slug: item.slug,
     description: item.description,
     registrationUrl: item.registration_url,
+    registrationFormId: item.registration_form_id,
     startAt: item.start_at.toISOString(),
     endAt: item.end_at.toISOString(),
     createdAt: item.created_at.toISOString(),
@@ -105,6 +106,26 @@ export const getBySlug = async (context: Context, slug: EventApi['slug']): Promi
   return asModel(rows[0]);
 };
 
+export const getByFormId = async (
+  context: Context,
+  formId: EventApi['registrationFormId'],
+): Promise<EventApi> => {
+  if (!formId) {
+    throw createHttpError(400, `Event registration form ID is required.`);
+  }
+
+  const rows = await context
+    .db<EventDb>(TABLE_NAME)
+    .where({ registration_form_id: formId, deleted_at: null })
+    .returning<EventDb[]>('*');
+
+  if (!rows.length) {
+    throw createHttpError(404, `Event with registration form ID ${formId} not found.`);
+  }
+
+  return asModel(rows[0]);
+};
+
 export const create = async (
   _context: Context,
   trx: Knex.Transaction,
@@ -117,6 +138,7 @@ export const create = async (
       slug: input.slug,
       description: input.description ?? undefined,
       registration_url: input.registrationUrl ?? undefined,
+      registration_form_id: input.registrationFormId ?? undefined,
       start_at: new Date(input.startAt!),
       end_at: new Date(input.endAt!),
       created_at: new Date(),
@@ -137,7 +159,7 @@ export const updateById = async (
   input: Partial<UpdateEvent>,
 ): Promise<EventApi> => {
   const event = await getById(context, id);
-  const { title, description, registrationUrl, startAt, endAt } = input;
+  const { title, description, registrationUrl, registrationFormId, startAt, endAt } = input;
 
   const rows = await trx<EventDb>(TABLE_NAME)
     .where({ id })
@@ -145,6 +167,7 @@ export const updateById = async (
       title: title ?? event.title,
       description,
       registration_url: registrationUrl ?? event.registrationUrl,
+      registration_form_id: registrationFormId ?? event.registrationFormId,
       start_at: new Date(startAt ?? event.startAt),
       end_at: new Date(endAt ?? event.endAt),
       updated_at: new Date(),

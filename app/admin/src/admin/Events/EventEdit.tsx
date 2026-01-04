@@ -47,7 +47,14 @@ const EventEdit = () => {
         <TextInput disabled label="Id" source="id" sx={{ display: 'none' }} />
         <TextInput disabled label="Event Id" source="slug" />
         <TextInput source="title" validate={required()} />
-        <TextInput source="registrationUrl" />
+        <TextInput
+          source="registrationUrl"
+          helperText="The public URL where users can register for this event."
+        />
+        <TextInput
+          source="registrationFormId"
+          helperText="If this event is using RegFox, use the Page ID (found in the RegFox Registration Page editor address bar) so that automation can create and link new players to this event when a registration is posted to our server. "
+        />
         <TextInput source="description" />
         <DateTimeInput source="startAt" validate={required()} />
         <DateTimeInput source="endAt" validate={required()} />

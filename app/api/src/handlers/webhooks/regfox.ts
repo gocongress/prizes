@@ -1,5 +1,6 @@
 import { sendSupportEmail } from '@/lib/email';
 import { convertStringRankToNumber } from '@/lib/player';
+import { getByFormId } from '@/models/event';
 import {
   type AgaField,
   type EmailField,
@@ -10,6 +11,7 @@ import {
   type RegistrantDetails,
 } from '@/schemas/regfox';
 import { createPlayer } from '@/services/player';
+import { createRegistrant } from '@/services/registrant';
 import { createUser } from '@/services/user';
 import type { Context } from '@/types';
 import rateLimit from 'express-rate-limit';
@@ -114,7 +116,7 @@ const handler = (context: Context) =>
             // Convert playing rank to integer
             const rank = convertStringRankToNumber(registrant.playingRank);
 
-            // Create player
+            // Create player (or get existing player)
             const player = await createPlayer({
               context,
               input: {
@@ -127,8 +129,27 @@ const handler = (context: Context) =>
 
             context.logger.info(
               { playerId: player.id, agaId: registrant.aga, userId: user.id },
-              'Player created successfully',
+              'Player created or retrieved',
             );
+
+            // Find the event to register the player as a registrant
+            if (input.formId) {
+              const event = await getByFormId(context, input.formId.toString());
+
+              context.logger.info(
+                { eventId: event.id, formId: input.data.formId },
+                'Event retrieved by form ID',
+              );
+
+              await createRegistrant({
+                context,
+                input: {
+                  eventId: event.id,
+                  playerId: player.id,
+                  registrationDate: new Date().toISOString(),
+                },
+              });
+            }
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             context.logger.error(

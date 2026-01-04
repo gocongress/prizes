@@ -1,5 +1,5 @@
 import { deleteByPlayer } from '@/models/awardPreference';
-import { create, deleteById, getAll, getById, updateById } from '@/models/player';
+import { create, deleteById, getAll, getByAgaId, getById, updateById } from '@/models/player';
 import {
   type CreatePlayer,
   type PlayerApi,
@@ -39,7 +39,7 @@ export const createPlayer = async ({
   } catch (error) {
     await trx.rollback();
     if ((error as Error).message.includes('players_lower_aga_id_unique')) {
-      throw createHttpError(400, `Player with AGA ID ${input.agaId} already exists.`);
+      return getByAgaId(context, input.agaId) as Promise<PlayerApi>;
     }
     throw error;
   }
