@@ -5,6 +5,7 @@ export const EventQueryFields = {
   title: 'title',
   slug: 'slug',
   description: 'description',
+  registrationUrl: 'registration_url',
   startAt: 'start_at',
   endAt: 'end_at',
   createdAt: 'created_at',
@@ -26,6 +27,7 @@ export const EventDbSchema = z.object({
       'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)',
     ),
   description: z.string().nullish().optional(),
+  registration_url: z.url().nullish().optional(),
   start_at: z.date(),
   end_at: z.date(),
   created_at: z.date(),
@@ -47,6 +49,7 @@ export const EventApiSchema = z.object({
     )
     .example('us-go-congress-2025'),
   description: z.string().trim().nullish().optional(),
+  registrationUrl: z.url().nullish().optional(),
   startAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
   endAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
   createdAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
@@ -86,6 +89,7 @@ export const EventCreateSchema = z.object({
     )
     .example('us-go-congress-2025'),
   description: z.string().trim().nullish().optional(),
+  registrationUrl: z.url().nullish().optional(),
   startAt: z.iso.date().or(z.iso.datetime()).example('2025-01-01'),
   endAt: z.iso.date().or(z.iso.datetime()).example('2025-01-01'),
 });
@@ -94,6 +98,7 @@ export const EventCreateSchema = z.object({
 export const EventUpdateSchema = EventCreateSchema.pick({
   title: true,
   description: true,
+  registrationUrl: true,
   startAt: true,
   endAt: true,
 });

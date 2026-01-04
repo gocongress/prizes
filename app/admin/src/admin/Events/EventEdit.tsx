@@ -39,7 +39,7 @@ const EventEdit = () => {
   };
 
   return (
-    <Edit transform={transform}>
+    <Edit transform={transform} redirect="list" mutationMode="pessimistic">
       <SimpleForm toolbar={<EventEditToolbar />} warnWhenUnsavedChanges>
         <Labeled label="Id">
           <TextField source="id" />
@@ -47,6 +47,7 @@ const EventEdit = () => {
         <TextInput disabled label="Id" source="id" sx={{ display: 'none' }} />
         <TextInput disabled label="Event Id" source="slug" />
         <TextInput source="title" validate={required()} />
+        <TextInput source="registrationUrl" />
         <TextInput source="description" />
         <DateTimeInput source="startAt" validate={required()} />
         <DateTimeInput source="endAt" validate={required()} />

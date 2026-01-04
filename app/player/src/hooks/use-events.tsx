@@ -7,6 +7,7 @@ export interface Event {
   title: string;
   slug: string;
   description?: string | null;
+  registrationUrl?: string | null;
   startAt: string;
   endAt: string;
   createdAt: string;

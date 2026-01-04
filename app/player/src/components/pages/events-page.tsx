@@ -5,7 +5,7 @@ import type { BreadcrumbItem } from '@/contexts/breadcrumb';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvents } from '@/hooks/use-events';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
-import { Calendar, LogIn } from 'lucide-react';
+import { Calendar, ExternalLink, LogIn } from 'lucide-react';
 import { useEffect } from 'react';
 
 export interface BreadcrumbSegment {
@@ -101,9 +101,23 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
               >
                 <CardHeader>
                   <CardTitle>{event.title}</CardTitle>
-                  <CardDescription className="flex items-center gap-1.5 text-xs">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {formatDate(event.startAt)} - {formatDate(event.endAt)}
+                  <CardDescription className="flex flex-col gap-1.5 text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {formatDate(event.startAt)} - {formatDate(event.endAt)}
+                    </div>
+                    {event.registrationUrl && (
+                      <a
+                        href={event.registrationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-800 hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        Register for this event
+                      </a>
+                    )}
                   </CardDescription>
                 </CardHeader>
                 {event.description && (

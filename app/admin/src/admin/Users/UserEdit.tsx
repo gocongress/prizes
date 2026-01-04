@@ -74,7 +74,7 @@ const UserEdit = () => {
   };
 
   return (
-    <Edit transform={transform}>
+    <Edit transform={transform} mutationMode="pessimistic">
       <SimpleForm toolbar={<UserEditToolbar />}>
         <Labeled label="Id">
           <TextField source="id" />

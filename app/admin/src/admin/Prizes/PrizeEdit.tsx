@@ -37,7 +37,7 @@ const EditImage = () => {
 
 const PrizeEdit = () => {
   return (
-    <Edit transform={transform} redirect="edit">
+    <Edit transform={transform} redirect="edit" mutationMode="pessimistic">
       <SimpleForm toolbar={<PrizeEditToolbar />} warnWhenUnsavedChanges>
         <Labeled label="Id">
           <TextField source="id" />

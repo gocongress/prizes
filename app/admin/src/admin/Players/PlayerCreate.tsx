@@ -9,7 +9,7 @@ import {
 } from 'react-admin';
 
 const PlayerCreate = () => (
-  <Create redirect="create">
+  <Create redirect="create" mutationMode="pessimistic">
     <SimpleForm>
       <ReferenceInput source="userId" reference="users">
         <AutocompleteInput validate={required()} />

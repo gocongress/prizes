@@ -23,6 +23,7 @@ const asModel = (item: EventDb): EventApi => {
     title: item.title,
     slug: item.slug,
     description: item.description,
+    registrationUrl: item.registration_url,
     startAt: item.start_at.toISOString(),
     endAt: item.end_at.toISOString(),
     createdAt: item.created_at.toISOString(),
@@ -115,6 +116,7 @@ export const create = async (
       title: input.title,
       slug: input.slug,
       description: input.description ?? undefined,
+      registration_url: input.registrationUrl ?? undefined,
       start_at: new Date(input.startAt!),
       end_at: new Date(input.endAt!),
       created_at: new Date(),
@@ -135,13 +137,14 @@ export const updateById = async (
   input: Partial<UpdateEvent>,
 ): Promise<EventApi> => {
   const event = await getById(context, id);
-  const { title, description, startAt, endAt } = input;
+  const { title, description, registrationUrl, startAt, endAt } = input;
 
   const rows = await trx<EventDb>(TABLE_NAME)
     .where({ id })
     .update({
       title: title ?? event.title,
       description,
+      registration_url: registrationUrl ?? event.registrationUrl,
       start_at: new Date(startAt ?? event.startAt),
       end_at: new Date(endAt ?? event.endAt),
       updated_at: new Date(),
