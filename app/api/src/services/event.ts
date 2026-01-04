@@ -1,4 +1,4 @@
-import { create, deleteById, getAll, getById, updateById } from '@/models/event';
+import { create, deleteById, getAll, getById, getBySlug, updateById } from '@/models/event';
 import {
   type CreateEvent,
   type EventApi,
@@ -44,6 +44,18 @@ export const getEventById = async ({
     throw new Error('Event ID is missing.');
   }
   const event = await getById(context, input);
+
+  return event;
+};
+
+export const getEventBySlug = async ({
+  context,
+  input,
+}: ServiceParams<EventApi['slug']>): Promise<EventApi> => {
+  if (!input) {
+    throw new Error('Event slug is missing.');
+  }
+  const event = await getBySlug(context, input);
 
   return event;
 };

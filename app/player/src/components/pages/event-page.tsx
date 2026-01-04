@@ -1,25 +1,25 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEventById } from '@/hooks/use-event-by-id';
+import { useEventBySlug } from '@/hooks/use-event-by-slug';
 import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
 import { useParams } from '@tanstack/react-router';
 import { CalendarDays, ExternalLink, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 export function EventPage() {
-  const { id } = useParams({ from: '/event/$id' });
+  const { slug } = useParams({ from: '/event/$slug' });
   const {
     event,
     isLoading: eventLoading,
     isError: eventError,
     error: eventErrorMsg,
-  } = useEventById(id);
+  } = useEventBySlug(slug);
   const {
     prizes,
     isLoading: prizesLoading,
     isError: prizesError,
     error: prizesErrorMsg,
-  } = usePrizesByEvent(id);
+  } = usePrizesByEvent(event?.id);
   const [touchedCard, setTouchedCard] = useState<string | null>(null);
 
   const availablePrizes = useMemo(() => {

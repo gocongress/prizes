@@ -20,6 +20,7 @@ const EventList = () => (
   <List actions={<EventListActions />}>
     <DataTable hiddenColumns={['id', 'createdAt', 'updatedAt']}>
       <DataTable.Col source="id" />
+      <DataTable.Col label="Event Id" source="slug" />
       <DataTable.Col source="title" />
       <DataTable.Col source="description" />
       <DataTable.Col source="startAt" field={DateField} />
