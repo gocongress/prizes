@@ -189,7 +189,7 @@ export const useAuth = () => {
       toast.success('Logged out successfully', {
         description: 'See you next time!',
       });
-      window.location.replace('/login');
+      window.location.replace('/');
     },
     onError: (error) => {
       toast.error('Logout failed', {

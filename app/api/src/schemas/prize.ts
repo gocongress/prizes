@@ -174,6 +174,7 @@ export const PrizeQuerySchema = z.object({
   orderBy: z.enum(PrizeQueryKeys).default('createdAt'),
   orderDirection: z.enum(['asc', 'desc']).default('asc'),
   q: z.string().optional().describe('Filter results.'),
+  eventId: z.guid().optional().describe('Filter prizes by associated event ID.'),
 });
 
 export type PrizeDb = z.infer<typeof PrizeDbSchema>;

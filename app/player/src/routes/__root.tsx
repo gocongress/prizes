@@ -53,8 +53,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     } catch {
       throw redirect({
         to: '/welcome',
-        search: { redirect: location.href },
-        replace: true,
       });
     }
   },
