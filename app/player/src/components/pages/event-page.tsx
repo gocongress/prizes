@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEventById } from '@/hooks/use-event-by-id';
 import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
 import { useParams } from '@tanstack/react-router';
@@ -77,9 +77,17 @@ export function EventPage() {
 
           {/* Prize Grid */}
           {prizes.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex flex-wrap justify-center gap-6">
               {prizes.map((prize) => (
-                <Card key={prize.id} className="group cursor-pointer hover:shadow-xl hover:border-blue-500 hover:-translate-y-2 transition-all duration-500 ease-in-out flex flex-col max-h-48 hover:max-h-[1000px] max-w-60 overflow-hidden pt-0 pb-6 gap-0">
+                <Card
+                  key={prize.id}
+                  className="group cursor-pointer hover:shadow-xl hover:border-blue-500 hover:-translate-y-2 transition-all duration-500 ease-in-out flex flex-col max-h-48 hover:max-h-[1000px] w-50 overflow-hidden pt-0 pb-6 gap-0 rounded-md"
+                  onClick={() => {
+                    if (prize.url) {
+                      window.open(prize.url, '_blank', 'noopener,noreferrer');
+                    }
+                  }}
+                >
                   {/* Prize Image */}
                   {prize.imageThumbnailEncoded ? (
                     <div className="w-full h-24 group-hover:h-64 overflow-hidden bg-muted flex items-center justify-center flex-shrink-0 transition-all duration-500 ease-in-out">
@@ -91,33 +99,20 @@ export function EventPage() {
                     </div>
                   ) : (
                     <div className="w-full h-24 overflow-hidden bg-muted flex items-center justify-center flex-shrink-0">
-                      <Trophy className="w-16 h-16 text-muted-foreground/30" />
+                      <Trophy className="w-16 h-16 text-gray-300" />
                     </div>
                   )}
 
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center justify-between gap-2 min-h-[3rem]">
-                      <span className="line-clamp-2">{prize.title}</span>
+                  <CardHeader className="px-3 gap-0">
+                    <CardTitle className="flex items-center justify-between min-h-[3rem]">
+                      <span className="line-clamp-2 text-sm font-semibold">{prize.title}</span>
                       {prize.url && (
-                        <a
-                          href={prize.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm text-primary hover:underline flex-shrink-0"
-                          aria-label={`Visit ${prize.title} link`}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
+                        <ExternalLink className="w-4 h-4 text-muted-foreground/60 flex-shrink-0" />
                       )}
                     </CardTitle>
-                    {prize.recommendedRank && prize.recommendedRank !== 'ALL' && (
-                      <CardDescription className="text-xs">
-                        Recommended for: {prize.recommendedRank}
-                      </CardDescription>
-                    )}
                   </CardHeader>
 
-                  <CardContent className="flex-1 flex flex-col justify-between pt-0">
+                  <CardContent className="flex-1 flex flex-col justify-between pt-0 px-3">
                     <div>
                       {prize.description && (
                         <p className="text-sm text-muted-foreground">
