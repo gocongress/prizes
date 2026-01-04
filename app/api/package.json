@@ -13,6 +13,7 @@
     "knex": "NODE_OPTIONS='--import tsx' knex --knexfile ./src/db/knexfile.ts"
   },
   "dependencies": {
+    "cacheable": "^2.3.1",
     "compression": "1.8.1",
     "cookie-parser": "1.4.7",
     "express": "5.1.0",

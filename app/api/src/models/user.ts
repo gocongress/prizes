@@ -1,6 +1,9 @@
 import { randomID } from '@/lib/crypto';
 import { getQueryParams } from '@/lib/handlers';
+import { TABLE_NAME as EVENT_TABLE_NAME } from '@/models/event';
 import { TABLE_NAME as PLAYER_TABLE_NAME } from '@/models/player';
+import { TABLE_NAME as REGISTRANT_TABLE_NAME } from '@/models/registrant';
+import type { EventApi, EventDb } from '@/schemas/event';
 import type { PlayerApi, PlayerDb } from '@/schemas/player';
 import {
   UserQueryFields,
@@ -18,8 +21,12 @@ import { randomUUID } from 'node:crypto';
 
 export const TABLE_NAME = 'users';
 
+type PlayerWithEvents = PlayerDb & {
+  events?: EventDb[];
+};
+
 type UserWithPlayers = UserDb & {
-  players?: PlayerDb[];
+  players?: PlayerWithEvents[];
 };
 
 /**
@@ -42,7 +49,29 @@ const userWithPlayersQuery = (context: Context) => {
               'aga_id',     ${PLAYER_TABLE_NAME}.aga_id,
               'created_at', ${PLAYER_TABLE_NAME}.created_at,
               'deleted_at', ${PLAYER_TABLE_NAME}.deleted_at,
-              'updated_at', ${PLAYER_TABLE_NAME}.updated_at
+              'updated_at', ${PLAYER_TABLE_NAME}.updated_at,
+              'events',     COALESCE(
+                (SELECT json_agg(
+                  json_build_object(
+                    'id',          ${EVENT_TABLE_NAME}.id,
+                    'title',       ${EVENT_TABLE_NAME}.title,
+                    'description', ${EVENT_TABLE_NAME}.description,
+                    'start_at',    ${EVENT_TABLE_NAME}.start_at,
+                    'end_at',      ${EVENT_TABLE_NAME}.end_at,
+                    'created_at',  ${EVENT_TABLE_NAME}.created_at,
+                    'deleted_at',  ${EVENT_TABLE_NAME}.deleted_at,
+                    'updated_at',  ${EVENT_TABLE_NAME}.updated_at
+                  )
+                )
+                FROM ${REGISTRANT_TABLE_NAME}
+                JOIN ${EVENT_TABLE_NAME} ON ${EVENT_TABLE_NAME}.id = ${REGISTRANT_TABLE_NAME}.event_id
+                WHERE ${REGISTRANT_TABLE_NAME}.player_id = ${PLAYER_TABLE_NAME}.id
+                  AND ${REGISTRANT_TABLE_NAME}.deleted_at IS NULL
+                  AND ${EVENT_TABLE_NAME}.deleted_at IS NULL
+                  AND ${EVENT_TABLE_NAME}.end_at >= CURRENT_DATE
+                ),
+                '[]'::json
+              )
             ) ORDER BY ${PLAYER_TABLE_NAME}.rank DESC
           ) FILTER (WHERE ${PLAYER_TABLE_NAME}.id IS NOT NULL), '[]'::json
         ) as "players"
@@ -83,6 +112,20 @@ const asModel = (item: UserWithPlayers): UserApi => {
           createdAt: new Date(p.created_at).toISOString(),
           deletedAt: p.deleted_at ? new Date(p.deleted_at).toISOString() : undefined,
           updatedAt: p.updated_at ? new Date(p.updated_at).toISOString() : undefined,
+          events: p.events?.map(
+            (e) =>
+              ({
+                id: e.id,
+                kind: ContextKinds.EVENT,
+                title: e.title,
+                description: e.description,
+                startAt: new Date(e.start_at).toISOString(),
+                endAt: new Date(e.end_at).toISOString(),
+                createdAt: new Date(e.created_at).toISOString(),
+                deletedAt: e.deleted_at ? new Date(e.deleted_at).toISOString() : undefined,
+                updatedAt: e.updated_at ? new Date(e.updated_at).toISOString() : undefined,
+              }) satisfies EventApi,
+          ),
         }) satisfies PlayerApi,
     ),
   };

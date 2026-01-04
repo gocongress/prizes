@@ -1,7 +1,9 @@
 import SortablePrizeItem from '@/components//ui/sortable-prize-item';
+import EventSelect from '@/components/ui/event-select';
 import PlayerSelect from '@/components/ui/player-select';
 import { useAwardPreferences, useSaveAwardPreferences } from '@/hooks/use-award-preferences';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
+import { useEvent } from '@/hooks/use-event';
 import { usePlayer } from '@/hooks/use-player';
 import { usePrizes, type PrizeAwardCombination } from '@/hooks/use-prizes';
 import {
@@ -19,7 +21,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { ArrowDownAZ, Star, UserCircle2 } from 'lucide-react';
+import { ArrowDownAZ, Calendar, Star, UserCircle2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 
@@ -27,6 +29,7 @@ export function DashboardPage() {
   const { setBreadcrumbs } = useBreadcrumb();
   const { prizes, isLoading: isLoadingPrizes } = usePrizes();
   const { selectedPlayer, isLoading: isLoadingPlayers } = usePlayer();
+  const { selectedEvent, setSelectedEvent, availableEvents } = useEvent();
   const { awardPreferences, isLoading: isLoadingAwardPreferences } = useAwardPreferences(
     selectedPlayer?.id,
   );
@@ -55,7 +58,15 @@ export function DashboardPage() {
   const initialCombinations = useMemo(() => {
     const combinations: PrizeAwardCombination[] = [];
 
-    prizes.forEach((prize) => {
+    // Only show prizes if both player and event are selected
+    if (!selectedPlayer || !selectedEvent) {
+      return combinations;
+    }
+
+    // Filter prizes to only those matching the selected event
+    const eventPrizes = prizes.filter((prize) => prize.eventId === selectedEvent.id);
+
+    eventPrizes.forEach((prize) => {
       if (prize.awards && prize.awards.length > 0) {
         // Get unique award values for this prize, but only for available awards
         const uniqueValues = new Set(
@@ -74,14 +85,6 @@ export function DashboardPage() {
               prize,
             });
           }
-        });
-      } else {
-        // If no awards, still show the prize with value 0
-        combinations.push({
-          id: `${prize.id}-0`,
-          prizeId: prize.id,
-          awardValue: 0,
-          prize,
         });
       }
     });
@@ -108,7 +111,7 @@ export function DashboardPage() {
     }
 
     return combinations;
-  }, [prizes, preferenceMap]);
+  }, [prizes, preferenceMap, selectedPlayer, selectedEvent]);
 
   const [prizeAwardCombinations, setPrizeAwardCombinations] = useState<PrizeAwardCombination[]>([]);
 
@@ -126,10 +129,12 @@ export function DashboardPage() {
 
   // Function to save the current order of preferences with debouncing
   const savePreferencesOrder = (orderedCombinations: PrizeAwardCombination[]) => {
-    if (!selectedPlayer) return;
+    if (!selectedPlayer || !selectedEvent) return;
 
     // Filter out combinations without awardId (prizes with no awards)
-    const validCombinations = orderedCombinations.filter((c) => c.awardId);
+    const validCombinations = orderedCombinations
+      .filter((c) => c.awardId)
+      .filter((c) => c.prize.eventId === selectedEvent.id);
 
     if (validCombinations.length === 0) return;
 
@@ -141,6 +146,7 @@ export function DashboardPage() {
     // Debounce the save to avoid rapid API calls
     saveTimeoutRef.current = setTimeout(() => {
       saveAwardPreferences({
+        eventId: selectedEvent.id,
         items: validCombinations.map((combination, index) => ({
           playerId: selectedPlayer.id,
           awardId: combination.awardId!,
@@ -201,9 +207,38 @@ export function DashboardPage() {
     <div className="p-4 sm:p-6 flex flex-col items-center">
       <div className="w-full max-w-[700px]">
         {/* Player Selector */}
-        {!isLoadingPlayers && <PlayerSelect variant="standalone" />}
+        {!isLoadingPlayers && (
+          <div className="md:hidden">
+            <PlayerSelect variant="standalone" />
+          </div>
+        )}
 
-        {selectedPlayer && (
+        {/* Event Selector - Only show if player has events */}
+        {selectedPlayer && availableEvents.length > 0 && (
+          <div className="md:hidden">
+            <EventSelect
+              variant="standalone"
+              events={availableEvents}
+              selectedEvent={selectedEvent}
+              onSelectEvent={setSelectedEvent}
+            />
+          </div>
+        )}
+
+        {/* No Events Available Message */}
+        {selectedPlayer && availableEvents.length === 0 && (
+          <div className="text-center text-muted-foreground space-y-4">
+            <Calendar className="h-16 w-16 mx-auto opacity-50" />
+            <div>
+              <h3 className="font-semibold text-lg">No events found</h3>
+              <p className="text-sm">
+                {selectedPlayer.name} isn't a registered player in any events.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {selectedPlayer && selectedEvent && (
           <div className="mb-6">
             <h1 className="text-2xl font-bold mb-1">Available Prizes</h1>
             <p className="text-sm text-muted-foreground">
@@ -224,8 +259,19 @@ export function DashboardPage() {
           </div>
         )}
 
-        {/* Prize List - Only show if player is selected */}
-        {selectedPlayer && (
+        {/* No Event Selected Message */}
+        {selectedPlayer && !selectedEvent && availableEvents.length > 0 && (
+          <div className="text-center py-12">
+            <UserCircle2 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Event Selected</h3>
+            <p className="text-muted-foreground">
+              Please select an event above to view available prizes
+            </p>
+          </div>
+        )}
+
+        {/* Prize List - Only show if player and event are selected */}
+        {selectedPlayer && selectedEvent && (
           <>
             {prizeAwardCombinations.length === 0 ? (
               <div className="text-center text-muted-foreground py-8">No prizes available</div>

@@ -88,6 +88,7 @@ const asModel = (item: PrizeWithAwards): PrizeApi => {
     description: item.description,
     url: item.url,
     contact: item.contact,
+    sponsor: item.sponsor,
     recommendedRank: item.recommended_rank,
     eventId: item.event_id,
     eventTitle: item.eventTitle,
@@ -189,6 +190,7 @@ export const create = async (
       description: input.description ?? undefined,
       url: input.url ?? undefined,
       contact: input.contact ?? undefined,
+      sponsor: input.sponsor ?? undefined,
       recommended_rank: input.recommendedRank,
       event_id: input.eventId ?? undefined,
       image,
@@ -220,14 +222,24 @@ export const updateById = async (
   input: Partial<UpdatePrize>,
 ): Promise<PrizeApi> => {
   const prize = await getById(context, id);
-  const { title, description, url, contact, recommendedRank, imageEncoded, imageType, eventId } =
-    input;
+  const {
+    title,
+    description,
+    url,
+    contact,
+    sponsor,
+    recommendedRank,
+    imageEncoded,
+    imageType,
+    eventId,
+  } = input;
 
   const updateFields: Partial<PrizeDb> = {
     title: title ?? prize.title,
     description,
     url,
     contact,
+    sponsor,
     recommended_rank: recommendedRank ?? prize.recommendedRank,
     event_id: eventId,
     updated_at: new Date(),

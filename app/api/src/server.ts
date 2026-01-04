@@ -9,6 +9,7 @@ import {
   adminRoutes,
   authRoutes,
   awardPreferencesRoutes,
+  eventsRoutes,
   prizesRoutes,
   usersRoutes,
 } from '@/routes';
@@ -73,6 +74,7 @@ const serverRouting = (context: Context) =>
     api: {
       v1: {
         auth: authRoutes(context),
+        events: eventsRoutes(context),
         prizes: prizesRoutes(context),
         awardPreferences: awardPreferencesRoutes(context),
         users: usersRoutes(context),

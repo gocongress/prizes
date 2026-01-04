@@ -31,6 +31,12 @@ export const SEED_IDS = {
 
   // Results
   RESULT_WINTER_2025: '50000000-0000-0000-0000-000000000001',
+
+  // Registrants
+  REGISTRANT_1: '60000000-0000-0000-0000-000000000001',
+  REGISTRANT_2: '60000000-0000-0000-0000-000000000002',
+  REGISTRANT_3: '60000000-0000-0000-0000-000000000003',
+  REGISTRANT_4: '60000000-0000-0000-0000-000000000004',
 } as const;
 
 export const loadSeedData = async (context: Context) => {
@@ -166,6 +172,7 @@ export const loadSeedData = async (context: Context) => {
       description: 'Complete set of advanced go strategy books',
       url: 'https://example.com/books',
       contact: 'books@example.com',
+      sponsor: 'Kiseido Publishing',
       recommended_rank: 'DAN',
       created_at: new Date('2025-01-15T01:00:00Z'),
     },
@@ -176,6 +183,7 @@ export const loadSeedData = async (context: Context) => {
       description: 'Handcrafted wooden go board with shell and slate stones',
       url: 'https://example.com/board',
       contact: 'equipment@example.com',
+      sponsor: 'Yellow Mountain Imports',
       recommended_rank: 'ALL',
       created_at: new Date('2025-01-15T02:00:00Z'),
     },
@@ -186,6 +194,7 @@ export const loadSeedData = async (context: Context) => {
       description: 'High-quality yunzi stones in bamboo bowls',
       url: 'https://example.com/stones',
       contact: 'stones@example.com',
+      sponsor: null,
       recommended_rank: 'SDK',
       created_at: new Date('2025-01-20T01:00:00Z'),
     },
@@ -196,6 +205,7 @@ export const loadSeedData = async (context: Context) => {
       description: 'Complete set of advanced go strategy books - Volume 2',
       url: 'https://example.com/stones',
       contact: 'stones@example.com',
+      sponsor: 'Slate & Shell Publishing',
       recommended_rank: 'SDK',
       created_at: new Date('2025-01-20T01:00:00Z'),
     },
@@ -278,6 +288,60 @@ export const loadSeedData = async (context: Context) => {
   const createdResults = resultResults.filter((r) => r.success).length;
   console.log(
     `✓ Results: ${createdResults} created, ${results.length - createdResults} already existed`,
+  );
+
+  // 7. Create Registrants
+  const registrants = [
+    {
+      id: SEED_IDS.REGISTRANT_1,
+      player_id: SEED_IDS.PLAYER_1,
+      event_id: SEED_IDS.EVENT_WINTER_2025,
+      registration_date: new Date('2025-01-20T10:00:00Z'),
+      status: 'confirmed',
+      notes: 'Paid in full',
+      created_at: new Date('2025-01-20T10:00:00Z'),
+    },
+    {
+      id: SEED_IDS.REGISTRANT_2,
+      player_id: SEED_IDS.PLAYER_2,
+      event_id: SEED_IDS.EVENT_WINTER_2025,
+      registration_date: new Date('2025-01-21T14:30:00Z'),
+      status: 'confirmed',
+      notes: null,
+      created_at: new Date('2025-01-21T14:30:00Z'),
+    },
+    {
+      id: SEED_IDS.REGISTRANT_3,
+      player_id: SEED_IDS.PLAYER_3,
+      event_id: SEED_IDS.EVENT_WINTER_2025,
+      registration_date: new Date('2025-01-22T09:15:00Z'),
+      status: 'waitlist',
+      notes: 'Waiting for payment confirmation',
+      created_at: new Date('2025-01-22T09:15:00Z'),
+    },
+    {
+      id: SEED_IDS.REGISTRANT_4,
+      player_id: SEED_IDS.PLAYER_1,
+      event_id: SEED_IDS.EVENT_SPRING_2025,
+      registration_date: new Date('2025-02-10T16:45:00Z'),
+      status: 'confirmed',
+      notes: 'Early bird registration',
+      created_at: new Date('2025-02-10T16:45:00Z'),
+    },
+  ];
+
+  const registrantResults = await Promise.all(
+    registrants.map((registrant, idx) =>
+      insertRow(
+        'registrants',
+        registrant,
+        `registrant ${idx + 1} (player ${registrant.player_id} -> event ${registrant.event_id})`,
+      ),
+    ),
+  );
+  const createdRegistrants = registrantResults.filter((r) => r.success).length;
+  console.log(
+    `✓ Registrants: ${createdRegistrants} created, ${registrants.length - createdRegistrants} already existed`,
   );
 
   console.log('✅ Seed data creation complete');

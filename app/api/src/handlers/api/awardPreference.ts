@@ -59,11 +59,11 @@ export const createAwardPreferences = (context: Context) =>
     itemSchema: AwardPreferenceListApiSchema,
   }).build({
     method: 'post',
-    input: z.object({ items: z.array(AwardPreferenceCreateSchema) }),
+    input: z.object({ eventId: z.guid(), items: z.array(AwardPreferenceCreateSchema) }),
     output: ApiPayloadSchema,
     handler: async ({ input, options: { context } }) => {
       try {
-        const payload = await AwardPreferenceService.syncAwardPreferencesByPlayer({
+        const payload = await AwardPreferenceService.syncAwardPreferences({
           context,
           input,
         });
@@ -81,6 +81,7 @@ export const createAwardPreferences = (context: Context) =>
   });
 
 /**
+ * Currently unused
  * DELETE /api/v1/awardPreferences/player/:id
  */
 export const deleteAwardPreferencesByPlayer = (context: Context) =>
@@ -95,9 +96,9 @@ export const deleteAwardPreferencesByPlayer = (context: Context) =>
     output: ApiPayloadSchema,
     handler: async ({ input, options: { context } }) => {
       try {
-        const payload = await AwardPreferenceService.deleteAwardPreferencesByPlayer({
+        const payload = await AwardPreferenceService.deleteAwardPreferences({
           context,
-          input: input.id,
+          input: { playerId: input.id },
         });
         return buildResponse(AwardPreferenceDeleteSchema, context, ContextKinds.AWARD_PREFERENCE, {
           message: `${payload} award preferences deleted.`,

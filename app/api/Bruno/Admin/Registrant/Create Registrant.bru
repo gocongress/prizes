@@ -1,0 +1,25 @@
+meta {
+  name: Create Registrant
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/registrants
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "playerId": "{{testPlayerId}}",
+    "eventId": "{{testEventId}}",
+    "registrationDate": "2025-01-01T12:00:00.000Z",
+    "status": "confirmed",
+    "notes": "Test registrant"
+  }
+}

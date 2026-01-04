@@ -89,27 +89,30 @@ export const userProfile = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserProfileSchema,
     scopes: ScopeKinds.USER,
-  }).build({
-    method: 'get',
-    output: ApiPayloadSchema,
-    handler: async ({ options: { context, user } }) => {
-      try {
-        if (
-          !context.request?.token ||
-          !context.request?.jwtPayload ||
-          context.request?.jwtPayload.sub !== user?.id
-        ) {
-          throw createHttpError(400, 'Unauthorized');
-        }
+  })
+    // TODO: re-add caching with user-specific cache keys
+    // .use(cacheMiddleware(context, 60000))
+    .build({
+      method: 'get',
+      output: ApiPayloadSchema,
+      handler: async ({ options: { context, user } }) => {
+        try {
+          if (
+            !context.request?.token ||
+            !context.request?.jwtPayload ||
+            context.request?.jwtPayload.sub !== user?.id
+          ) {
+            throw createHttpError(400, 'Unauthorized');
+          }
 
-        const payload = await UserService.getUserProfile({ context, input: user!.id });
-        return buildResponse(UserProfileSchema, context, ContextKinds.USER, {
-          ...payload,
-          isAdmin: payload.scope === 'ADMIN',
-        });
-      } catch (err) {
-        context.logger.error({ err }, 'Error fetching user profile');
-        throw createHttpError(500, err as Error, { expose: false });
-      }
-    },
-  });
+          const payload = await UserService.getUserProfile({ context, input: user!.id });
+          return buildResponse(UserProfileSchema, context, ContextKinds.USER, {
+            ...payload,
+            isAdmin: payload.scope === 'ADMIN',
+          });
+        } catch (err) {
+          context.logger.error({ err }, 'Error fetching user profile');
+          throw createHttpError(500, err as Error, { expose: false });
+        }
+      },
+    });

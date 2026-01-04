@@ -23,13 +23,22 @@ const PrizeListActions = () => (
 const PrizeList = () => (
   <List actions={<PrizeListActions />} filters={prizeFilters}>
     <DataTable
-      hiddenColumns={['id', 'createdAt', 'updatedAt', 'awardsSum', 'description', 'contact']}
+      hiddenColumns={[
+        'id',
+        'createdAt',
+        'updatedAt',
+        'awardsSum',
+        'description',
+        'contact',
+        'sponsor',
+      ]}
     >
       <DataTable.Col source="id" />
       <DataTable.Col source="title" />
       <DataTable.Col source="eventTitle" label="Event" />
       <DataTable.Col source="description" disableSort />
       <DataTable.Col source="contact" />
+      <DataTable.Col source="sponsor" />
       <DataTable.Col source="recommendedRank" label="Recommended Rank" />
       <DataTable.Col source="awardsCount" label="Awards #" disableSort />
       <DataTable.Col label="Awards Total Value" disableSort>

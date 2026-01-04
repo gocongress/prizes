@@ -1,5 +1,6 @@
 import { getQueryParams } from '@/lib/handlers';
 import { TABLE_NAME as AWARD_TABLE_NAME } from '@/models/award';
+import { TABLE_NAME as PRIZE_TABLE_NAME } from '@/models/prize';
 import type { AwardDb } from '@/schemas/award';
 import {
   AwardPreferenceQueryFields,
@@ -11,6 +12,7 @@ import {
   type CreateAwardPreference,
   type UpdateAwardPreference,
 } from '@/schemas/awardPreference';
+import type { EventApi } from '@/schemas/event';
 import { ContextKinds, type Context } from '@/types';
 import type { Knex } from 'knex';
 import { randomUUID } from 'node:crypto';
@@ -174,8 +176,25 @@ export const deleteById = async (
   id: AwardPreferenceApi['id'],
 ): Promise<number> => trx<AwardPreferenceDb>(TABLE_NAME).where({ id }).del();
 
+// Delete all award preferences for a given player, used when deleting a player in the admin API
 export const deleteByPlayer = async (
   _context: Context,
   trx: Knex.Transaction,
-  playerId: AwardPreferenceApi['playerId'],
+  { playerId }: { playerId: AwardPreferenceApi['playerId'] },
 ): Promise<number> => trx<AwardPreferenceDb>(TABLE_NAME).where({ player_id: playerId }).del();
+
+export const deleteByPlayerAndEvent = async (
+  _context: Context,
+  trx: Knex.Transaction,
+  { playerId, eventId }: { playerId: AwardPreferenceApi['playerId']; eventId: EventApi['id'] },
+): Promise<number> =>
+  trx<AwardPreferenceDb>(TABLE_NAME)
+    .whereIn(
+      'id',
+      trx<AwardPreferenceDb>(TABLE_NAME)
+        .select(`${TABLE_NAME}.id`)
+        .join(PRIZE_TABLE_NAME, `${TABLE_NAME}.prize_id`, `${PRIZE_TABLE_NAME}.id`)
+        .where(`${TABLE_NAME}.player_id`, playerId)
+        .andWhere(`${PRIZE_TABLE_NAME}.event_id`, eventId),
+    )
+    .del();
