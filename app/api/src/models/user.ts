@@ -55,6 +55,7 @@ const userWithPlayersQuery = (context: Context) => {
                   json_build_object(
                     'id',          ${EVENT_TABLE_NAME}.id,
                     'title',       ${EVENT_TABLE_NAME}.title,
+                    'slug',        ${EVENT_TABLE_NAME}.slug,
                     'description', ${EVENT_TABLE_NAME}.description,
                     'start_at',    ${EVENT_TABLE_NAME}.start_at,
                     'end_at',      ${EVENT_TABLE_NAME}.end_at,
@@ -118,6 +119,7 @@ const asModel = (item: UserWithPlayers): UserApi => {
                 id: e.id,
                 kind: ContextKinds.EVENT,
                 title: e.title,
+                slug: e.slug,
                 description: e.description,
                 startAt: new Date(e.start_at).toISOString(),
                 endAt: new Date(e.end_at).toISOString(),
