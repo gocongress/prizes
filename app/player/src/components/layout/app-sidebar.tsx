@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, Medal } from 'lucide-react';
+import { Calendar1Icon, LayoutDashboard, Medal } from 'lucide-react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/layout/nav-main';
@@ -21,6 +21,12 @@ const data = {
       title: 'Dashboard',
       url: '/dashboard',
       icon: LayoutDashboard,
+      isActive: true,
+    },
+    {
+      title: 'Upcoming Events',
+      url: '/events',
+      icon: Calendar1Icon,
       isActive: true,
     },
     {

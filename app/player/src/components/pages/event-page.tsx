@@ -1,13 +1,28 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { BreadcrumbItem } from '@/contexts/breadcrumb';
+import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEventBySlug } from '@/hooks/use-event-by-slug';
 import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
 import { useParams } from '@tanstack/react-router';
 import { CalendarDays, ExternalLink, Trophy } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-export function EventPage() {
-  const { slug } = useParams({ from: '/event/$slug' });
+export interface BreadcrumbSegment {
+  label: string;
+  href?: string;
+}
+
+interface EventPageProps {
+  slug?: string;
+  breadcrumbs?: BreadcrumbSegment[];
+}
+
+export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) {
+  const { setBreadcrumbs } = useBreadcrumb();
+  // Try to get slug from props first, fallback to route params
+  const routeParams = useParams({ strict: false });
+  const slug = slugProp || (routeParams as { slug?: string })?.slug || '';
   const {
     event,
     isLoading: eventLoading,
@@ -21,6 +36,17 @@ export function EventPage() {
     error: prizesErrorMsg,
   } = usePrizesByEvent(event?.id);
   const [touchedCard, setTouchedCard] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (breadcrumbs && event) {
+      const crumbs: BreadcrumbItem[] = [
+        ...breadcrumbs.map((bc) => ({ title: bc.label, href: bc.href || '' })),
+        { title: event.title, href: '' },
+      ];
+      setBreadcrumbs(crumbs);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event?.title]);
 
   const availablePrizes = useMemo(() => {
     return prizes

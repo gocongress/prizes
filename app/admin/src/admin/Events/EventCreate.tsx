@@ -1,4 +1,4 @@
-import { Create, DateInput, SimpleForm, TextInput, required } from 'react-admin';
+import { Create, DateTimeInput, SimpleForm, TextInput, required } from 'react-admin';
 
 const validateSlug = (value: string) => {
   if (!value) return undefined;
@@ -9,16 +9,30 @@ const validateSlug = (value: string) => {
   return undefined;
 };
 
-const EventCreate = () => (
-  <Create redirect="list">
-    <SimpleForm>
-      <TextInput label="Event Id" source="slug" validate={[required(), validateSlug]} />
-      <TextInput source="title" validate={[required()]} />
-      <TextInput source="description" />
-      <DateInput source="startAt" validate={[required()]} />
-      <DateInput source="endAt" validate={[required()]} />
-    </SimpleForm>
-  </Create>
-);
+const EventCreate = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const transform = (data: any) => {
+    // Convert datetime fields from local time to UTC
+    if (data.startAt) {
+      data.startAt = new Date(data.startAt).toISOString();
+    }
+    if (data.endAt) {
+      data.endAt = new Date(data.endAt).toISOString();
+    }
+
+    return data;
+  };
+  return (
+    <Create redirect="list" transform={transform}>
+      <SimpleForm>
+        <TextInput label="Event Id" source="slug" validate={[required(), validateSlug]} />
+        <TextInput source="title" validate={[required()]} />
+        <TextInput source="description" />
+        <DateTimeInput source="startAt" validate={[required()]} />
+        <DateTimeInput source="endAt" validate={[required()]} />
+      </SimpleForm>
+    </Create>
+  );
+};
 
 export default EventCreate;

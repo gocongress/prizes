@@ -77,6 +77,10 @@ const prizeWithAwardsQuery = (context: Context, queryParams?: PrizeQueryParams) 
     });
   }
 
+  if (queryParams?.eventId) {
+    query.andWhere(`${TABLE_NAME}.event_id`, queryParams.eventId);
+  }
+
   return query;
 };
 

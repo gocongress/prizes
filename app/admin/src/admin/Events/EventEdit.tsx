@@ -1,5 +1,5 @@
 import {
-  DateInput,
+  DateTimeInput,
   DeleteWithConfirmButton,
   Edit,
   Labeled,
@@ -26,6 +26,15 @@ const EventEdit = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { kind, createdAt, updatedAt, ...rest } = data;
     const transformedData = { ...rest };
+
+    // Convert datetime fields from local time to UTC
+    if (transformedData.startAt) {
+      transformedData.startAt = new Date(transformedData.startAt).toISOString();
+    }
+    if (transformedData.endAt) {
+      transformedData.endAt = new Date(transformedData.endAt).toISOString();
+    }
+
     return transformedData;
   };
 
@@ -39,8 +48,8 @@ const EventEdit = () => {
         <TextInput disabled label="Event Id" source="slug" />
         <TextInput source="title" validate={required()} />
         <TextInput source="description" />
-        <DateInput source="startAt" validate={required()} />
-        <DateInput source="endAt" validate={required()} />
+        <DateTimeInput source="startAt" validate={required()} />
+        <DateTimeInput source="endAt" validate={required()} />
       </SimpleForm>
     </Edit>
   );

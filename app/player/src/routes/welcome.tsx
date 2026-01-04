@@ -1,5 +1,5 @@
 import { WelcomeLayout } from '@/components/layout/welcome-layout';
-import WelcomePage from '@/components/pages/welcome-page';
+import EventsPage from '@/components/pages/events-page';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/welcome')({
@@ -9,7 +9,7 @@ export const Route = createFileRoute('/welcome')({
 function WelcomePageLayout() {
   return (
     <WelcomeLayout breadcrumbs={[{ title: 'Welcome' }]}>
-      <WelcomePage />
+      <EventsPage breadcrumbs={[{ label: 'Welcome' }]} showCallToAction={true} />
     </WelcomeLayout>
   );
 }
