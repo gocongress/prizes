@@ -52,9 +52,7 @@ export function WelcomeLayout({ breadcrumbs = [], children }: WelcomeLayoutProps
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          {children || <Outlet />}
-        </div>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children || <Outlet />}</div>
       </SidebarInset>
     </SidebarProvider>
   );

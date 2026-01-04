@@ -24,6 +24,7 @@ const PrizeCreate = () => {
         <TextInput source="title" validate={[required()]} />
         <TextInput source="url" />
         <TextInput source="contact" />
+        <TextInput source="sponsor" />
         <TextInput source="description" multiline={true} />
         <SelectInput
           source="recommendedRank"

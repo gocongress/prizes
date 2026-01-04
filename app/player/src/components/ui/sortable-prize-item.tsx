@@ -79,6 +79,9 @@ function SortablePrizeItem({
             </a>
           )}
         </h3>
+        {prize.sponsor && (
+          <p className="text-sm text-muted-foreground italic mb-1">Sponsored by {prize.sponsor}</p>
+        )}
         <div className="mb-2 min-h-[30px]">
           {prize.description && (
             <>

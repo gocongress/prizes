@@ -41,7 +41,7 @@ export const usePrizesByEvent = (eventId: string | undefined) => {
         throw new Error('Event ID is required');
       }
 
-      const response = await fetch(`${API_URL}/api/v1/prizes?eventId=${eventId}`, {
+      const response = await fetch(`${API_URL}/api/v1/prizes?eventId=${eventId}&pageSize=100`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

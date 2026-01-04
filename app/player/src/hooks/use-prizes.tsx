@@ -15,10 +15,12 @@ export interface Prize {
   eventTitle?: string | null;
   description?: string | null;
   url?: string | null;
+  sponsor?: string | null;
   recommendedRank: 'ALL' | 'DAN' | 'SDK' | 'DDK';
   eventId?: string | null;
   awards?: Award[];
   awardsCount?: number;
+  awardsSum?: number;
   imageType?: string | null;
   imageThumbnailEncoded?: string | null;
 }

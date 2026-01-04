@@ -1,3 +1,4 @@
+import { cacheMiddleware } from '@/lib/cache';
 import { ApiPayloadSchema, buildResponse, handlerFactory, UuidParamsSchema } from '@/lib/handlers';
 import { ScopeKinds } from '@/lib/handlers/constants';
 import { EventApiSchema, EventQuerySchema, type EventQueryParams } from '@/schemas/event';
@@ -17,32 +18,34 @@ export const getAllEvents = (context: Context) =>
     authenticateUser: false,
     context,
     itemSchema: EventApiSchema,
-  }).build({
-    method: 'get',
-    input: EventQuerySchema,
-    output: ApiPayloadSchema,
-    handler: async ({ options: { context }, input }) => {
-      try {
-        const payload = await EventService.getAllEvent({
-          serviceParams: { context },
-          queryParams: input as EventQueryParams,
-        });
+  })
+    .use(cacheMiddleware(context))
+    .build({
+      method: 'get',
+      input: EventQuerySchema,
+      output: ApiPayloadSchema,
+      handler: async ({ options: { context }, input }) => {
+        try {
+          const payload = await EventService.getAllEvent({
+            serviceParams: { context },
+            queryParams: input as EventQueryParams,
+          });
 
-        // Filter to only upcoming events (where end_at >= now)
-        const now = new Date();
-        const upcomingEvents = {
-          ...payload,
-          items: payload.items.filter((event) => new Date(event.endAt) >= now),
-          totalItems: payload.items.filter((event) => new Date(event.endAt) >= now).length,
-        };
+          // Filter to only upcoming events (where end_at >= now)
+          const now = new Date();
+          const upcomingEvents = {
+            ...payload,
+            items: payload.items.filter((event) => new Date(event.endAt) >= now),
+            totalItems: payload.items.filter((event) => new Date(event.endAt) >= now).length,
+          };
 
-        return buildResponse(EventApiSchema, context, ContextKinds.EVENT, upcomingEvents);
-      } catch (err) {
-        context.logger.error({ err }, 'Error fetching events');
-        throw createHttpError(500, err as Error, { expose: false });
-      }
-    },
-  });
+          return buildResponse(EventApiSchema, context, ContextKinds.EVENT, upcomingEvents);
+        } catch (err) {
+          context.logger.error({ err }, 'Error fetching events');
+          throw createHttpError(500, err as Error, { expose: false });
+        }
+      },
+    });
 
 /**
  * GET /api/v1/events/:id
@@ -55,17 +58,19 @@ export const getEventById = (context: Context) =>
     authenticateUser: false,
     context,
     itemSchema: EventApiSchema,
-  }).build({
-    method: 'get',
-    input: UuidParamsSchema,
-    output: ApiPayloadSchema,
-    handler: async ({ input, options: { context } }) => {
-      try {
-        const payload = await EventService.getEventById({ context, input: input.id });
-        return buildResponse(EventApiSchema, context, ContextKinds.EVENT, payload);
-      } catch (err) {
-        context.logger.error({ err, id: input.id }, 'Error fetching event');
-        throw createHttpError(500, err as Error, { expose: false });
-      }
-    },
-  });
+  })
+    .use(cacheMiddleware(context))
+    .build({
+      method: 'get',
+      input: UuidParamsSchema,
+      output: ApiPayloadSchema,
+      handler: async ({ input, options: { context } }) => {
+        try {
+          const payload = await EventService.getEventById({ context, input: input.id });
+          return buildResponse(EventApiSchema, context, ContextKinds.EVENT, payload);
+        } catch (err) {
+          context.logger.error({ err, id: input.id }, 'Error fetching event');
+          throw createHttpError(500, err as Error, { expose: false });
+        }
+      },
+    });
