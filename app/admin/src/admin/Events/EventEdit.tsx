@@ -53,6 +53,7 @@ const EventEdit = () => {
         />
         <TextInput
           source="registrationFormId"
+          label="Registration Form Id"
           helperText="If this event is using RegFox, use the Page ID (found in the RegFox Registration Page editor address bar) so that automation can create and link new players to this event when a registration is posted to our server. "
         />
         <TextInput source="description" />
