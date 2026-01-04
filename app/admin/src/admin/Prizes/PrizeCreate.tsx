@@ -16,7 +16,7 @@ import Image from './Image';
 
 const PrizeCreate = () => {
   return (
-    <Create transform={transform} redirect="edit">
+    <Create transform={transform} redirect="edit" mutationMode="pessimistic">
       <SimpleForm>
         <ReferenceInput source="eventId" reference="events">
           <AutocompleteInput validate={[required()]} />

@@ -32,7 +32,7 @@ const AwardPreferenceEdit = () => {
   };
 
   return (
-    <Edit transform={transform} redirect="edit">
+    <Edit transform={transform} redirect="edit" mutationMode="pessimistic">
       <SimpleForm toolbar={<AwardPreferenceEditToolbar />} warnWhenUnsavedChanges>
         <Labeled label="Id">
           <TextField source="id" />

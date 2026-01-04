@@ -16,7 +16,7 @@ const transform = (data: any) => {
 };
 
 const RegistrantEdit = () => (
-  <Edit transform={transform} redirect="list">
+  <Edit transform={transform} redirect="list" mutationMode="pessimistic">
     <SimpleForm>
       <ReferenceInput source="playerId" reference="players">
         <AutocompleteInput

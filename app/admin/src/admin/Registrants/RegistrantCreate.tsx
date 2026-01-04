@@ -16,7 +16,7 @@ const transform = (data: any) => {
 };
 
 const RegistrantCreate = () => (
-  <Create transform={transform} redirect="list">
+  <Create transform={transform} redirect="list" mutationMode="pessimistic">
     <SimpleForm>
       <ReferenceInput source="playerId" reference="players">
         <AutocompleteInput

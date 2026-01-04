@@ -23,10 +23,11 @@ const EventCreate = () => {
     return data;
   };
   return (
-    <Create redirect="list" transform={transform}>
+    <Create redirect="list" transform={transform} mutationMode="pessimistic">
       <SimpleForm>
         <TextInput label="Event Id" source="slug" validate={[required(), validateSlug]} />
         <TextInput source="title" validate={[required()]} />
+        <TextInput source="registrationUrl" />
         <TextInput source="description" />
         <DateTimeInput source="startAt" validate={[required()]} />
         <DateTimeInput source="endAt" validate={[required()]} />

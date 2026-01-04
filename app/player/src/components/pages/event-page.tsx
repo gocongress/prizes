@@ -89,7 +89,7 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
           {event.description && (
             <p className="text-lg text-muted-foreground mb-4">{event.description}</p>
           )}
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex flex-col gap-2 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <CalendarDays className="w-4 h-4" />
               <span>
@@ -97,6 +97,17 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
                 {new Date(event.endAt).toLocaleDateString()}
               </span>
             </div>
+            {event.registrationUrl && (
+              <a
+                href={event.registrationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Register for this event
+              </a>
+            )}
           </div>
         </div>
 

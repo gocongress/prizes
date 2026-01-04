@@ -32,7 +32,7 @@ const PlayerEdit = () => {
   };
 
   return (
-    <Edit transform={transform}>
+    <Edit transform={transform} mutationMode="pessimistic">
       <SimpleForm toolbar={<PlayerEditToolbar />} warnWhenUnsavedChanges>
         <Labeled label="Id">
           <TextField source="id" />

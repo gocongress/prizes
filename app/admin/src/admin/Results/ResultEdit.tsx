@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   ArrayInput,
   AutocompleteInput,
@@ -17,7 +18,6 @@ import {
   useRecordContext,
   useRedirect,
 } from 'react-admin';
-import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transform = (data: any) => {
@@ -50,7 +50,7 @@ const RedirectIfHasAwards = () => {
 
 const ResultEdit = () => {
   return (
-    <Edit transform={transform} redirect="edit">
+    <Edit transform={transform} redirect="edit" mutationMode="pessimistic">
       <SimpleForm toolbar={<ResultEditToolbar />} warnWhenUnsavedChanges>
         <RedirectIfHasAwards />
         <Labeled label="Id">

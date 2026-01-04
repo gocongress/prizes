@@ -9,7 +9,7 @@ import {
 import UniqueAwardsAutocompleteInput from './UniqueAwardsAutocompleteInput';
 
 const AwardPreferenceCreate = () => (
-  <Create redirect="list">
+  <Create redirect="list" mutationMode="pessimistic">
     <SimpleForm>
       <ReferenceInput source="playerId" reference="players">
         <AutocompleteInput validate={required()} />
