@@ -14,7 +14,7 @@ const API_URL = env.VITE_API_URL;
 /**
  * React hook that fetches a single event by ID from the API
  *
- * @param eventId - The ID of the event to fetch
+ * @param eventSlug - The slug of the event to fetch
  * @returns Event query state and data
  *
  * @example
@@ -26,15 +26,15 @@ const API_URL = env.VITE_API_URL;
  * return <div>{event?.title}</div>;
  * ```
  */
-export const useEventById = (eventId: string | undefined) => {
+export const useEventBySlug = (eventSlug: string | undefined) => {
   const eventQuery = useQuery({
-    queryKey: ['event', eventId],
+    queryKey: ['event', eventSlug],
     queryFn: async (): Promise<Event> => {
-      if (!eventId) {
+      if (!eventSlug) {
         throw new Error('Event ID is required');
       }
 
-      const response = await fetch(`${API_URL}/api/v1/events/${eventId}`, {
+      const response = await fetch(`${API_URL}/api/v1/events/slug/${eventSlug}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export const useEventById = (eventId: string | undefined) => {
       const result: ApiResponse<Event> = await response.json();
       return result.data;
     },
-    enabled: !!eventId,
+    enabled: !!eventSlug,
     staleTime: 5 * 60 * 1000, // 5 minutes
     throwOnError: true,
   });

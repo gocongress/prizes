@@ -5,6 +5,7 @@ export interface Event {
   id: string;
   kind: 'event';
   title: string;
+  slug: string;
   description?: string | null;
   startAt: string;
   endAt: string;

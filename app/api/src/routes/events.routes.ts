@@ -9,6 +9,15 @@ export const eventsRoutes = (context: Context) =>
       get: handlers.Event.getAllEvents(context),
     },
     {
+      slug: nested(
+        {},
+        {
+          ':slug': route({
+            // GET: /api/v1/events/slug/{slug}
+            get: handlers.Event.getEventBySlug(context),
+          }),
+        },
+      ),
       ':id': route({
         // GET: /api/v1/events/{id}
         get: handlers.Event.getEventById(context),

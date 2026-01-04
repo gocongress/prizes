@@ -140,6 +140,7 @@ export const loadSeedData = async (context: Context) => {
     {
       id: SEED_IDS.EVENT_WINTER_2025,
       title: 'Winter Tournament 2025',
+      slug: 'winter-tournament-2025',
       description: 'Annual winter go tournament with prizes for all divisions',
       start_at: new Date('2025-02-01T09:00:00Z'),
       end_at: new Date('2025-02-03T18:00:00Z'),
@@ -148,6 +149,7 @@ export const loadSeedData = async (context: Context) => {
     {
       id: SEED_IDS.EVENT_SPRING_2025,
       title: 'Spring Championship 2025',
+      slug: 'spring-championship-2025',
       description: 'Premier spring event for advanced players',
       start_at: new Date('2025-04-15T09:00:00Z'),
       end_at: new Date('2025-04-17T18:00:00Z'),

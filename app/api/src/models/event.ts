@@ -21,6 +21,7 @@ const asModel = (item: EventDb): EventApi => {
     id: item.id,
     kind: ContextKinds.EVENT,
     title: item.title,
+    slug: item.slug,
     description: item.description,
     startAt: item.start_at.toISOString(),
     endAt: item.end_at.toISOString(),
@@ -86,6 +87,23 @@ export const getById = async (context: Context, id: EventApi['id']): Promise<Eve
   return asModel(rows[0]);
 };
 
+export const getBySlug = async (context: Context, slug: EventApi['slug']): Promise<EventApi> => {
+  if (!slug) {
+    throw createHttpError(400, `Event slug is required.`);
+  }
+
+  const rows = await context
+    .db<EventDb>(TABLE_NAME)
+    .where({ slug, deleted_at: null })
+    .returning<EventDb[]>('*');
+
+  if (!rows.length) {
+    throw createHttpError(404, `Event with slug ${slug} not found.`);
+  }
+
+  return asModel(rows[0]);
+};
+
 export const create = async (
   _context: Context,
   trx: Knex.Transaction,
@@ -95,6 +113,7 @@ export const create = async (
     .insert({
       id: randomUUID(),
       title: input.title,
+      slug: input.slug,
       description: input.description ?? undefined,
       start_at: new Date(input.startAt!),
       end_at: new Date(input.endAt!),
@@ -116,12 +135,13 @@ export const updateById = async (
   input: Partial<UpdateEvent>,
 ): Promise<EventApi> => {
   const event = await getById(context, id);
-  const { title, description, startAt, endAt } = input;
+  const { title, slug, description, startAt, endAt } = input;
 
   const rows = await trx<EventDb>(TABLE_NAME)
     .where({ id })
     .update({
       title: title ?? event.title,
+      slug: slug ?? event.slug!,
       description,
       start_at: new Date(startAt ?? event.startAt),
       end_at: new Date(endAt ?? event.endAt),

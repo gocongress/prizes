@@ -1,8 +1,8 @@
-import EventPage from '@/components/pages/event-page';
 import { WelcomeLayout } from '@/components/layout/welcome-layout';
+import EventPage from '@/components/pages/event-page';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/event/$id')({
+export const Route = createFileRoute('/event/$slug')({
   component: EventPageLayout,
 });
 

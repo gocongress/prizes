@@ -18,8 +18,8 @@ function WelcomePage() {
     });
   };
 
-  const handleEventClick = (eventId: string) => {
-    navigate({ to: '/event/$id', params: { id: eventId } });
+  const handleEventClick = (eventSlug: string) => {
+    navigate({ to: '/event/$slug', params: { slug: eventSlug } });
   };
 
   if (isLoading) {
@@ -62,7 +62,7 @@ function WelcomePage() {
               <Card
                 key={event.id}
                 className="flex flex-col cursor-pointer transition-all duration-300 hover:border-blue-500 hover:shadow-xl hover:-translate-y-2"
-                onClick={() => handleEventClick(event.id)}
+                onClick={() => handleEventClick(event.slug)}
               >
                 <CardHeader>
                   <CardTitle>{event.title}</CardTitle>
