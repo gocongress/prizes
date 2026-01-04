@@ -36,7 +36,7 @@ const EventEdit = () => {
           <TextField source="id" />
         </Labeled>
         <TextInput disabled label="Id" source="id" sx={{ display: 'none' }} />
-        <TextInput label="Event Id" source="slug" validate={required()} />
+        <TextInput disabled label="Event Id" source="slug" />
         <TextInput source="title" validate={required()} />
         <TextInput source="description" />
         <DateInput source="startAt" validate={required()} />

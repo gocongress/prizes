@@ -135,13 +135,12 @@ export const updateById = async (
   input: Partial<UpdateEvent>,
 ): Promise<EventApi> => {
   const event = await getById(context, id);
-  const { title, slug, description, startAt, endAt } = input;
+  const { title, description, startAt, endAt } = input;
 
   const rows = await trx<EventDb>(TABLE_NAME)
     .where({ id })
     .update({
       title: title ?? event.title,
-      slug: slug ?? event.slug!,
       description,
       start_at: new Date(startAt ?? event.startAt),
       end_at: new Date(endAt ?? event.endAt),

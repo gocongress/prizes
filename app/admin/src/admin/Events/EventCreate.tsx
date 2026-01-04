@@ -2,9 +2,9 @@ import { Create, DateInput, SimpleForm, TextInput, required } from 'react-admin'
 
 const validateSlug = (value: string) => {
   if (!value) return undefined;
-  const slugPattern = /^[a-z-]+$/;
+  const slugPattern = /^[a-z0-9-]+$/;
   if (!slugPattern.test(value)) {
-    return 'Slug must contain only lowercase letters (a-z) and dashes (-)';
+    return 'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)';
   }
   return undefined;
 };
