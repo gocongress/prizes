@@ -21,7 +21,10 @@ export const EventDbSchema = z.object({
     .string()
     .min(1)
     .trim()
-    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)'),
+    .regex(
+      /^[a-z0-9-]+$/,
+      'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)',
+    ),
   description: z.string().nullish().optional(),
   start_at: z.date(),
   end_at: z.date(),
@@ -38,7 +41,10 @@ export const EventApiSchema = z.object({
     .string()
     .min(1)
     .trim()
-    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)')
+    .regex(
+      /^[a-z0-9-]+$/,
+      'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)',
+    )
     .example('us-go-congress-2025'),
   description: z.string().trim().nullish().optional(),
   startAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
@@ -53,7 +59,10 @@ export const EventSlugParamsSchema = z.object({
     .string()
     .min(1)
     .trim()
-    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)'),
+    .regex(
+      /^[a-z0-9-]+$/,
+      'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)',
+    ),
 });
 
 export const EventMinimalDetailsSchema = EventApiSchema.pick({
@@ -71,7 +80,10 @@ export const EventCreateSchema = z.object({
     .string()
     .min(1)
     .trim()
-    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)')
+    .regex(
+      /^[a-z0-9-]+$/,
+      'Slug must contain only lowercase letters (a-z), digits (0-9), and dashes (-)',
+    )
     .example('us-go-congress-2025'),
   description: z.string().trim().nullish().optional(),
   startAt: z.iso.date().or(z.iso.datetime()).example('2025-01-01'),
