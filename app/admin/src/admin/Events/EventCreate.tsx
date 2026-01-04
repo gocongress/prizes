@@ -25,9 +25,21 @@ const EventCreate = () => {
   return (
     <Create redirect="list" transform={transform} mutationMode="pessimistic">
       <SimpleForm>
-        <TextInput label="Event Id" source="slug" validate={[required(), validateSlug]} />
+        <TextInput
+          label="Event Id"
+          source="slug"
+          validate={[required(), validateSlug]}
+          helperText="A unique identifier for the event, used in URLs. Only lowercase letters, digits, and dashes are allowed. (ie. go-congress-2026)"
+        />
         <TextInput source="title" validate={[required()]} />
-        <TextInput source="registrationUrl" />
+        <TextInput
+          source="registrationUrl"
+          helperText="The public URL where users can register for this event."
+        />
+        <TextInput
+          source="registrationFormId"
+          helperText="If this event is using RegFox, use the Page ID (found in the RegFox Registration Page editor address bar) so that automation can create and link new players to this event when a registration is posted to our server. "
+        />
         <TextInput source="description" />
         <DateTimeInput source="startAt" validate={[required()]} />
         <DateTimeInput source="endAt" validate={[required()]} />
