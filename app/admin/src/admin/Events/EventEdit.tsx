@@ -8,7 +8,7 @@ import {
   TextField,
   TextInput,
   Toolbar,
-  required
+  required,
 } from 'react-admin';
 
 const EventEditToolbar = () => {

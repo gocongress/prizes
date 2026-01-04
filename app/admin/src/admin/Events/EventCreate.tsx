@@ -33,6 +33,6 @@ const EventCreate = () => {
       </SimpleForm>
     </Create>
   );
-}
+};
 
 export default EventCreate;
