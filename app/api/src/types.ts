@@ -61,6 +61,7 @@ export type Context = {
     };
   };
   server: {
+    url: string;
     host: string;
     port: string;
     maxBodySize: string; // ie. 1500kb

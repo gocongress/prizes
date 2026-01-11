@@ -23,6 +23,7 @@ if (!serviceName) {
 }
 
 const server = {
+  url: process.env.SERVER_URL || 'http://localhost:3001',
   host: process.env.SERVER_HOST || '0.0.0.0',
   port: process.env.SERVER_PORT || '3001',
   maxBodySize: process.env.SERVER_MAX_BODY_SIZE || '1500kb',

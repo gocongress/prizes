@@ -64,8 +64,8 @@ const serverConfig = (context: Context) =>
         }),
       );
       app.use(cookieParser());
-      // Route /docs to a SwaggerUI endpoint for improved developer experience
-      app.use('/docs', ui.serve, ui.setup(null, { swaggerUrl: '/public/openapi.yaml' }));
+      // Route /api/swagger to a SwaggerUI endpoint for improved developer experience
+      app.use('/api/swagger', ui.serve, ui.setup(null, { swaggerUrl: '/api/doc/openapi.yaml' }));
     },
   });
 
@@ -87,8 +87,12 @@ const serverRouting = (context: Context) =>
         redirect: false,
       }),
     },
+  }) as Routing;
+
+const webhooksRouting = (context: Context) =>
+  ({
     webhooks: {
-      regfox: route({ post: regfox(context) }),
+      regfox: route({ get: regfox(context) }),
     },
   }) as Routing;
 
@@ -97,6 +101,7 @@ export const buildServer = async () => {
 
   const config = serverConfig(context);
   const serverRoutes = serverRouting(context);
+  const webhooksRoutes = webhooksRouting(context);
 
   if (process.env.SEED_DATA && process.env.SEED_DATA.toLowerCase() === 'true') {
     await loadSeedData(context);
@@ -104,6 +109,6 @@ export const buildServer = async () => {
 
   await buildOpenApiSpec(serverRoutes, config, context);
 
-  const server = await createServer(config, serverRoutes);
+  const server = await createServer(config, { ...serverRoutes, ...webhooksRoutes });
   return { server, context };
 };
