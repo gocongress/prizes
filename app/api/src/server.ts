@@ -80,16 +80,16 @@ const serverRouting = (context: Context) =>
         users: usersRoutes(context),
         admin: adminRoutes(context),
       },
+      // path /public serves static files from /public
+      doc: new ServeStatic(join(__dirname, 'public'), {
+        dotfiles: 'deny',
+        index: false,
+        redirect: false,
+      }),
     },
     webhooks: {
       regfox: route({ post: regfox(context) }),
     },
-    // path /public serves static files from /public
-    public: new ServeStatic(join(__dirname, 'public'), {
-      dotfiles: 'deny',
-      index: false,
-      redirect: false,
-    }),
   }) as Routing;
 
 export const buildServer = async () => {
