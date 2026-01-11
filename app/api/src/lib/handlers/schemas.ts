@@ -4,7 +4,7 @@ import {
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE,
   MAX_PAGE_SIZE,
-} from './constants';
+} from '../constants';
 
 const ErrorSchema = z.object({
   code: z.number().example(404).min(400).max(511),

@@ -1,5 +1,5 @@
+import { ScopeKinds } from '@/lib/constants';
 import { ApiPayloadSchema, buildResponse, handlerFactory, UuidParamsSchema } from '@/lib/handlers';
-import { ScopeKinds } from '@/lib/handlers/constants';
 import { AwardWithPrizeListApiSchema } from '@/schemas/award';
 import { UserCreateSchema, UserMinimalDetailsSchema } from '@/schemas/user';
 import * as AwardService from '@/services/award';

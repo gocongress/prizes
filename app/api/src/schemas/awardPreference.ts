@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { DEFAULT_PAGE_SIZE, MAX_PAGE, MAX_PAGE_SIZE } from '@/lib/constants';
 
 export const AwardPreferenceQueryFields = {
   id: 'id',
@@ -67,8 +68,8 @@ export const AwardPreferenceDeleteSchema = z.object({
 export const AwardPreferenceQuerySchema = z.object({
   playerId: z.guid().nullable().optional(),
   awardId: z.guid().nullable().optional(),
-  page: z.coerce.number().min(0).max(9999).default(0),
-  pageSize: z.coerce.number().min(1).max(100).default(10),
+  page: z.coerce.number().min(0).max(MAX_PAGE).default(0),
+  pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(AwardPreferenceQueryKeys).default('preferenceOrder'),
   orderDirection: z.enum(['asc', 'desc']).default('asc'),
 });

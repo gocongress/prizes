@@ -1,3 +1,4 @@
+import { ScopeKinds } from '@/lib/constants';
 import {
   ApiPayloadSchema,
   buildResponse,
@@ -5,7 +6,6 @@ import {
   handlerFactory,
   UuidParamsSchema,
 } from '@/lib/handlers';
-import { ScopeKinds } from '@/lib/handlers/constants';
 import {
   PlayerApiSchema,
   PlayerCreateSchema,

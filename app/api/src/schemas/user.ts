@@ -1,5 +1,5 @@
 import { runtime } from '@/config';
-import { ScopeKindKeys } from '@/lib/handlers/constants';
+import { DEFAULT_PAGE_SIZE, MAX_PAGE, MAX_PAGE_SIZE, ScopeKindKeys } from '@/lib/constants';
 import * as z from 'zod';
 import { PlayerMinimalDetailsSchema } from './player';
 
@@ -92,8 +92,8 @@ export const UserImportSchema = z.object({
 });
 
 export const UserQuerySchema = z.object({
-  page: z.coerce.number().min(0).max(9999).default(0),
-  pageSize: z.coerce.number().min(1).max(100).default(10),
+  page: z.coerce.number().min(0).max(MAX_PAGE).default(0),
+  pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(UserQueryKeys).default('createdAt'),
   orderDirection: z.enum(['asc', 'desc']).default('asc'),
   q: z.string().optional().describe('Filter results by users email address.'),
