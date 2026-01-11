@@ -66,6 +66,7 @@ export const AwardPreferenceDeleteSchema = z.object({
 });
 
 export const AwardPreferenceQuerySchema = z.object({
+  ids: z.array(z.guid()).nullable().optional(),
   playerId: z.guid().nullable().optional(),
   awardId: z.guid().nullable().optional(),
   page: z.coerce.number().min(0).max(MAX_PAGE).default(0),

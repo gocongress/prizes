@@ -61,7 +61,9 @@ export const getAll = async (
     .select(`${AWARD_TABLE_NAME}.value as awardValue`)
     .leftJoin(AWARD_TABLE_NAME, `${TABLE_NAME}.award_id`, `${AWARD_TABLE_NAME}.id`);
 
-  if (queryParams.playerId) {
+  if (queryParams.ids) {
+    query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
+  } else if (queryParams.playerId) {
     query.where(`${TABLE_NAME}.player_id`, queryParams.playerId);
   }
 

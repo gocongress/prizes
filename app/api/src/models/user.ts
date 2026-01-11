@@ -158,6 +158,9 @@ export const getAll = async (
   const q = queryParams.q;
 
   const query = context.db<UserDb>(TABLE_NAME).where('deleted_at', null);
+  if (queryParams.ids) {
+    query.whereIn('id', queryParams.ids);
+  }
   if (q) {
     query.andWhereILike('email', `%${q}%`);
   }

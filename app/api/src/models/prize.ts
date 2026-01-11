@@ -65,8 +65,11 @@ const prizeWithAwardsQuery = (context: Context, queryParams?: PrizeQueryParams) 
     )
     .leftJoin(EVENT_TABLE_NAME, `${TABLE_NAME}.event_id`, `${EVENT_TABLE_NAME}.id`)
     .leftJoin(AWARD_TABLE_NAME, `${TABLE_NAME}.id`, `${AWARD_TABLE_NAME}.prize_id`)
-    .where(`${TABLE_NAME}.deleted_at`, null)
-    .groupBy(`${TABLE_NAME}.id`, `${EVENT_TABLE_NAME}.title`);
+    .where(`${TABLE_NAME}.deleted_at`, null);
+
+  if (queryParams?.ids) {
+    query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
+  }
 
   if (queryParams?.q) {
     query.andWhere((subQuery) => {
@@ -80,6 +83,8 @@ const prizeWithAwardsQuery = (context: Context, queryParams?: PrizeQueryParams) 
   if (queryParams?.eventId) {
     query.andWhere(`${TABLE_NAME}.event_id`, queryParams.eventId);
   }
+
+  query.groupBy(`${TABLE_NAME}.id`, `${EVENT_TABLE_NAME}.title`);
 
   return query;
 };

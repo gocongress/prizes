@@ -61,11 +61,17 @@ export const getAll = async (
       ? `${USER_TABLE_NAME}.email`
       : `${TABLE_NAME}.${PlayerQueryFields[orderBy]}`;
 
-  const rows = await context
+  const query = context
     .db<PlayerDb>(TABLE_NAME)
     .select(`${TABLE_NAME}.*`, `${USER_TABLE_NAME}.email as email`)
     .join(USER_TABLE_NAME, `${USER_TABLE_NAME}.id`, `${TABLE_NAME}.user_id`)
-    .where(`${TABLE_NAME}.deleted_at`, null)
+    .where(`${TABLE_NAME}.deleted_at`, null);
+
+  if (queryParams.ids) {
+    query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
+  }
+
+  const rows = await query
     .orderBy(orderByTable, orderDirection)
     .offset(offset)
     .limit(pageSize)
