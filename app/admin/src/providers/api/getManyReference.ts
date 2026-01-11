@@ -29,7 +29,7 @@ type getManyReference = <RecordType extends RaRecord = any>(
 
 export const getManyReference: getManyReference = async (resource, params) => {
   const { target, id, pagination, sort, signal, filter } = params;
-  const { page, perPage } = pagination || { page: 1, perPage: 10 };
+  const { page, perPage } = pagination || { page: 1, perPage: 50 };
   const { field, order } = sort || { field: 'created_at', order: 'ASC' };
 
   const queryParams: Record<string, string> = {
