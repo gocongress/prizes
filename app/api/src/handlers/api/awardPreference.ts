@@ -1,5 +1,5 @@
+import { ScopeKinds } from '@/lib/constants';
 import { ApiPayloadSchema, buildResponse, handlerFactory, UuidParamsSchema } from '@/lib/handlers';
-import { ScopeKinds } from '@/lib/handlers/constants';
 import {
   AwardPreferenceApiSchema,
   AwardPreferenceCreateSchema,

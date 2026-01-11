@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { DEFAULT_PAGE_SIZE, MAX_PAGE, MAX_PAGE_SIZE } from '@/lib/constants';
 import { EventApiSchema, EventMinimalDetailsSchema } from './event';
 
 export const PlayerQueryFields = {
@@ -74,8 +75,8 @@ export const PlayerMessageSchema = z.object({
 });
 
 export const PlayerQuerySchema = z.object({
-  page: z.coerce.number().min(0).max(9999).default(0),
-  pageSize: z.coerce.number().min(1).max(100).default(10),
+  page: z.coerce.number().min(0).max(MAX_PAGE).default(0),
+  pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(PlayerQueryKeys).default('createdAt'),
   orderDirection: z.enum(['asc', 'desc']).default('asc'),
 });

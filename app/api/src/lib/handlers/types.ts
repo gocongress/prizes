@@ -1,7 +1,7 @@
 import type { UserApi } from '@/schemas/user';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { z } from 'zod';
-import type { ScopeKindKeys, ScopeKinds } from './constants';
+import type { ScopeKindKeys, ScopeKinds } from '../constants';
 import type { ApiPayloadSchema, ErrorPayloadSchema, SuccessPayloadSchema } from './schemas';
 
 export type GetJwtUser<C> = (context: C, payload: JwtPayload) => Promise<{ user: UserApi }>;

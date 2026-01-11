@@ -1,6 +1,6 @@
 import { cacheMiddleware } from '@/lib/cache';
+import { ScopeKinds } from '@/lib/constants';
 import { ApiPayloadSchema, buildResponse, handlerFactory, UuidParamsSchema } from '@/lib/handlers';
-import { ScopeKinds } from '@/lib/handlers/constants';
 import {
   EventApiSchema,
   EventQuerySchema,

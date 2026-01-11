@@ -2,7 +2,7 @@ import { type ScopeKindKey } from '@/lib/handlers';
 import type { Context } from '@/types';
 import createHttpError from 'http-errors';
 import { JsonWebTokenError, sign, verify, type JwtPayload } from 'jsonwebtoken';
-import { ScopeKinds } from './handlers/constants';
+import { ScopeKinds } from './constants';
 
 export const getUserJwt = (
   context: Context,
