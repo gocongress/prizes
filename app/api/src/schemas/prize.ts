@@ -170,7 +170,10 @@ export const PrizeCreateSchema = PrizeApiSchema.extend({
 export const PrizeUpdateSchema = PrizeCreateSchema;
 
 export const PrizeQuerySchema = z.object({
-  ids: z.array(z.guid()).nullable().optional(),
+  ids: z
+    .union([z.array(z.guid()), z.string().transform((val) => val.split(','))])
+    .nullable()
+    .optional(),
   page: z.coerce.number().min(0).max(MAX_PAGE).default(0),
   pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(PrizeQueryKeys).default('createdAt'),
