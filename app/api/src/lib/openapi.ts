@@ -12,8 +12,8 @@ export const buildOpenApiSpec = async (
     routing,
     config,
     version: '1.0.0',
-    title: 'Todo API',
-    serverUrl: `http://${context.runtime.localhost ? 'localhost' : context.server.host}:${context.server.port}`,
+    title: 'AGA Prizes API',
+    serverUrl: context.server.url,
     composition: 'inline', // optional, or "components" for keeping schemas in a separate dedicated section using refs
   }).getSpecAsYaml();
 
