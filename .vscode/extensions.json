@@ -4,6 +4,7 @@
     "ms-vscode.vscode-js-profile-table",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "redhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "hverlin.mise-vscode"
   ]
 }
