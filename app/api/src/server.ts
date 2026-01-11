@@ -5,6 +5,7 @@ import { defaultErrorHandler } from '@/lib/handlers';
 import { buildOpenApiSpec } from '@/lib/openapi';
 import { route } from '@/lib/routing-helpers';
 import { loadSeedData } from '@/lib/seed';
+import { syncPrizeImages } from '@/lib/sync-prize-images';
 import {
   adminRoutes,
   authRoutes,
@@ -80,8 +81,8 @@ const serverRouting = (context: Context) =>
         users: usersRoutes(context),
         admin: adminRoutes(context),
       },
-      // path /api/doc serves static files from /public
-      doc: new ServeStatic(join(__dirname, 'public'), {
+      // path /static serves from /public
+      static: new ServeStatic(join(__dirname, 'public'), {
         dotfiles: 'deny',
         index: false,
         redirect: false,
@@ -106,6 +107,9 @@ export const buildServer = async () => {
   if (process.env.SEED_DATA && process.env.SEED_DATA.toLowerCase() === 'true') {
     await loadSeedData(context);
   }
+
+  // Sync prize images from database to public folder
+  await syncPrizeImages(context);
 
   await buildOpenApiSpec(serverRoutes, config, context);
 

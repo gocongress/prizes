@@ -1,12 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
+import { env } from '@/env';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEventBySlug } from '@/hooks/use-event-by-slug';
 import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
 import { useParams } from '@tanstack/react-router';
 import { CalendarDays, ExternalLink, Trophy } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface BreadcrumbSegment {
   label: string;
@@ -17,6 +18,20 @@ interface EventPageProps {
   slug?: string;
   breadcrumbs?: BreadcrumbSegment[];
 }
+
+const getExtensionFromMimeType = (mimeType: string): string | null => {
+  const mimeMap: Record<string, string> = {
+    'image/jpeg': 'jpg',
+    'image/jpg': 'jpg',
+    'image/png': 'png',
+    'image/gif': 'gif',
+    'image/webp': 'webp',
+    'image/svg+xml': 'svg',
+    'image/bmp': 'bmp',
+  };
+
+  return mimeMap[mimeType.toLowerCase()] || null;
+};
 
 export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) {
   const { setBreadcrumbs } = useBreadcrumb();
@@ -36,6 +51,7 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
     error: prizesErrorMsg,
   } = usePrizesByEvent(event?.id);
   const [touchedCard, setTouchedCard] = useState<string | null>(null);
+  const isTouchDevice = useRef(false);
 
   useEffect(() => {
     if (breadcrumbs && event) {
@@ -139,29 +155,31 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
                 return (
                   <Card
                     key={prize.id}
-                    className={`group cursor-pointer hover:shadow-xl hover:border-blue-500 hover:-translate-y-2 hover:max-h-[1000px] transition-all duration-500 ease-in-out flex flex-col w-90 sm:w-50 overflow-hidden pt-0 pb-3 gap-0 rounded-md ${
-                      isTouched
-                        ? 'shadow-xl border-blue-500 -translate-y-2 max-h-[1000px]'
-                        : 'max-h-48'
-                    }`}
+                    className={`group cursor-pointer hover:shadow-xl hover:border-blue-500 hover:-translate-y-2 hover:max-h-[1000px] transition-all duration-500 ease-in-out flex flex-col w-90 sm:w-50 overflow-hidden pt-0 pb-3 gap-0 rounded-md ${isTouched
+                      ? 'shadow-xl border-blue-500 -translate-y-2 max-h-[1000px]'
+                      : 'max-h-48'
+                      }`}
                     onClick={() => {
-                      if (prize.url) {
+                      if (prize.url && !isTouchDevice.current) {
                         window.open(prize.url, '_blank', 'noopener,noreferrer');
                       }
                     }}
-                    onTouchStart={() => setTouchedCard(prize.id)}
-                    onTouchEnd={() => setTouchedCard(null)}
-                    onTouchCancel={() => setTouchedCard(null)}
+                    onTouchStart={() => {
+                      isTouchDevice.current = true;
+                      setTouchedCard((prev) => (prev === prize.id ? null : prize.id));
+                    }}
+                    onTouchEnd={() => {}}
+                    onTouchCancel={() => {}}
                   >
                     {/* Prize Image */}
-                    {prize.imageThumbnailEncoded ? (
+                    {prize.imageThumbnailEncoded && prize.imageType ? (
                       <div
-                        className={`w-full overflow-hidden bg-muted flex items-center justify-center flex-shrink-0 transition-all duration-500 ease-in-out ${
-                          isTouched ? 'h-64' : 'h-24 group-hover:h-64'
-                        }`}
+                        className={`w-full overflow-hidden bg-muted flex items-center justify-center flex-shrink-0 transition-all duration-500 ease-in-out ${isTouched ? 'h-64' : 'h-24 group-hover:h-64'
+                          }`}
                       >
                         <img
-                          src={`data:${prize.imageType || 'image/png'};base64,${prize.imageThumbnailEncoded}`}
+                          // src={`data:${prize.imageType || 'image/png'};base64,${prize.imageThumbnailEncoded}`}
+                          src={`${env.VITE_API_URL}/api/static/prizes/${prize.id}.${getExtensionFromMimeType(prize.imageType)}`}
                           alt={prize.title}
                           className="w-full h-full object-cover"
                         />
@@ -175,18 +193,38 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
                     <CardHeader className="px-3 gap-0">
                       <CardTitle className="flex flex-col">
                         <div className="flex justify-between w-full items-center min-h-[2.5rem]">
-                          <span className="line-clamp-2 text-sm font-semibold">{prize.title}</span>
+                          {prize.url ? (
+                            <a
+                              href={prize.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="line-clamp-2 text-sm font-semibold hover:underline flex-1"
+                              onClick={(e) => e.stopPropagation()}
+                              onTouchStart={(e) => e.stopPropagation()}
+                            >
+                              {prize.title}
+                            </a>
+                          ) : (
+                            <span className="line-clamp-2 text-sm font-semibold">{prize.title}</span>
+                          )}
                           {prize.url && (
-                            <ExternalLink className="w-4 h-4 text-muted-foreground/60 flex-shrink-0" />
+                            <a
+                              href={prize.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              onTouchStart={(e) => e.stopPropagation()}
+                            >
+                              <ExternalLink className="w-4 h-4 text-muted-foreground/60 flex-shrink-0" />
+                            </a>
                           )}
                         </div>
                         {prize.sponsor && (
                           <p
-                            className={`text-xs text-muted-foreground italic font-normal pb-2 ${
-                              isTouched
-                                ? 'whitespace-normal max-w-full'
-                                : 'max-w-44 truncate group-hover:whitespace-normal group-hover:max-w-full'
-                            }`}
+                            className={`text-xs text-muted-foreground italic font-normal pb-2 ${isTouched
+                              ? 'whitespace-normal max-w-full'
+                              : 'max-w-44 truncate group-hover:whitespace-normal group-hover:max-w-full'
+                              }`}
                           >
                             {prize.sponsor}
                           </p>
