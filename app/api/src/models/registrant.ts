@@ -78,6 +78,10 @@ export const getAll = async (
     .leftJoin(EVENT_TABLE_NAME, `${TABLE_NAME}.event_id`, `${EVENT_TABLE_NAME}.id`)
     .where(`${TABLE_NAME}.deleted_at`, null);
 
+  if (queryParams.ids) {
+    query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
+  }
+
   // Improve this if future table-joined fields are included in the orderBy
   let orderByTable;
   switch (orderBy) {

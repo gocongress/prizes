@@ -56,9 +56,13 @@ export const getAll = async (
   const { page, pageSize, orderBy, orderDirection, offset, totalPages } =
     getQueryParams<EventQueryKey>(EventQueryKeys, queryParams, totalItems);
 
-  const rows = await context
-    .db<EventDb>(TABLE_NAME)
-    .where('deleted_at', null)
+  const query = context.db<EventDb>(TABLE_NAME).where('deleted_at', null);
+
+  if (queryParams.ids) {
+    query.whereIn('id', queryParams.ids);
+  }
+
+  const rows = await query
     .orderBy(EventQueryFields[orderBy], orderDirection)
     .offset(offset)
     .limit(pageSize)

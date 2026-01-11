@@ -110,6 +110,7 @@ export const EventUpdateSchema = EventCreateSchema.pick({
 });
 
 export const EventQuerySchema = z.object({
+  ids: z.array(z.guid()).nullable().optional(),
   page: z.coerce.number().min(0).max(MAX_PAGE).default(0),
   pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(EventQueryKeys).default('createdAt'),
