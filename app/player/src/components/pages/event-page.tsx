@@ -155,10 +155,11 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
                 return (
                   <Card
                     key={prize.id}
-                    className={`group cursor-pointer hover:shadow-xl hover:border-blue-500 hover:-translate-y-2 hover:max-h-[1000px] transition-all duration-500 ease-in-out flex flex-col w-90 sm:w-50 overflow-hidden pt-0 pb-3 gap-0 rounded-md ${isTouched
-                      ? 'shadow-xl border-blue-500 -translate-y-2 max-h-[1000px]'
-                      : 'max-h-48'
-                      }`}
+                    className={`group cursor-pointer hover:shadow-xl hover:border-blue-500 hover:-translate-y-2 hover:max-h-[1000px] transition-all duration-500 ease-in-out flex flex-col w-90 sm:w-50 overflow-hidden pt-0 pb-3 gap-0 rounded-md ${
+                      isTouched
+                        ? 'shadow-xl border-blue-500 -translate-y-2 max-h-[1000px]'
+                        : 'max-h-48'
+                    }`}
                     onClick={() => {
                       if (prize.url && !isTouchDevice.current) {
                         window.open(prize.url, '_blank', 'noopener,noreferrer');
@@ -174,8 +175,9 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
                     {/* Prize Image */}
                     {prize.imageThumbnailEncoded && prize.imageType ? (
                       <div
-                        className={`w-full overflow-hidden bg-muted flex items-center justify-center flex-shrink-0 transition-all duration-500 ease-in-out ${isTouched ? 'h-64' : 'h-24 group-hover:h-64'
-                          }`}
+                        className={`w-full overflow-hidden bg-muted flex items-center justify-center flex-shrink-0 transition-all duration-500 ease-in-out ${
+                          isTouched ? 'h-64' : 'h-24 group-hover:h-64'
+                        }`}
                       >
                         <img
                           // src={`data:${prize.imageType || 'image/png'};base64,${prize.imageThumbnailEncoded}`}
@@ -205,7 +207,9 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
                               {prize.title}
                             </a>
                           ) : (
-                            <span className="line-clamp-2 text-sm font-semibold">{prize.title}</span>
+                            <span className="line-clamp-2 text-sm font-semibold">
+                              {prize.title}
+                            </span>
                           )}
                           {prize.url && (
                             <a
@@ -221,10 +225,11 @@ export function EventPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) 
                         </div>
                         {prize.sponsor && (
                           <p
-                            className={`text-xs text-muted-foreground italic font-normal pb-2 ${isTouched
-                              ? 'whitespace-normal max-w-full'
-                              : 'max-w-44 truncate group-hover:whitespace-normal group-hover:max-w-full'
-                              }`}
+                            className={`text-xs text-muted-foreground italic font-normal pb-2 ${
+                              isTouched
+                                ? 'whitespace-normal max-w-full'
+                                : 'max-w-44 truncate group-hover:whitespace-normal group-hover:max-w-full'
+                            }`}
                           >
                             {prize.sponsor}
                           </p>

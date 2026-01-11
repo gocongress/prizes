@@ -20,7 +20,8 @@ export const syncPrizeImages = async (context: Context): Promise<void> => {
 
   try {
     // Fetch all prizes that have images
-    const prizes = await context.db<PrizeDb>(TABLE_NAME)
+    const prizes = await context
+      .db<PrizeDb>(TABLE_NAME)
       .select('id', 'image', 'image_type')
       .whereNotNull('image')
       .whereNotNull('image_type')
@@ -39,7 +40,9 @@ export const syncPrizeImages = async (context: Context): Promise<void> => {
       // Determine file extension from MIME type
       const extension = getExtensionFromMimeType(prize.image_type);
       if (!extension) {
-        context.logger.warn(`Unknown image type ${prize.image_type} for prize ${prize.id}, skipping`);
+        context.logger.warn(
+          `Unknown image type ${prize.image_type} for prize ${prize.id}, skipping`,
+        );
         continue;
       }
 
