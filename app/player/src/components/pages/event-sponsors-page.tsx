@@ -87,7 +87,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
         prizes,
         totalValue: prizes.reduce((sum, p) => sum + (p.awardsSum || 0), 0),
       }))
-      .sort((a, b) => b.totalValue - a.totalValue);
+      .sort((a, b) => a.sponsor.localeCompare(b.sponsor));
   }, [availablePrizes]);
 
   if (eventLoading || prizesLoading) {
@@ -169,7 +169,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
 
           {/* Prize Cards Grouped by Sponsor */}
           {prizesBySponso.length > 0 && (
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-center gap-4">
               {prizesBySponso.map(({ sponsor, prizes }) => {
                 // Use the first prize with an image for the sponsor card
                 const sponsorPrize =
@@ -197,7 +197,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                 return (
                   <Card
                     key={sponsorCardId}
-                    className="group hover:shadow-lg transition-all duration-300 cursor-pointer w-full sm:max-w-[480px] sm:flex-1 sm:basis-[calc(50%-0.5rem)]"
+                    className="group py-4 hover:shadow-lg transition-all duration-300 cursor-pointer w-full sm:min-w-[475px] sm:max-w-[480px]"
                     onClick={(e) => {
                       // Check if the click target is a link
                       const target = e.target as HTMLElement;
@@ -227,43 +227,45 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                               />
                             </div>
                           ) : (
-                            <div
-                              className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${
-                                isExpanded
-                                  ? 'h-[300px]'
-                                  : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
-                              }`}
-                            >
+                            <div className="w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 h-28 md:h-[120px]">
                               <Trophy className="w-16 h-16 text-gray-300" />
                             </div>
                           )}
 
                           {/* Sponsor Info */}
                           <div className="text-center md:text-left w-full">
-                            <div className="flex items-center justify-center md:justify-start gap-1">
-                              {sponsorPrize.url ? (
-                                <>
-                                  <a
-                                    href={sponsorPrize.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="font-semibold text-base text-blue-600 hover:text-blue-800 hover:underline"
-                                  >
-                                    {sponsor}
-                                  </a>
-                                  <a
-                                    href={sponsorPrize.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex text-blue-600 hover:text-blue-800"
-                                  >
-                                    <ExternalLink className="w-3 h-3" />
-                                  </a>
-                                </>
-                              ) : (
-                                <h3 className="font-semibold text-base">{sponsor}</h3>
-                              )}
-                            </div>
+                            {sponsorPrize.url ? (
+                              <div className="flex items-center justify-center md:justify-start gap-1">
+                                <a
+                                  href={sponsorPrize.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`font-semibold text-base text-blue-600 hover:text-blue-800 hover:underline transition-all overflow-hidden ${
+                                    isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
+                                  }`}
+                                  style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical' }}
+                                >
+                                  {sponsor}
+                                </a>
+                                <a
+                                  href={sponsorPrize.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex text-blue-600 hover:text-blue-800 flex-shrink-0"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </div>
+                            ) : (
+                              <h3
+                                className={`font-semibold text-base transition-all overflow-hidden ${
+                                  isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
+                                }`}
+                                style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical' }}
+                              >
+                                {sponsor}
+                              </h3>
+                            )}
                           </div>
                         </div>
 
@@ -329,9 +331,11 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                                   </div>
 
                                   <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
-                                    <Badge className="text-xs py-0 px-2 h-5 bg-blue-500 hover:bg-blue-600 text-white">
-                                      {availableCount} {availableCount === 1 ? 'prize' : 'prizes'}
-                                    </Badge>
+                                    {availableCount > 1 && (
+                                      <Badge className="text-xs py-0 px-2 h-5 bg-blue-500 hover:bg-blue-600 text-white">
+                                        {availableCount} prizes
+                                      </Badge>
+                                    )}
                                     {valuePerAward && (
                                       <span className="text-xs text-muted-foreground font-medium">
                                         ${valuePerAward.toFixed(2)}
