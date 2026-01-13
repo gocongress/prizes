@@ -1,5 +1,5 @@
 import { WelcomeLayout } from '@/components/layout/welcome-layout';
-import EventPage from '@/components/pages/event-page';
+import EventSponsorsPage from '@/components/pages/event-sponsors-page';
 import { useEventBySlug } from '@/hooks/use-event-by-slug';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
@@ -26,7 +26,7 @@ function EventPageLayout() {
 
   return (
     <WelcomeLayout breadcrumbs={breadcrumbs}>
-      <EventPage />
+      <EventSponsorsPage />
     </WelcomeLayout>
   );
 }
