@@ -214,10 +214,11 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                           {/* Prize Image */}
                           {sponsorPrize.imageThumbnailEncoded && sponsorPrize.imageType ? (
                             <div
-                              className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${isExpanded
-                                ? 'h-[300px]'
-                                : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
-                                }`}
+                              className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${
+                                isExpanded
+                                  ? 'h-[300px]'
+                                  : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
+                              }`}
                             >
                               <img
                                 src={`${env.VITE_API_URL}/api/static/prizes/${sponsorPrize.id}.${getExtensionFromMimeType(sponsorPrize.imageType)}`}
@@ -226,9 +227,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                               />
                             </div>
                           ) : (
-                            <div
-                              className="w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 h-28 md:h-[120px]"
-                            >
+                            <div className="w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 h-28 md:h-[120px]">
                               <Trophy className="w-16 h-16 text-gray-300" />
                             </div>
                           )}
@@ -241,8 +240,9 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                                   href={sponsorPrize.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className={`font-semibold text-base text-blue-600 hover:text-blue-800 hover:underline transition-all overflow-hidden ${isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
-                                    }`}
+                                  className={`font-semibold text-base text-blue-600 hover:text-blue-800 hover:underline transition-all overflow-hidden ${
+                                    isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
+                                  }`}
                                   style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical' }}
                                 >
                                   {sponsor}
@@ -258,8 +258,9 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                               </div>
                             ) : (
                               <h3
-                                className={`font-semibold text-base transition-all overflow-hidden ${isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
-                                  }`}
+                                className={`font-semibold text-base transition-all overflow-hidden ${
+                                  isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
+                                }`}
                                 style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical' }}
                               >
                                 {sponsor}
@@ -318,10 +319,11 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                                     </div>
                                     {prize.description && (
                                       <p
-                                        className={`text-xs text-muted-foreground mt-0.5 transition-all ${isExpanded
-                                          ? 'line-clamp-none'
-                                          : 'line-clamp-1 group-hover:line-clamp-none group-hover/prize:line-clamp-none'
-                                          }`}
+                                        className={`text-xs text-muted-foreground mt-0.5 transition-all ${
+                                          isExpanded
+                                            ? 'line-clamp-none'
+                                            : 'line-clamp-1 group-hover:line-clamp-none group-hover/prize:line-clamp-none'
+                                        }`}
                                       >
                                         {prize.description}
                                       </p>
