@@ -81,11 +81,13 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
       grouped.get(sponsor)!.push(prize);
     });
 
-    return Array.from(grouped.entries()).map(([sponsor, prizes]) => ({
-      sponsor,
-      prizes,
-      totalValue: prizes.reduce((sum, p) => sum + (p.awardsSum || 0), 0),
-    })).sort((a, b) => b.totalValue - a.totalValue);
+    return Array.from(grouped.entries())
+      .map(([sponsor, prizes]) => ({
+        sponsor,
+        prizes,
+        totalValue: prizes.reduce((sum, p) => sum + (p.awardsSum || 0), 0),
+      }))
+      .sort((a, b) => b.totalValue - a.totalValue);
   }, [availablePrizes]);
 
   if (eventLoading || prizesLoading) {
@@ -170,18 +172,25 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
               {prizesBySponso.map(({ sponsor, prizes }) => {
                 // Use the first prize with an image for the sponsor card
-                const sponsorPrize = prizes.find((p) => p.imageThumbnailEncoded && p.imageType) || prizes[0];
+                const sponsorPrize =
+                  prizes.find((p) => p.imageThumbnailEncoded && p.imageType) || prizes[0];
                 const sponsorCardId = `sponsor-${sponsor}`;
                 const isExpanded = expandedCard === sponsorCardId;
 
                 // Sort prizes by value (highest first)
                 const sortedPrizes = [...prizes].sort((a, b) => {
-                  const aValue = a.awards && a.awards.length > 0
-                    ? a.awards[0].value || 0
-                    : (a.awardsSum && (a.awardsCount || 0) > 0 ? a.awardsSum / (a.awardsCount || 1) : 0);
-                  const bValue = b.awards && b.awards.length > 0
-                    ? b.awards[0].value
-                    : (b.awardsSum && (b.awardsCount || 0) > 0 ? b.awardsSum / (b.awardsCount || 1) : 0);
+                  const aValue =
+                    a.awards && a.awards.length > 0
+                      ? a.awards[0].value || 0
+                      : a.awardsSum && (a.awardsCount || 0) > 0
+                        ? a.awardsSum / (a.awardsCount || 1)
+                        : 0;
+                  const bValue =
+                    b.awards && b.awards.length > 0
+                      ? b.awards[0].value
+                      : b.awardsSum && (b.awardsCount || 0) > 0
+                        ? b.awardsSum / (b.awardsCount || 1)
+                        : 0;
                   return (bValue || 0) - (aValue || 0);
                 });
 
@@ -204,8 +213,13 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                         <div className="flex flex-col items-center md:items-start w-full md:w-48 flex-shrink-0">
                           {/* Prize Image */}
                           {sponsorPrize.imageThumbnailEncoded && sponsorPrize.imageType ? (
-                            <div className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${isExpanded ? 'h-[300px]' : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
-                              }`}>
+                            <div
+                              className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${
+                                isExpanded
+                                  ? 'h-[300px]'
+                                  : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
+                              }`}
+                            >
                               <img
                                 src={`${env.VITE_API_URL}/api/static/prizes/${sponsorPrize.id}.${getExtensionFromMimeType(sponsorPrize.imageType)}`}
                                 alt={sponsor}
@@ -213,8 +227,13 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                               />
                             </div>
                           ) : (
-                            <div className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${isExpanded ? 'h-[300px]' : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
-                              }`}>
+                            <div
+                              className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${
+                                isExpanded
+                                  ? 'h-[300px]'
+                                  : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
+                              }`}
+                            >
                               <Trophy className="w-16 h-16 text-gray-300" />
                             </div>
                           )}
@@ -257,9 +276,12 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                             {sortedPrizes.map((prize) => {
                               const availableCount = prize.awardsCount || 0;
                               // Calculate value per award
-                              const valuePerAward = prize.awards && prize.awards.length > 0
-                                ? prize.awards[0].value
-                                : (prize.awardsSum && availableCount > 0 ? prize.awardsSum / availableCount : null);
+                              const valuePerAward =
+                                prize.awards && prize.awards.length > 0
+                                  ? prize.awards[0].value
+                                  : prize.awardsSum && availableCount > 0
+                                    ? prize.awardsSum / availableCount
+                                    : null;
 
                               return (
                                 <div
@@ -288,12 +310,19 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                                           </a>
                                         </>
                                       ) : (
-                                        <span className="font-medium text-xs line-clamp-1">{prize.title}</span>
+                                        <span className="font-medium text-xs line-clamp-1">
+                                          {prize.title}
+                                        </span>
                                       )}
                                     </div>
                                     {prize.description && (
-                                      <p className={`text-xs text-muted-foreground mt-0.5 transition-all ${isExpanded ? 'line-clamp-none' : 'line-clamp-1 group-hover:line-clamp-none group-hover/prize:line-clamp-none'
-                                        }`}>
+                                      <p
+                                        className={`text-xs text-muted-foreground mt-0.5 transition-all ${
+                                          isExpanded
+                                            ? 'line-clamp-none'
+                                            : 'line-clamp-1 group-hover:line-clamp-none group-hover/prize:line-clamp-none'
+                                        }`}
+                                      >
                                         {prize.description}
                                       </p>
                                     )}
