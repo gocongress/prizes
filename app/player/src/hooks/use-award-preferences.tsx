@@ -158,3 +158,49 @@ export const useSaveAwardPreferences = () => {
     isSuccess: mutation.isSuccess,
   };
 };
+
+export interface DeleteAwardPreferencesRequest {
+  playerId: string;
+  eventId: string;
+}
+
+/**
+ * React hook that provides a mutation function to delete award preferences for a player in an event
+ *
+ * @returns Mutation object with deleteAwardPreferences function
+ */
+export const useDeleteAwardPreferences = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (request: DeleteAwardPreferencesRequest): Promise<void> => {
+      const response = await fetch(
+        `${API_URL}/api/v1/awardPreferences/player/${request.playerId}/event/${request.eventId}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to delete award preferences');
+      }
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['awardPreferences', variables.playerId] });
+    },
+    throwOnError: true,
+  });
+
+  return {
+    deleteAwardPreferences: mutation.mutate,
+    deleteAwardPreferencesAsync: mutation.mutateAsync,
+    isPending: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
+  };
+};

@@ -12,12 +12,24 @@ export const awardPreferencesRoutes = (context: Context) =>
           post: handlers.AwardPreference.createAwardPreferences(context),
         },
         {
-          ':id': route({
-            // GET: /api/v1/awardPreferences/player/{id}
-            get: handlers.AwardPreference.getAwardPreferencesByPlayer(context),
-            // DELETE: /api/v1/awardPreferences/player/{id}
-            delete: handlers.AwardPreference.deleteAwardPreferencesByPlayer(context),
-          }),
+          ':id': nested(
+            {
+              // GET: /api/v1/awardPreferences/player/{id}
+              get: handlers.AwardPreference.getAwardPreferencesByPlayer(context),
+            },
+            {
+              event: nested(
+                {},
+                {
+                  ':eventId': route({
+                    // DELETE: /api/v1/awardPreferences/player/{id}/event/{eventId}
+                    delete:
+                      handlers.AwardPreference.deleteAwardPreferencesByPlayerAndEvent(context),
+                  }),
+                },
+              ),
+            },
+          ),
         },
       ),
     },

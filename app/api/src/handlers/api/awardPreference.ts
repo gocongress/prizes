@@ -81,30 +81,32 @@ export const createAwardPreferences = (context: Context) =>
   });
 
 /**
- * Currently unused
- * DELETE /api/v1/awardPreferences/player/:id
+ * DELETE /api/v1/awardPreferences/player/:id/event/:eventId
  */
-export const deleteAwardPreferencesByPlayer = (context: Context) =>
+export const deleteAwardPreferencesByPlayerAndEvent = (context: Context) =>
   handlerFactory({
     kind: ContextKinds.AWARD_PREFERENCE,
     scopes: ScopeKinds.USER,
     context,
-    itemSchema: AwardPreferenceApiSchema.extend({ playerId: z.guid() }),
+    itemSchema: AwardPreferenceApiSchema.extend({ playerId: z.guid(), eventId: z.guid() }),
   }).build({
     method: 'delete',
-    input: UuidParamsSchema,
+    input: z.object({ id: z.guid(), eventId: z.guid() }),
     output: ApiPayloadSchema,
     handler: async ({ input, options: { context } }) => {
       try {
         const payload = await AwardPreferenceService.deleteAwardPreferences({
           context,
-          input: { playerId: input.id },
+          input: { playerId: input.id, eventId: input.eventId },
         });
         return buildResponse(AwardPreferenceDeleteSchema, context, ContextKinds.AWARD_PREFERENCE, {
           message: `${payload} award preferences deleted.`,
         });
       } catch (err) {
-        context.logger.error({ err, id: input.id }, 'Error deleting award preference');
+        context.logger.error(
+          { err, playerId: input.id, eventId: input.eventId },
+          'Error deleting award preferences',
+        );
         throw createHttpError(500, err as Error, { expose: false });
       }
     },
