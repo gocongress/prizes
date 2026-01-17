@@ -1,27 +1,12 @@
-import SortablePrizeItem from '@/components//ui/sortable-prize-item';
 import EventSelect from '@/components/ui/event-select';
 import PlayerSelect from '@/components/ui/player-select';
+import PrizeList from '@/components/ui/prize-list';
 import { useAwardPreferences, useSaveAwardPreferences } from '@/hooks/use-award-preferences';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvent } from '@/hooks/use-event';
 import { usePlayer } from '@/hooks/use-player';
 import { usePrizes, type PrizeAwardCombination } from '@/hooks/use-prizes';
-import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { ArrowDownAZ, Calendar, Star, UserCircle2 } from 'lucide-react';
+import { Calendar, UserCircle2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 
@@ -120,13 +105,6 @@ export function DashboardPage() {
     setPrizeAwardCombinations(initialCombinations);
   }, [initialCombinations]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
   // Function to save the current order of preferences with debouncing
   const savePreferencesOrder = (orderedCombinations: PrizeAwardCombination[]) => {
     if (!selectedPlayer || !selectedEvent) return;
@@ -156,36 +134,10 @@ export function DashboardPage() {
     }, 300);
   };
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      const oldIndex = prizeAwardCombinations.findIndex((item) => item.id === active.id);
-      const newIndex = prizeAwardCombinations.findIndex((item) => item.id === over.id);
-
-      const newItems = arrayMove(prizeAwardCombinations, oldIndex, newIndex);
-
-      setPrizeAwardCombinations(newItems);
-      savePreferencesOrder(newItems);
-    }
-  }
-
-  function moveItem(id: string, direction: 'up' | 'down') {
-    setPrizeAwardCombinations((items) => {
-      const currentIndex = items.findIndex((item) => item.id === id);
-      if (currentIndex === -1) return items;
-
-      const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-      if (newIndex < 0 || newIndex >= items.length) return items;
-
-      const newItems = arrayMove(items, currentIndex, newIndex);
-
-      // Save after state update
-      savePreferencesOrder(newItems);
-
-      return newItems;
-    });
-  }
+  const handleReorder = (newCombinations: PrizeAwardCombination[]) => {
+    setPrizeAwardCombinations(newCombinations);
+    savePreferencesOrder(newCombinations);
+  };
 
   if (isLoadingPrizes || isLoadingPlayers || isLoadingAwardPreferences) {
     return (
@@ -272,59 +224,12 @@ export function DashboardPage() {
 
         {/* Prize List - Only show if player and event are selected */}
         {selectedPlayer && selectedEvent && (
-          <>
-            {prizeAwardCombinations.length === 0 ? (
-              <div className="text-center text-muted-foreground py-8">No prizes available</div>
-            ) : (
-              <>
-                {/* Order Indicator Label */}
-                <div className="mb-4 flex justify-end">
-                  {awardPreferences.length > 0 ? (
-                    <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-500">
-                      <Star className="w-4 h-4" />
-                      <span className="text-sm font-medium">Sorted by your preference</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1.5 text-muted-foreground">
-                      <ArrowDownAZ className="w-4 h-4" />
-                      <span className="text-sm">Sorted by recommendation</span>
-                    </div>
-                  )}
-                </div>
-
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={handleDragEnd}
-                >
-                  <SortableContext
-                    items={prizeAwardCombinations.map((c) => c.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    <ul className="space-y-4">
-                      {prizeAwardCombinations.map((combination, index) => {
-                        const preferenceOrder = preferenceMap?.get(combination.id);
-                        const showRibbon = index < 3 && preferenceOrder !== undefined;
-
-                        return (
-                          <SortablePrizeItem
-                            key={combination.id}
-                            combination={combination}
-                            onMoveUp={() => moveItem(combination.id, 'up')}
-                            onMoveDown={() => moveItem(combination.id, 'down')}
-                            isFirst={index === 0}
-                            isLast={index === prizeAwardCombinations.length - 1}
-                            preferenceOrder={showRibbon ? preferenceOrder : undefined}
-                            index={index}
-                          />
-                        );
-                      })}
-                    </ul>
-                  </SortableContext>
-                </DndContext>
-              </>
-            )}
-          </>
+          <PrizeList
+            prizeAwardCombinations={prizeAwardCombinations}
+            onReorder={handleReorder}
+            preferenceMap={preferenceMap}
+            hasAwardPreferences={awardPreferences.length > 0}
+          />
         )}
       </div>
     </div>
