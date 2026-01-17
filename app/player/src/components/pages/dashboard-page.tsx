@@ -1,7 +1,11 @@
 import EventSelect from '@/components/ui/event-select';
 import PlayerSelect from '@/components/ui/player-select';
 import PrizeList from '@/components/ui/prize-list';
-import { useAwardPreferences, useSaveAwardPreferences } from '@/hooks/use-award-preferences';
+import {
+  useAwardPreferences,
+  useDeleteAwardPreferences,
+  useSaveAwardPreferences,
+} from '@/hooks/use-award-preferences';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvent } from '@/hooks/use-event';
 import { usePlayer } from '@/hooks/use-player';
@@ -19,6 +23,7 @@ export function DashboardPage() {
     selectedPlayer?.id,
   );
   const { saveAwardPreferences } = useSaveAwardPreferences();
+  const { deleteAwardPreferences, isPending: isResettingPreferences } = useDeleteAwardPreferences();
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -26,18 +31,28 @@ export function DashboardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Filter award preferences to only those for the selected event
+  const eventAwardPreferences = useMemo(() => {
+    if (!selectedEvent) return [];
+    // Filter preferences to only those matching prizes in the selected event
+    const eventPrizeIds = new Set(
+      prizes.filter((prize) => prize.eventId === selectedEvent.id).map((prize) => prize.id),
+    );
+    return awardPreferences.filter((pref) => eventPrizeIds.has(pref.prizeId));
+  }, [awardPreferences, prizes, selectedEvent]);
+
   // Create a preference map for easy lookup
   const preferenceMap = useMemo(() => {
-    if (awardPreferences.length > 0) {
+    if (eventAwardPreferences.length > 0) {
       return new Map(
-        awardPreferences.map((pref) => [
+        eventAwardPreferences.map((pref) => [
           `${pref.prizeId}-${pref.awardValue}`,
           pref.preferenceOrder,
         ]),
       );
     }
     return null;
-  }, [awardPreferences]);
+  }, [eventAwardPreferences]);
 
   // Create unique combinations of prizeId and award values
   const initialCombinations = useMemo(() => {
@@ -139,6 +154,15 @@ export function DashboardPage() {
     savePreferencesOrder(newCombinations);
   };
 
+  const handleResetToRecommended = () => {
+    if (!selectedPlayer || !selectedEvent) return;
+
+    deleteAwardPreferences({
+      playerId: selectedPlayer.id,
+      eventId: selectedEvent.id,
+    });
+  };
+
   if (isLoadingPrizes || isLoadingPlayers || isLoadingAwardPreferences) {
     return (
       <div className="flex pt-12 justify-center min-h-[calc(100vh-4rem)] min-w-full">
@@ -192,11 +216,11 @@ export function DashboardPage() {
 
         {selectedPlayer && selectedEvent && (
           <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-1">Available Prizes</h1>
-            <p className="text-sm text-muted-foreground">
-              Only showing prizes that are still available to win. Drag items or use arrows to sort
-              your prize preferences.
-            </p>
+            <h1 className="text-2xl font-bold mb-2">Available Prizes</h1>
+            <ul className="text-xs text-muted-foreground space-y-0.5">
+              <li>• Drag rows or use arrows to rank your preference for the available prizes</li>
+              <li>• Your preferences are saved automatically</li>
+            </ul>
           </div>
         )}
 
@@ -227,8 +251,9 @@ export function DashboardPage() {
           <PrizeList
             prizeAwardCombinations={prizeAwardCombinations}
             onReorder={handleReorder}
-            preferenceMap={preferenceMap}
-            hasAwardPreferences={awardPreferences.length > 0}
+            hasAwardPreferences={eventAwardPreferences.length > 0}
+            onResetToRecommended={handleResetToRecommended}
+            isResetting={isResettingPreferences}
           />
         )}
       </div>
