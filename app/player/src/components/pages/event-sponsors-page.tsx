@@ -223,7 +223,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                               <img
                                 src={`${env.VITE_API_URL}/api/static/prizes/${sponsorPrize.id}.${getExtensionFromMimeType(sponsorPrize.imageType)}`}
                                 alt={sponsor}
-                                className={`w-full h-full object-cover transition-all duration-300 ${isExpanded ? 'object-contain' : 'md:group-hover:object-contain'}`}
+                                className="w-full h-full object-contain"
                               />
                             </div>
                           ) : (
