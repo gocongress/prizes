@@ -1,4 +1,5 @@
 import {
+  BooleanField,
   ColumnsButton,
   CreateButton,
   DataTable,
@@ -22,6 +23,9 @@ const EventList = () => (
       <DataTable.Col source="id" />
       <DataTable.Col label="Event Id" source="slug" />
       <DataTable.Col source="title" />
+      <DataTable.Col label="Self Registration">
+        <BooleanField source="selfRegistrationEnabled" />
+      </DataTable.Col>
       <DataTable.Col source="registrationUrl" />
       <DataTable.Col source="description" />
       <DataTable.Col source="startAt" field={DateField} />

@@ -1,4 +1,5 @@
 import {
+  BooleanInput,
   DateTimeInput,
   DeleteWithConfirmButton,
   Edit,
@@ -47,6 +48,7 @@ const EventEdit = () => {
         <TextInput disabled label="Id" source="id" sx={{ display: 'none' }} />
         <TextInput disabled label="Event Id" source="slug" />
         <TextInput source="title" validate={required()} />
+        <BooleanInput label="Self Registration" source="selfRegistrationEnabled" />
         <TextInput
           source="registrationUrl"
           helperText="The public URL where users can register for this event."

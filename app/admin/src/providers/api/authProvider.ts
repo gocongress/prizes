@@ -71,19 +71,23 @@ export const authProvider = {
       throw new HttpError('Server error during login, please try again later.', 500);
     }
   },
-  async logout() {},
+  async logout() {
+    localStorage.removeItem('token');
+    return Promise.resolve();
+  },
   async checkError(error: unknown) {
     const status = (error as HttpError).status;
     if (status === 401 || status === 403) {
       localStorage.removeItem('token');
-      throw new HttpError('Unauthorized.', status);
+      throw new HttpError('Unauthorized.', status, '/login');
     }
   },
   async checkAuth() {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      throw new HttpError('Unauthorized', 401);
+      localStorage.removeItem('token');
+      throw new HttpError('Unauthorized', 401, '/login');
     }
   },
   async getOtp({

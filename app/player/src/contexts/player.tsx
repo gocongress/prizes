@@ -22,19 +22,28 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
   // Memoize the list of players for the current user
   const players = useMemo(() => auth.user?.players || [], [auth.user?.players]);
 
-  // Auto-select the first player if there's only one
+  // Sync selectedPlayer with fresh data when players array changes
   useEffect(() => {
-    if (players.length === 1 && !selectedPlayer) {
+    if (players.length === 0) {
+      setSelectedPlayer(undefined);
+      return;
+    }
+
+    // Auto-select the first player if none selected
+    if (!selectedPlayer) {
+      setSelectedPlayer(players[0]);
+      return;
+    }
+
+    // Update selectedPlayer with fresh data from the players array
+    const freshPlayer = players.find((p) => p.id === selectedPlayer.id);
+    if (freshPlayer) {
+      setSelectedPlayer(freshPlayer);
+    } else {
+      // Selected player no longer in list, select first available
       setSelectedPlayer(players[0]);
     }
-  }, [players, selectedPlayer]);
-
-  // Clear selection if the selected player is no longer in the list
-  useEffect(() => {
-    if (selectedPlayer && !players.find((p) => p.id === selectedPlayer.id)) {
-      setSelectedPlayer(undefined);
-    }
-  }, [players, selectedPlayer]);
+  }, [players]);
 
   const value: PlayerContextValue = {
     players,

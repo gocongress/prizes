@@ -1,4 +1,4 @@
-import { Create, DateTimeInput, SimpleForm, TextInput, required } from 'react-admin';
+import { BooleanInput, Create, DateTimeInput, SimpleForm, TextInput, required } from 'react-admin';
 
 const validateSlug = (value: string) => {
   if (!value) return undefined;
@@ -32,6 +32,7 @@ const EventCreate = () => {
           helperText="A unique identifier for the event, used in URLs. Only lowercase letters, digits, and dashes are allowed. (ie. go-congress-2026)"
         />
         <TextInput source="title" validate={[required()]} />
+        <BooleanInput label="Self Registration" source="selfRegistrationEnabled" defaultValue={false} defaultChecked={false} />
         <TextInput
           source="registrationUrl"
           helperText="The public URL where users can register for this event."

@@ -215,18 +215,16 @@ export const deleteById = async (
   trx: Knex.Transaction,
   id: RegistrantApi['id'],
 ): Promise<RegistrantApi | undefined> => {
-  const rows = await trx<RegistrantDb>(TABLE_NAME)
-    .where({ id })
-    .update({
-      deleted_at: new Date(),
-      updated_at: new Date(),
-    })
-    .returning<RegistrantDb[]>('*');
+  const rows = await trx<RegistrantDb>(TABLE_NAME).where({ id }).select('*');
 
   if (!rows.length) {
     return;
   }
 
-  context.logger.debug({ id: rows[0].id }, 'Registrant soft deleted');
-  return asModel(rows[0]);
+  const registrant = asModel(rows[0]);
+
+  await trx<RegistrantDb>(TABLE_NAME).where({ id }).del();
+
+  context.logger.debug({ id: registrant.id }, 'Registrant deleted');
+  return registrant;
 };

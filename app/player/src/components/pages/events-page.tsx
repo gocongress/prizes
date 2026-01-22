@@ -2,10 +2,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
+import { useAuth } from '@/hooks/use-auth';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
+import type { Event } from '@/hooks/use-events';
 import { useEvents } from '@/hooks/use-events';
+import { useSelfRegistration } from '@/hooks/use-self-registration';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
-import { Calendar, ExternalLink, LogIn } from 'lucide-react';
+import { Calendar, Check, ExternalLink, LogIn, Loader2, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect } from 'react';
 
 export interface BreadcrumbSegment {
@@ -21,6 +24,8 @@ export interface EventsPageProps {
 function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
   const { setBreadcrumbs } = useBreadcrumb();
   const { events, isLoading } = useEvents();
+  const { user, isAuthenticated } = useAuth();
+  const { register, unregister, isLoading: isRegistrationLoading } = useSelfRegistration();
   const navigate = useNavigate();
   const routerState = useRouterState();
 
@@ -55,6 +60,39 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
     } else {
       navigate({ to: '/event/$slug', params: { slug: eventSlug } });
     }
+  };
+
+  // Check if any of the user's players is registered for a given event
+  const isPlayerRegisteredForEvent = (event: Event): boolean => {
+    if (!user?.players) return false;
+    return user.players.some((player) => player.events?.some((e) => e.id === event.id));
+  };
+
+  // Get the first player that is registered for the event (for unregistration)
+  const getRegisteredPlayer = (event: Event) => {
+    if (!user?.players) return null;
+    return user.players.find((player) => player.events?.some((e) => e.id === event.id)) || null;
+  };
+
+  // Get the first player available for registration
+  const getFirstPlayer = () => {
+    return user?.players?.[0] || null;
+  };
+
+  const handleSelfRegister = async (event: Event, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const player = getFirstPlayer();
+    if (!player) return;
+
+    await register({ eventId: event.id, playerId: player.id });
+  };
+
+  const handleSelfUnregister = async (event: Event, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const player = getRegisteredPlayer(event);
+    if (!player) return;
+
+    await unregister({ eventId: event.id, playerId: player.id });
   };
 
   if (isLoading) {
@@ -93,42 +131,87 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
           </Card>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <Card
-                key={event.id}
-                className="flex flex-col cursor-pointer transition-all duration-300 hover:border-blue-500 hover:shadow-xl hover:-translate-y-2"
-                onClick={() => handleEventClick(event.slug)}
-              >
-                <CardHeader>
-                  <CardTitle>{event.title}</CardTitle>
-                  <CardDescription className="flex flex-col gap-1.5 text-xs">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {formatDate(event.startAt)} - {formatDate(event.endAt)}
-                    </div>
-                    {event.registrationUrl && (
-                      <a
-                        href={event.registrationUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-800 hover:underline"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                        Register for this event
-                      </a>
-                    )}
-                  </CardDescription>
-                </CardHeader>
-                {event.description && (
-                  <CardContent className="flex-1">
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {event.description}
-                    </p>
-                  </CardContent>
-                )}
-              </Card>
-            ))}
+            {events.map((event) => {
+              const isRegistered = isPlayerRegisteredForEvent(event);
+              const canSelfRegister = event.selfRegistrationEnabled && isAuthenticated && user?.players?.length;
+
+              return (
+                <Card
+                  key={event.id}
+                  className="flex flex-col cursor-pointer transition-all duration-300 hover:border-blue-500 hover:shadow-xl hover:-translate-y-2"
+                  onClick={() => handleEventClick(event.slug)}
+                >
+                  <CardHeader>
+                    <CardTitle>{event.title}</CardTitle>
+                    <CardDescription className="flex flex-col gap-1.5 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {formatDate(event.startAt)} - {formatDate(event.endAt)}
+                      </div>
+                      {event.registrationUrl && !event.selfRegistrationEnabled && (
+                        <a
+                          href={event.registrationUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-800 hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          Register for this event
+                        </a>
+                      )}
+                    </CardDescription>
+                  </CardHeader>
+                  {event.description && (
+                    <CardContent className="flex-1">
+                      <p className="text-sm text-muted-foreground line-clamp-3">
+                        {event.description}
+                      </p>
+                    </CardContent>
+                  )}
+                  {canSelfRegister && (
+                    <CardContent className="pt-0">
+                      {isRegistered ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={(e) => handleSelfUnregister(event, e)}
+                          disabled={isRegistrationLoading}
+                        >
+                          {isRegistrationLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <>
+                              <Check className="w-4 h-4 text-green-600" />
+                              <span className="text-green-600">Registered</span>
+                              <UserMinus className="w-4 h-4 ml-auto" />
+                            </>
+                          )}
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="w-full"
+                          onClick={(e) => handleSelfRegister(event, e)}
+                          disabled={isRegistrationLoading}
+                        >
+                          {isRegistrationLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <>
+                              <UserPlus className="w-4 h-4" />
+                              Register for this event
+                            </>
+                          )}
+                        </Button>
+                      )}
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
           </div>
         )}
 

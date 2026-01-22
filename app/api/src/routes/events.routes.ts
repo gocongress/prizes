@@ -18,9 +18,24 @@ export const eventsRoutes = (context: Context) =>
           }),
         },
       ),
-      ':id': route({
-        // GET: /api/v1/events/{id}
-        get: handlers.Event.getEventById(context),
-      }),
+      ':id': nested(
+        {
+          // GET: /api/v1/events/{id}
+          get: handlers.Event.getEventById(context),
+        },
+        {
+          register: nested(
+            {},
+            {
+              ':playerId': route({
+                // POST: /api/v1/events/{id}/register/{playerId}
+                post: handlers.Event.selfRegisterForEvent(context),
+                // DELETE: /api/v1/events/{id}/register/{playerId}
+                delete: handlers.Event.selfUnregisterFromEvent(context),
+              }),
+            },
+          ),
+        },
+      ),
     },
   );

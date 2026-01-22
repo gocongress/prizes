@@ -7,9 +7,11 @@ import {
   EventSlugParamsSchema,
   type EventQueryParams,
 } from '@/schemas/event';
+import { RegistrantApiSchema } from '@/schemas/registrant';
 import * as EventService from '@/services/event';
 import { ContextKinds, type Context } from '@/types';
 import createHttpError from 'http-errors';
+import z from 'zod';
 
 /**
  * GET /api/v1/events?page=0&pageSize=25
@@ -108,3 +110,81 @@ export const getEventBySlug = (context: Context) =>
         }
       },
     });
+
+/**
+ * POST /api/v1/events/:id/register/:playerId
+ * Authenticated endpoint - allows a user to self-register their player for an event
+ */
+export const selfRegisterForEvent = (context: Context) =>
+  handlerFactory({
+    kind: ContextKinds.REGISTRANT,
+    scopes: ScopeKinds.USER,
+    context,
+    itemSchema: RegistrantApiSchema,
+  }).build({
+    method: 'post',
+    input: z.object({ id: z.guid(), playerId: z.guid() }),
+    output: ApiPayloadSchema,
+    handler: async ({ input, options: { context } }) => {
+      try {
+        const userId = context.request?.jwtPayload?.sub as string | undefined;
+        if (!userId) {
+          throw createHttpError(401, 'Authentication required.');
+        }
+
+        const payload = await EventService.selfRegisterForEvent({
+          context,
+          input: { eventId: input.id, playerId: input.playerId, userId },
+        });
+        return buildResponse(RegistrantApiSchema, context, ContextKinds.REGISTRANT, payload);
+      } catch (err) {
+        if (err instanceof createHttpError.HttpError) {
+          throw err;
+        }
+        context.logger.error(
+          { err, eventId: input.id, playerId: input.playerId },
+          'Error self-registering for event',
+        );
+        throw createHttpError(500, err as Error, { expose: false });
+      }
+    },
+  });
+
+/**
+ * DELETE /api/v1/events/:id/register/:playerId
+ * Authenticated endpoint - allows a user to self-unregister their player from an event
+ */
+export const selfUnregisterFromEvent = (context: Context) =>
+  handlerFactory({
+    kind: ContextKinds.REGISTRANT,
+    scopes: ScopeKinds.USER,
+    context,
+    itemSchema: RegistrantApiSchema,
+  }).build({
+    method: 'delete',
+    input: z.object({ id: z.guid(), playerId: z.guid() }),
+    output: ApiPayloadSchema,
+    handler: async ({ input, options: { context } }) => {
+      try {
+        const userId = context.request?.jwtPayload?.sub as string | undefined;
+        if (!userId) {
+          throw createHttpError(401, 'Authentication required.');
+        }
+
+        const payload = await EventService.selfUnregisterFromEvent({
+          context,
+          input: { eventId: input.id, playerId: input.playerId, userId },
+        });
+        return buildResponse(RegistrantApiSchema, context, ContextKinds.REGISTRANT, payload);
+      } catch (err) {
+        if (err instanceof createHttpError.HttpError) {
+          throw err;
+        }
+        context.logger.error(
+          { err, eventId: input.id, playerId: input.playerId },
+          'Error self-unregistering from event',
+        );
+        throw createHttpError(500, err as Error, { expose: false });
+      }
+    },
+  });

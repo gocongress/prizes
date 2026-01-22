@@ -7,13 +7,21 @@ import {
   getBySlug,
   updateById,
 } from '@/models/event';
+import { getByUserId as getPlayersByUserId } from '@/models/player';
+import {
+  create as createRegistrant,
+  deleteById as deleteRegistrant,
+  getByPlayerAndEvent,
+} from '@/models/registrant';
 import {
   type CreateEvent,
   type EventApi,
   type EventQueryParams,
   type UpdateEvent,
 } from '@/schemas/event';
+import type { RegistrantApi } from '@/schemas/registrant';
 import type { ServiceParams } from '@/types';
+import createHttpError from 'http-errors';
 
 export const getAllEvent = async (args: {
   serviceParams: ServiceParams<void>;
@@ -112,6 +120,97 @@ export const deleteEventById = async ({
     const payload = await deleteById(context, trx, input);
     await trx.commit();
     return payload;
+  } catch (error) {
+    await trx.rollback();
+    throw error;
+  }
+};
+
+export const selfRegisterForEvent = async ({
+  context,
+  input,
+}: ServiceParams<{ eventId: EventApi['id']; playerId: string; userId: string }>): Promise<RegistrantApi> => {
+  if (!input) {
+    throw createHttpError(400, 'Self-registration input is missing.');
+  }
+
+  const { eventId, playerId, userId } = input;
+
+  // Get the event and verify self-registration is enabled
+  const event = await getById(context, eventId);
+  if (!event.selfRegistrationEnabled) {
+    throw createHttpError(403, 'Self-registration is not enabled for this event.');
+  }
+
+  // Verify the player belongs to the user
+  const players = await getPlayersByUserId(context, userId);
+  const player = players.find((p) => p.id === playerId);
+  if (!player) {
+    throw createHttpError(403, 'You can only register players that belong to your account.');
+  }
+
+  // Check if already registered
+  const existingRegistration = await getByPlayerAndEvent(context, playerId, eventId);
+  if (existingRegistration) {
+    throw createHttpError(400, 'Player is already registered for this event.');
+  }
+
+  const trx = await context.db.transaction();
+  try {
+    const registrant = await createRegistrant(context, trx, {
+      playerId,
+      eventId,
+      registrationDate: new Date().toISOString(),
+      status: 'self-registered',
+    });
+    if (!registrant) {
+      throw createHttpError(400, 'Failed to create registration.');
+    }
+    await trx.commit();
+    return registrant;
+  } catch (error) {
+    await trx.rollback();
+    throw error;
+  }
+};
+
+export const selfUnregisterFromEvent = async ({
+  context,
+  input,
+}: ServiceParams<{ eventId: EventApi['id']; playerId: string; userId: string }>): Promise<RegistrantApi> => {
+  if (!input) {
+    throw createHttpError(400, 'Self-unregistration input is missing.');
+  }
+
+  const { eventId, playerId, userId } = input;
+
+  // Get the event and verify self-registration is enabled
+  const event = await getById(context, eventId);
+  if (!event.selfRegistrationEnabled) {
+    throw createHttpError(403, 'Self-registration is not enabled for this event.');
+  }
+
+  // Verify the player belongs to the user
+  const players = await getPlayersByUserId(context, userId);
+  const player = players.find((p) => p.id === playerId);
+  if (!player) {
+    throw createHttpError(403, 'You can only unregister players that belong to your account.');
+  }
+
+  // Find the existing registration
+  const existingRegistration = await getByPlayerAndEvent(context, playerId, eventId);
+  if (!existingRegistration) {
+    throw createHttpError(404, 'Player is not registered for this event.');
+  }
+
+  const trx = await context.db.transaction();
+  try {
+    const registrant = await deleteRegistrant(context, trx, existingRegistration.id);
+    if (!registrant) {
+      throw createHttpError(400, 'Failed to remove registration.');
+    }
+    await trx.commit();
+    return registrant;
   } catch (error) {
     await trx.rollback();
     throw error;

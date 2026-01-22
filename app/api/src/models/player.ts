@@ -153,6 +153,21 @@ export const getByAgaId = async (
   return asModel(rows[0]);
 };
 
+export const getByUserId = async (
+  context: Context,
+  userId: PlayerApi['userId'],
+): Promise<PlayerApi[]> => {
+  const rows = await context
+    .db<PlayerDb>(TABLE_NAME)
+    .select(`${TABLE_NAME}.*`, `${USER_TABLE_NAME}.email as email`)
+    .join(USER_TABLE_NAME, `${USER_TABLE_NAME}.id`, `${TABLE_NAME}.user_id`)
+    .where(`${TABLE_NAME}.user_id`, userId)
+    .where(`${TABLE_NAME}.deleted_at`, null)
+    .returning<(PlayerDb & { email: UserDb['email'] })[]>('*');
+
+  return rows.map(asModel);
+};
+
 export const create = async (
   context: Context,
   trx: Knex.Transaction,

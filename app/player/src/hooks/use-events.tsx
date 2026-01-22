@@ -8,6 +8,7 @@ export interface Event {
   slug: string;
   description?: string | null;
   registrationUrl?: string | null;
+  selfRegistrationEnabled: boolean;
   startAt: string;
   endAt: string;
   createdAt: string;
