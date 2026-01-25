@@ -214,16 +214,22 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                           {/* Prize Image */}
                           {sponsorPrize.imageThumbnailEncoded && sponsorPrize.imageType ? (
                             <div
-                              className={`w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${
+                              className={`relative w-full overflow-hidden bg-muted flex items-center justify-center rounded-md mb-2 transition-all duration-300 ${
                                 isExpanded
-                                  ? 'h-[300px]'
-                                  : 'h-28 md:h-[120px] md:group-hover:h-[300px]'
+                                  ? 'h-[250px]'
+                                  : 'h-28 md:h-[120px] md:group-hover:h-[250px]'
                               }`}
                             >
                               <img
                                 src={`${env.VITE_API_URL}/api/static/prizes/${sponsorPrize.id}.${getExtensionFromMimeType(sponsorPrize.imageType)}`}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover blur-md scale-110 opacity-80"
+                                aria-hidden="true"
+                              />
+                              <img
+                                src={`${env.VITE_API_URL}/api/static/prizes/${sponsorPrize.id}.${getExtensionFromMimeType(sponsorPrize.imageType)}`}
                                 alt={sponsor}
-                                className="w-full h-full object-contain"
+                                className="relative w-full h-full object-contain"
                               />
                             </div>
                           ) : (
