@@ -1,9 +1,9 @@
-export const convertStringRankToNumber = (playingRank: string): number => {
+export const convertStringRankToNumber = (playingRank: string): number | undefined => {
   const normalized = playingRank.toLowerCase().trim();
 
   const match = normalized.match(/^(\d+)\s*(dan|kyu)$/);
   if (!match) {
-    throw new Error(`Invalid playing rank: ${playingRank}`);
+    return;
   }
 
   const [, digits, rank] = match;
