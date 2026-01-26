@@ -24,7 +24,7 @@ export const getMany: getMany = async (resource, params) => {
   };
 
   const queryString = new URLSearchParams(queryParams).toString();
-  const url = `${API_URL}/api/v1/admin/${resource}?${queryString}`;
+  const url = `${API_URL}/api/v1/admin/${resource}?${queryString}&pageSize=${ids.length}`;
 
   const response = await httpClient(url, { signal });
 
