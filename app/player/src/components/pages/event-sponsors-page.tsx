@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
 import { env } from '@/env';
@@ -6,8 +7,10 @@ import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEventBySlug } from '@/hooks/use-event-by-slug';
 import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
 import { useParams } from '@tanstack/react-router';
-import { CalendarDays, ExternalLink, Trophy } from 'lucide-react';
+import { ArrowDownAZ, ArrowDownWideNarrow, CalendarDays, ExternalLink, Trophy } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+
+type SortOrder = 'totalValue' | 'sponsorName';
 
 export interface BreadcrumbSegment {
   label: string;
@@ -51,6 +54,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
     error: prizesErrorMsg,
   } = usePrizesByEvent(event?.id);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>('totalValue');
 
   useEffect(() => {
     if (breadcrumbs && event) {
@@ -70,7 +74,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
   }, [prizes]);
 
   // Group prizes by sponsor
-  const prizesBySponso = useMemo(() => {
+  const prizesBySponsor = useMemo(() => {
     const grouped = new Map<string, typeof prizes>();
 
     availablePrizes.forEach((prize) => {
@@ -81,14 +85,18 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
       grouped.get(sponsor)!.push(prize);
     });
 
-    return Array.from(grouped.entries())
-      .map(([sponsor, prizes]) => ({
-        sponsor,
-        prizes,
-        totalValue: prizes.reduce((sum, p) => sum + (p.awardsSum || 0), 0),
-      }))
-      .sort((a, b) => a.sponsor.localeCompare(b.sponsor));
-  }, [availablePrizes]);
+    const sponsorGroups = Array.from(grouped.entries()).map(([sponsor, prizes]) => ({
+      sponsor,
+      prizes,
+      totalValue: prizes.reduce((sum, p) => sum + (p.awardsSum || 0), 0),
+    }));
+
+    if (sortOrder === 'sponsorName') {
+      return sponsorGroups.sort((a, b) => a.sponsor.localeCompare(b.sponsor));
+    }
+    // Default: sort by total value (highest first)
+    return sponsorGroups.sort((a, b) => b.totalValue - a.totalValue);
+  }, [availablePrizes, sortOrder]);
 
   if (eventLoading || prizesLoading) {
     return (
@@ -149,10 +157,37 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
 
         {/* Prizes Section */}
         <div>
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-            <Trophy className="w-6 h-6" />
-            Prizes
-          </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <Trophy className="w-6 h-6" />
+              Prizes
+            </h2>
+            {prizesBySponsor.length > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Sort by:</span>
+                <div className="flex gap-1">
+                  <Button
+                    variant={sortOrder === 'totalValue' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setSortOrder('totalValue')}
+                    className="gap-1"
+                  >
+                    <ArrowDownWideNarrow className="w-4 h-4" />
+                    Value
+                  </Button>
+                  <Button
+                    variant={sortOrder === 'sponsorName' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setSortOrder('sponsorName')}
+                    className="gap-1"
+                  >
+                    <ArrowDownAZ className="w-4 h-4" />
+                    Sponsor
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {prizesError && (
             <div className="text-center text-destructive mb-4">
@@ -168,9 +203,9 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
           )}
 
           {/* Prize Cards Grouped by Sponsor */}
-          {prizesBySponso.length > 0 && (
+          {prizesBySponsor.length > 0 && (
             <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-center gap-4">
-              {prizesBySponso.map(({ sponsor, prizes }) => {
+              {prizesBySponsor.map(({ sponsor, prizes }) => {
                 // Use the first prize with an image for the sponsor card
                 const sponsorPrize =
                   prizes.find((p) => p.imageThumbnailEncoded && p.imageType) || prizes[0];
