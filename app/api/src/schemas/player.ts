@@ -80,11 +80,7 @@ export const PlayerQuerySchema = z.object({
     .nullable()
     .optional(),
   page: z.coerce.number().min(0).max(MAX_PAGE).default(0),
-  pageSize: z.coerce
-    .number()
-    .min(1)
-    .max(MAX_PAGE_SIZE * 10)
-    .default(DEFAULT_PAGE_SIZE),
+  pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(PlayerQueryKeys).default('createdAt'),
   orderDirection: z.enum(['asc', 'desc']).default('asc'),
 });
