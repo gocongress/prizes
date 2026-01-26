@@ -93,7 +93,7 @@ const serverRouting = (context: Context) =>
 const webhooksRouting = (context: Context) =>
   ({
     webhooks: {
-      regfox: route({ get: regfox(context) }),
+      regfox: route({ post: regfox(context) }),
     },
   }) as Routing;
 
