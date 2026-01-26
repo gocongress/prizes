@@ -5,6 +5,11 @@ import type { NextFunction, Request, Response } from 'express';
 // Create cacheable instance
 const cache = new Cacheable();
 
+// Clear all cached entries
+export const resetCache = async () => {
+  await cache.clear();
+};
+
 // Basic middleware
 export const cacheMiddleware = (context: Context, ttl = 300000) => {
   // 5 minutes default
