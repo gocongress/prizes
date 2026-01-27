@@ -31,7 +31,7 @@ export const extractRegistrantDetails = (
   return {
     firstName: nameField.first.value,
     lastName: nameField.last.value,
-    email: emailField.value,
+    email: emailField?.value,
     aga: agaField.value,
     playingRank: rankField.value,
   };
@@ -95,6 +95,15 @@ const handler = (context: Context) =>
         );
 
         const registrants = input.data.registrants.map(extractRegistrantDetails);
+        const primaryRegistrantEmail = registrants.find((r) => r.email)?.email;
+
+        if (!primaryRegistrantEmail) {
+          const errorMessage = 'No registrant with a valid email found in payload';
+          context.logger.error({ errorMessage, registrants }, 'Aborting webhook processing');
+          await sendSupportEmail(context, { errorMessage, jsonData: registrants as any });
+          throw createHttpError(400, errorMessage);
+        }
+
         context.logger.debug({ registrants }, 'Extracted registrant details');
 
         for (const registrant of registrants) {
@@ -104,7 +113,7 @@ const handler = (context: Context) =>
             // TODO: Should brand new users get a welcome email and a code from the Prizes app?
             const user = await createUser({
               context,
-              input: { email: registrant.email },
+              input: { email: registrant.email || primaryRegistrantEmail },
               sendEmail: false,
             });
 
