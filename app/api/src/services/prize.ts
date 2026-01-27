@@ -1,4 +1,5 @@
 import { resetCache } from '@/lib/cache';
+import { syncPrizeImages } from '@/lib/sync-prize-images';
 import { create, deleteById, getAll, getById, updateById } from '@/models/prize';
 import {
   type CreatePrize,
@@ -34,6 +35,7 @@ export const createPrize = async ({
   try {
     const payload = await create(context, trx, input);
     await trx.commit();
+    await syncPrizeImages(context, payload.id);
     await resetCache();
     return payload;
   } catch (error) {
@@ -66,6 +68,7 @@ export const updatePrizeById = async ({
   try {
     const payload = await updateById(context, trx, input.id, input);
     await trx.commit();
+    await syncPrizeImages(context, payload.id);
     await resetCache();
     return payload;
   } catch (error) {
