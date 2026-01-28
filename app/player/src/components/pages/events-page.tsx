@@ -1,11 +1,12 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ExternalLink } from '@/components/ui/external-link';
+import { LoginCallToAction } from '@/components/ui/login-call-to-action';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvents } from '@/hooks/use-events';
-import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
-import { Calendar, ExternalLink, LogIn } from 'lucide-react';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
+import { Calendar } from 'lucide-react';
 import { useEffect } from 'react';
 
 export interface BreadcrumbSegment {
@@ -107,16 +108,13 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
                       {formatDate(event.startAt)} - {formatDate(event.endAt)}
                     </div>
                     {event.registrationUrl && (
-                      <a
+                      <ExternalLink
                         href={event.registrationUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs font-semibold text-blue-500 hover:text-blue-800 hover:underline"
+                        className="text-xs font-semibold text-blue-500 hover:text-blue-800"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <ExternalLink className="w-3 h-3" />
                         Register for this event
-                      </a>
+                      </ExternalLink>
                     )}
                   </CardDescription>
                 </CardHeader>
@@ -133,24 +131,7 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
         )}
 
         {/* Call to Action */}
-        {showCallToAction && events.length > 0 && (
-          <div className="mt-12 flex justify-center">
-            <Card className="border-primary/20 bg-primary/5 inline-block">
-              <CardContent className="py-2 px-8 text-center">
-                <h3 className="text-xl font-semibold mb-2">
-                  Registered for one of these tournaments?
-                </h3>
-                <p className="text-muted-foreground mb-4">Log in to set your prize preferences.</p>
-                <Button asChild size="lg">
-                  <Link to="/login">
-                    <LogIn />
-                    Log In and Choose Prizes
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        {showCallToAction && events.length > 0 && <LoginCallToAction />}
       </div>
     </div>
   );
