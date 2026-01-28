@@ -37,8 +37,8 @@ export function PrizeRankingHelpDialog() {
             <div>
               <p className="font-medium">Drag Handle</p>
               <p className="text-sm text-muted-foreground">
-                Click and drag the grip icon on the left side of any prize to move it up
-                or down in the list. This works great on desktop.
+                Click and drag the grip icon on the left side of any prize to move it up or down in
+                the list. This works great on desktop.
               </p>
             </div>
           </div>
@@ -52,9 +52,8 @@ export function PrizeRankingHelpDialog() {
             <div>
               <p className="font-medium">Arrow Buttons</p>
               <p className="text-sm text-muted-foreground">
-                Use the up and down arrow buttons on the right side of each prize to move
-                it one position at a time. This is ideal for mobile or precise
-                adjustments.
+                Use the up and down arrow buttons on the right side of each prize to move it one
+                position at a time. This is ideal for mobile or precise adjustments.
               </p>
             </div>
           </div>

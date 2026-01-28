@@ -79,10 +79,7 @@ export function MyPrizesPage() {
                     <Medal className="w-5 h-5" />
                     {award.prize?.title || 'Prize'}
                     {award.prize?.url && (
-                      <ExternalLink
-                        href={award.prize.url}
-                        className="text-sm text-primary"
-                      />
+                      <ExternalLink href={award.prize.url} className="text-sm text-primary" />
                     )}
                   </CardTitle>
                   {award.prize?.eventTitle && (
