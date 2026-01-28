@@ -1,3 +1,4 @@
+import { ExternalLink } from '@/components/ui/external-link';
 import SortIndicator from '@/components/ui/sort-indicator';
 import type { PrizeAwardCombination } from '@/hooks/use-prizes';
 import {
@@ -17,7 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ChevronDown, ChevronUp, ExternalLink, GripVertical, Trophy } from 'lucide-react';
+import { ChevronDown, ChevronUp, GripVertical, Trophy } from 'lucide-react';
 import { useState } from 'react';
 
 interface PrizeListProps {
@@ -74,17 +75,6 @@ function SortableRow({
         style={style}
         className={`border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors ${isDragging ? 'bg-gray-100 dark:bg-slate-700' : ''}`}
       >
-        {/* Rank */}
-        <td className="py-2 px-2 text-center w-12">
-          {index < 3 && showRankBadge ? (
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white text-sm font-bold">
-              {index + 1}
-            </span>
-          ) : (
-            <span className="text-sm font-medium text-muted-foreground">{index + 1}</span>
-          )}
-        </td>
-
         {/* Drag Handle */}
         <td className="py-2 px-1 w-8">
           <div
@@ -94,6 +84,17 @@ function SortableRow({
           >
             <GripVertical className="w-4 h-4 text-muted-foreground" />
           </div>
+        </td>
+
+        {/* Rank */}
+        <td className="py-2 px-2 text-center w-12">
+          {index < 3 && showRankBadge ? (
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white text-sm font-bold">
+              {index + 1}
+            </span>
+          ) : (
+            <span className="text-sm font-medium text-muted-foreground">{index + 1}</span>
+          )}
         </td>
 
         {/* Prize Name (clickable to expand) */}
@@ -118,16 +119,12 @@ function SortableRow({
               {prize.title}
             </span>
             {prize.url && (
-              <a
+              <ExternalLink
                 href={prize.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
-                aria-label={`Open link for ${prize.title}`}
+                className="text-muted-foreground hover:text-foreground no-underline hover:no-underline"
+                ariaLabel={`Open link for ${prize.title}`}
                 onClick={(e) => e.stopPropagation()}
-              >
-                <ExternalLink className="w-3 h-3" />
-              </a>
+              />
             )}
           </div>
         </td>
@@ -192,15 +189,9 @@ function SortableRow({
                   <p className="text-muted-foreground italic pt-2">
                     Sponsored by{' '}
                     {prize.url ? (
-                      <a
-                        href={prize.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline transition-colors inline-flex items-center gap-1"
-                      >
+                      <ExternalLink href={prize.url} className="text-blue-600 dark:text-blue-400">
                         {prize.sponsor}
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                      </ExternalLink>
                     ) : (
                       prize.sponsor
                     )}
@@ -282,10 +273,10 @@ export function PrizeList({
             <table className="w-full">
               <thead className="bg-gray-100 dark:bg-slate-800 border-b border-gray-200 dark:border-gray-700">
                 <tr>
+                  <th className="py-2 px-1 w-8" />
                   <th className="py-2 px-2 text-xs font-medium text-muted-foreground text-center w-12">
                     #
                   </th>
-                  <th className="py-2 px-1 w-8" />
                   <th className="py-2 px-2 text-xs font-medium text-muted-foreground text-left">
                     Prize
                   </th>

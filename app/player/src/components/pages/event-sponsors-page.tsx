@@ -1,13 +1,15 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ExternalLink } from '@/components/ui/external-link';
+import { LoginCallToAction } from '@/components/ui/login-call-to-action';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
 import { env } from '@/env';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEventBySlug } from '@/hooks/use-event-by-slug';
 import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
 import { useParams } from '@tanstack/react-router';
-import { ArrowDownAZ, ArrowDownWideNarrow, CalendarDays, ExternalLink, Trophy } from 'lucide-react';
+import { ArrowDownAZ, ArrowDownWideNarrow, CalendarDays, Trophy } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 type SortOrder = 'totalValue' | 'sponsorName';
@@ -142,15 +144,13 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
               </span>
             </div>
             {event.registrationUrl && (
-              <a
+              <ExternalLink
                 href={event.registrationUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                className="text-sm font-semibold"
+                iconClassName="w-4 h-4"
               >
-                <ExternalLink className="w-4 h-4" />
                 Register for this event
-              </a>
+              </ExternalLink>
             )}
           </div>
         </div>
@@ -276,27 +276,14 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                           {/* Sponsor Info */}
                           <div className="text-center md:text-left w-full">
                             {sponsorPrize.url ? (
-                              <div className="flex items-center justify-center md:justify-start gap-1">
-                                <a
-                                  href={sponsorPrize.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className={`font-semibold text-base text-blue-600 hover:text-blue-800 hover:underline transition-all overflow-hidden ${
-                                    isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
-                                  }`}
-                                  style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical' }}
-                                >
-                                  {sponsor}
-                                </a>
-                                <a
-                                  href={sponsorPrize.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex text-blue-600 hover:text-blue-800 flex-shrink-0"
-                                >
-                                  <ExternalLink className="w-3 h-3" />
-                                </a>
-                              </div>
+                              <ExternalLink
+                                href={sponsorPrize.url}
+                                className={`font-semibold text-base transition-all ${
+                                  isExpanded ? '' : 'line-clamp-1 group-hover:line-clamp-none'
+                                }`}
+                              >
+                                {sponsor}
+                              </ExternalLink>
                             ) : (
                               <h3
                                 className={`font-semibold text-base transition-all overflow-hidden ${
@@ -332,26 +319,14 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                                   className="group/prize flex items-start justify-between gap-3 pb-2 border-b last:border-b-0"
                                 >
                                   <div className="flex-1 min-w-0">
-                                    <div className="flex items-start gap-1">
+                                    <div className="flex items-start">
                                       {prize.url ? (
-                                        <>
-                                          <a
-                                            href={prize.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="font-medium text-xs hover:underline text-blue-600 line-clamp-1"
-                                          >
-                                            {prize.title}
-                                          </a>
-                                          <a
-                                            href={prize.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex flex-shrink-0 text-blue-600 hover:text-blue-800"
-                                          >
-                                            <ExternalLink className="w-3 h-3" />
-                                          </a>
-                                        </>
+                                        <ExternalLink
+                                          href={prize.url}
+                                          className="font-medium text-xs"
+                                        >
+                                          <span className="line-clamp-1">{prize.title}</span>
+                                        </ExternalLink>
                                       ) : (
                                         <span className="font-medium text-xs line-clamp-1">
                                           {prize.title}
@@ -396,6 +371,9 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
             </div>
           )}
         </div>
+
+        {/* Call to Action */}
+        <LoginCallToAction />
       </div>
     </div>
   );
