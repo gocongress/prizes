@@ -1,6 +1,7 @@
 import EventSelect from '@/components/ui/event-select';
 import PlayerSelect from '@/components/ui/player-select';
 import PrizeList from '@/components/ui/prize-list';
+import { PrizeRankingHelpDialog } from '@/components/ui/prize-ranking-help-dialog';
 import {
   useAwardPreferences,
   useDeleteAwardPreferences,
@@ -216,11 +217,10 @@ export function DashboardPage() {
 
         {selectedPlayer && selectedEvent && (
           <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-2">Available Prizes</h1>
-            <ul className="text-xs text-muted-foreground space-y-0.5">
-              <li>• Drag rows or use arrows to rank your preference for the available prizes</li>
-              <li>• Your preferences are saved automatically</li>
-            </ul>
+            <div className="flex items-center gap-2 mb-2">
+              <h1 className="text-2xl font-bold">Available Prizes</h1>
+              <PrizeRankingHelpDialog />
+            </div>
           </div>
         )}
 
