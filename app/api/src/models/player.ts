@@ -75,7 +75,7 @@ export const getAll = async (
     query.andWhere((subQuery) => {
       subQuery
         .whereILike(`${TABLE_NAME}.name`, `%${queryParams.q}%`)
-        .orWhereILike(`${TABLE_NAME}.email`, `%${queryParams.q}%`);
+        .orWhereILike(`${USER_TABLE_NAME}.email`, `%${queryParams.q}%`);
     });
   }
 
