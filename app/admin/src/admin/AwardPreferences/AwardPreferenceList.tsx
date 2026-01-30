@@ -7,8 +7,11 @@ import {
   List,
   NumberField,
   ReferenceField,
+  SearchInput,
   TopToolbar,
 } from 'react-admin';
+
+const filters = [<SearchInput source="q" alwaysOn />];
 
 const AwardPreferenceListActions = () => (
   <TopToolbar>
@@ -19,7 +22,7 @@ const AwardPreferenceListActions = () => (
 );
 
 const AwardPreferenceList = () => (
-  <List actions={<AwardPreferenceListActions />}>
+  <List actions={<AwardPreferenceListActions />} filters={filters}>
     <DataTable hiddenColumns={['id', 'createdAt', 'updatedAt']}>
       <DataTable.Col source="id" />
       <DataTable.Col source="playerId" label="Player">
