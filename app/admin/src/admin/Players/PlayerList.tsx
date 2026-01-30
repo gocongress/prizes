@@ -5,8 +5,11 @@ import {
   DateField,
   ExportButton,
   List,
+  SearchInput,
   TopToolbar,
 } from 'react-admin';
+
+const filters = [<SearchInput source="q" alwaysOn />];
 
 const PlayerListActions = () => (
   <TopToolbar>
@@ -17,7 +20,7 @@ const PlayerListActions = () => (
 );
 
 const PlayerList = () => (
-  <List actions={<PlayerListActions />}>
+  <List actions={<PlayerListActions />} filters={filters}>
     <DataTable hiddenColumns={['id', 'createdAt', 'updatedAt']}>
       <DataTable.Col source="id" />
       <DataTable.Col source="name" />

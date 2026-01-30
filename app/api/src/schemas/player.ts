@@ -83,6 +83,7 @@ export const PlayerQuerySchema = z.object({
   pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(PlayerQueryKeys).default('createdAt'),
   orderDirection: z.enum(['asc', 'desc']).default('asc'),
+  q: z.string().optional().describe('Filter results.'),
 });
 
 export type PlayerDb = z.infer<typeof PlayerDbSchema>;

@@ -1,16 +1,10 @@
 import { ScopeKinds } from '@/lib/constants';
-import {
-  ApiPayloadSchema,
-  buildResponse,
-  createQueryParamsSchema,
-  handlerFactory,
-  UuidParamsSchema,
-} from '@/lib/handlers';
+import { ApiPayloadSchema, buildResponse, handlerFactory, UuidParamsSchema } from '@/lib/handlers';
 import {
   RegistrantApiSchema,
   RegistrantCreateSchema,
   RegistrantMessageSchema,
-  RegistrantQueryKeys,
+  RegistrantQuerySchema,
   RegistrantUpdateSchema,
   type RegistrantQueryParams,
 } from '@/schemas/registrant';
@@ -29,7 +23,7 @@ export const getAllRegistrant = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
   }).build({
     method: 'get',
-    input: createQueryParamsSchema(RegistrantQueryKeys),
+    input: RegistrantQuerySchema,
     output: ApiPayloadSchema,
     handler: async ({ options: { context }, input }) => {
       try {

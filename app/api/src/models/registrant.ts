@@ -82,6 +82,14 @@ export const getAll = async (
     query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
   }
 
+  if (queryParams?.q) {
+    query.andWhere((subQuery) => {
+      subQuery
+        .whereILike(`${PLAYER_TABLE_NAME}.name`, `%${queryParams.q}%`)
+        .orWhereILike(`${EVENT_TABLE_NAME}.title`, `%${queryParams.q}%`);
+    });
+  }
+
   // Improve this if future table-joined fields are included in the orderBy
   let orderByTable;
   switch (orderBy) {

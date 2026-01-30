@@ -71,6 +71,14 @@ export const getAll = async (
     query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
   }
 
+  if (queryParams?.q) {
+    query.andWhere((subQuery) => {
+      subQuery
+        .whereILike(`${TABLE_NAME}.name`, `%${queryParams.q}%`)
+        .orWhereILike(`${TABLE_NAME}.email`, `%${queryParams.q}%`);
+    });
+  }
+
   const rows = await query
     .orderBy(orderByTable, orderDirection)
     .offset(offset)
