@@ -90,12 +90,12 @@ export function DashboardPage() {
       }
     });
 
-    // Sort by award preferences if available
-    if (preferenceMap) {
-      // Sort combinations based on preference order
-      combinations.sort((a, b) => {
-        const orderA = preferenceMap.get(a.id) || undefined;
-        const orderB = preferenceMap.get(b.id) || undefined;
+    // Sort combinations
+    combinations.sort((a, b) => {
+      // If we have preferences, use them first
+      if (preferenceMap) {
+        const orderA = preferenceMap.get(a.id);
+        const orderB = preferenceMap.get(b.id);
 
         // If both have preferences, sort by preference order
         if (orderA !== undefined && orderB !== undefined) {
@@ -105,11 +105,11 @@ export function DashboardPage() {
         // If only one has a preference, put it first
         if (orderA !== undefined) return -1;
         if (orderB !== undefined) return 1;
+      }
 
-        // If neither has a preference, maintain original order
-        return 0;
-      });
-    }
+      // Default: sort by award value descending (highest value first)
+      return b.awardValue - a.awardValue;
+    });
 
     return combinations;
   }, [prizes, preferenceMap, selectedPlayer, selectedEvent]);
