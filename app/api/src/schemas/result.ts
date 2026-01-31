@@ -21,6 +21,7 @@ export const WinnerSchema = z.object({
   division: z.string().min(1).trim(),
   agaId: z.string().min(1).trim(),
   place: z.coerce.number().int().positive(),
+  name: z.string().nullable().optional(),
 });
 
 // Allocation kind enum

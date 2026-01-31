@@ -135,11 +135,17 @@ export const bulkSyncResults = async (context: Context, input: ImportResults): P
   // Generate bulk upsert values
   const resultValues = [`(?, ?, ?)`];
   const resultArgs: (string | number)[] = [];
-  const winnersJson = input.results.map(({ division, agaId, place }) => ({
-    division,
-    agaId,
-    place,
-  }));
+  const winnersJson = await Promise.all(
+    input.results.map(async ({ division, agaId, place }) => {
+      const player = await getByAgaId(context, agaId);
+      return {
+        division,
+        agaId,
+        place,
+        name: player?.name ?? null,
+      };
+    }),
+  );
   resultArgs.push(randomUUID(), input.results[0].eventId, JSON.stringify(winnersJson));
 
   if (resultValues.length) {
