@@ -148,6 +148,7 @@ const apiResultsHandler = <T extends ZodTypeAny, C>(
   itemSchema: T,
   rawOutput = false,
   clearCookie = false,
+  disableScrub = false,
 ) =>
   new ResultHandler({
     positive: () => {
@@ -188,7 +189,7 @@ const apiResultsHandler = <T extends ZodTypeAny, C>(
         const error = err as Error;
         const { statusCode, expose } = ensureHttpError(error);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const shouldScrub = context.env === 'production' && !expose;
+        const shouldScrub = !disableScrub && context.env === 'production' && !expose;
         let message = shouldScrub
           ? createHttpError(statusCode).message
           : getMessageFromError(error);
@@ -220,6 +221,7 @@ export const handlerFactory = <T extends ZodTypeAny>({
   useBotProtection = false,
   rawOutput = false,
   clearCookie = false,
+  disableScrub = false,
 }: {
   kind: ContextKind;
   context: Context;
@@ -229,8 +231,11 @@ export const handlerFactory = <T extends ZodTypeAny>({
   scopes: ScopeKind;
   rawOutput?: boolean;
   clearCookie?: boolean;
+  disableScrub?: boolean;
 }) => {
-  let handler = new EndpointsFactory(apiResultsHandler(kind, itemSchema, rawOutput, clearCookie))
+  let handler = new EndpointsFactory(
+    apiResultsHandler(kind, itemSchema, rawOutput, clearCookie, disableScrub),
+  )
     .addOptions(async () => {
       const requestId = randomID(8);
       const requestContext: Context = {

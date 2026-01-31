@@ -28,6 +28,7 @@ export const getAllAward = (context: Context) =>
     kind: ContextKinds.AWARD,
     itemSchema: AwardListApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: createQueryParamsSchema(AwardQueryKeys),
@@ -56,6 +57,7 @@ export const createAward = (context: Context) =>
     kind: ContextKinds.AWARD,
     itemSchema: AwardApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: AwardCreateSchema,
@@ -80,6 +82,7 @@ export const getAwardById = (context: Context) =>
     kind: ContextKinds.AWARD,
     itemSchema: AwardApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -104,6 +107,7 @@ export const updateAwardById = (context: Context) =>
     kind: ContextKinds.AWARD,
     itemSchema: AwardApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(AwardUpdateSchema.shape),
@@ -128,6 +132,7 @@ export const deleteAwardById = (context: Context) =>
     kind: ContextKinds.AWARD,
     itemSchema: AwardDeleteSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,

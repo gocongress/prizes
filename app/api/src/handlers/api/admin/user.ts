@@ -23,6 +23,7 @@ export const getAllUser = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     // input: createQueryParamsSchema(UserQueryKeys),
@@ -52,6 +53,7 @@ export const createUser = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserMinimalDetailsSchema,
     scopes: ScopeKinds.USER,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: UserCreateSchema,
@@ -84,6 +86,7 @@ export const getUserById = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -108,6 +111,7 @@ export const updateUserById = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(UserUpdateSchema.shape),
@@ -132,6 +136,7 @@ export const deleteUserById = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserMessageSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,
@@ -158,6 +163,7 @@ export const importUsers = (context: Context) =>
     kind: ContextKinds.USER,
     itemSchema: UserMessageSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: UserImportSchema,

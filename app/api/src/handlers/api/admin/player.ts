@@ -21,6 +21,7 @@ export const getAllPlayer = (context: Context) =>
     kind: ContextKinds.PLAYER,
     itemSchema: PlayerApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: PlayerQuerySchema,
@@ -49,6 +50,7 @@ export const createPlayer = (context: Context) =>
     kind: ContextKinds.PLAYER,
     itemSchema: PlayerApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: PlayerCreateSchema,
@@ -73,6 +75,7 @@ export const getPlayerById = (context: Context) =>
     kind: ContextKinds.PLAYER,
     itemSchema: PlayerApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -97,6 +100,7 @@ export const updatePlayerById = (context: Context) =>
     kind: ContextKinds.PLAYER,
     itemSchema: PlayerApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(PlayerUpdateSchema.shape),
@@ -121,6 +125,7 @@ export const deletePlayerById = (context: Context) =>
     kind: ContextKinds.PLAYER,
     itemSchema: PlayerMessageSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,

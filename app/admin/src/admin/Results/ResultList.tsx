@@ -1,6 +1,6 @@
 import ImportButton from '@/components/ImportButton';
 import { API_URL } from '@/config';
-import { EditOutlined, VisibilityOutlined } from '@mui/icons-material';
+import { VisibilityOutlined } from '@mui/icons-material';
 import { Chip, IconButton, Tooltip } from '@mui/material';
 import {
   ColumnsButton,
@@ -60,25 +60,11 @@ const LockedColumn = () => {
 const ActionsColumn = () => {
   const record = useRecordContext();
   const navigate = useNavigate();
-  const isFinalized = !!record?.allocationFinalizedAt;
 
   if (!record) return null;
 
   return (
     <div style={{ display: 'flex', gap: '8px' }}>
-      {!isFinalized && (
-        <Tooltip title="Edit Winners">
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/results/${record.id}`);
-            }}
-          >
-            <EditOutlined fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      )}
       <Tooltip title="View Details">
         <IconButton
           size="small"
@@ -99,7 +85,7 @@ const ResultList = () => (
     <DataTable hiddenColumns={['id', 'createdAt', 'updatedAt']} rowClick="show">
       <DataTable.Col source="id" />
       <DataTable.Col label="Event Title">
-        <ReferenceField source="eventId" reference="events" />
+        <ReferenceField source="eventId" reference="events" link={false} />
       </DataTable.Col>
       <DataTable.Col label="Results" render={(record) => record.winners.length} />
       <DataTable.Col label="Awards" render={(record) => record.awards?.length || 0} />

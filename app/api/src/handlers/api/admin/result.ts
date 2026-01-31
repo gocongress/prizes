@@ -13,6 +13,7 @@ import {
   ResultCreateSchema,
   ResultImportApiSchema,
   ResultImportSchema,
+  ResultMessageSchema,
   ResultQueryKeys,
   ResultUpdateSchema,
   type ResultQueryParams,
@@ -31,6 +32,7 @@ export const getAllResult = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: ResultApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: createQueryParamsSchema(ResultQueryKeys),
@@ -58,6 +60,7 @@ export const createResult = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: ResultApiSchema,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: ResultCreateSchema,
@@ -82,6 +85,7 @@ export const getResultById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: ResultApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -106,6 +110,7 @@ export const getResultByEventId = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: ResultApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: z.object({ eventId: z.string().uuid() }),
@@ -133,6 +138,7 @@ export const updateResultById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: ResultApiSchema,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(ResultUpdateSchema.shape),
@@ -156,15 +162,18 @@ export const deleteResultById = (context: Context) =>
     kind: ContextKinds.RESULT,
     scopes: ScopeKinds.ADMIN,
     context,
-    itemSchema: ResultApiSchema,
+    itemSchema: ResultMessageSchema,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,
     output: ApiPayloadSchema,
     handler: async ({ input, options: { context } }) => {
       try {
-        const payload = await ResultService.deleteResultById({ context, input: input.id });
-        return buildResponse(ResultApiSchema, context, ContextKinds.RESULT, payload);
+        await ResultService.deleteResultById({ context, input: input.id });
+        return buildResponse(ResultMessageSchema, context, ContextKinds.RESULT, {
+          message: 'Results deleted.',
+        });
       } catch (err) {
         context.logger.error({ err, id: input.id }, 'Error deleting result');
         throw createHttpError(500, err as Error, { expose: false });
@@ -181,6 +190,7 @@ export const importResults = (context: Context) =>
     kind: ContextKinds.RESULT,
     itemSchema: ResultImportApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: ResultImportSchema,
@@ -208,6 +218,7 @@ export const getAllocationRecommendations = (context: Context) =>
     kind: ContextKinds.RESULT,
     itemSchema: AllocationRecommendationsSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -241,6 +252,7 @@ export const allocateAwardsToWinners = (context: Context) =>
     kind: ContextKinds.RESULT,
     itemSchema: ResultApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: UuidParamsSchema.extend({ awards: AllocateAwardsSchema }),
@@ -269,6 +281,7 @@ export const getDeallocationRecommendations = (context: Context) =>
     kind: ContextKinds.RESULT,
     itemSchema: AllocationRecommendationsSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,

@@ -21,6 +21,7 @@ export const getAllPrize = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: PrizeListApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: PrizeQuerySchema,
@@ -48,6 +49,7 @@ export const createPrize = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: PrizeApiSchema,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: PrizeCreateSchema,
@@ -73,6 +75,7 @@ export const getPrizeById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: PrizeApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -97,6 +100,7 @@ export const updatePrizeById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: PrizeApiSchema,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(PrizeUpdateSchema.shape),
@@ -122,6 +126,7 @@ export const deletePrizeById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: PrizeApiSchema,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,

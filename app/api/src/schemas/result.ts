@@ -1,5 +1,5 @@
-import * as z from 'zod';
 import { DEFAULT_PAGE_SIZE, MAX_PAGE, MAX_PAGE_SIZE } from '@/lib/constants';
+import * as z from 'zod';
 
 export const ResultQueryFields = {
   id: 'id',
@@ -113,6 +113,8 @@ export const ResultImportSchema = z.object({
 export const ResultImportApiSchema = z.object({
   message: z.string(),
 });
+
+export const ResultMessageSchema = ResultImportApiSchema;
 
 // Schema for allocating awards with client modifications
 // export const AllocateAwardsSchema = z.object({

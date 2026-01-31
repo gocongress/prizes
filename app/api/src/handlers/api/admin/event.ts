@@ -26,6 +26,7 @@ export const getAllEvent = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: EventApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: createQueryParamsSchema(EventQueryKeys),
@@ -53,6 +54,7 @@ export const createEvent = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: EventApiSchema,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: EventCreateSchema,
@@ -77,6 +79,7 @@ export const getEventById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: EventApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -101,6 +104,7 @@ export const updateEventById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: EventApiSchema,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(EventUpdateSchema.shape),
@@ -125,6 +129,7 @@ export const deleteEventById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: EventApiSchema,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,

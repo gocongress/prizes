@@ -1,15 +1,4 @@
-import {
-  ArrayInput,
-  AutocompleteInput,
-  Create,
-  NumberInput,
-  ReferenceInput,
-  SimpleForm,
-  SimpleFormIterator,
-  TextInput,
-  minValue,
-  required,
-} from 'react-admin';
+import { AutocompleteInput, Create, ReferenceInput, SimpleForm, required } from 'react-admin';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transform = (data: any) => {
@@ -20,31 +9,11 @@ const transform = (data: any) => {
 
 const ResultCreate = () => {
   return (
-    <Create transform={transform} redirect="edit" mutationMode="pessimistic">
+    <Create transform={transform} redirect="list" mutationMode="pessimistic">
       <SimpleForm>
         <ReferenceInput source="eventId" reference="events">
           <AutocompleteInput label="Event" validate={[required()]} />
         </ReferenceInput>
-        <ArrayInput source="winners" label="Winners">
-          <SimpleFormIterator inline>
-            <NumberInput
-              source="place"
-              label="Place"
-              validate={[required(), minValue(1)]}
-              step={1}
-              min={1}
-            />
-            <ReferenceInput source="agaId" reference="players">
-              <AutocompleteInput
-                label="Player"
-                optionText={(record) => `${record.name} (${record.agaId})`}
-                optionValue="agaId"
-                validate={[required()]}
-              />
-            </ReferenceInput>
-            <TextInput source="division" label="Division" validate={[required()]} />
-          </SimpleFormIterator>
-        </ArrayInput>
       </SimpleForm>
     </Create>
   );
