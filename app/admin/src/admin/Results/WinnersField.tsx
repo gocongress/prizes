@@ -43,11 +43,15 @@ const WinnersField = ({ source }: WinnersFieldProps) => {
             <TableCell>Division</TableCell>
             <TableCell>Place</TableCell>
             <TableCell>Player AGA ID</TableCell>
+            <TableCell>Player Name</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {sortedWinners.map(
-            (winner: { division: string; place: number; agaId: string }, idx: number) => (
+            (
+              winner: { division: string; place: number; agaId: string; name?: string },
+              idx: number,
+            ) => (
               <TableRow key={idx} hover>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -70,6 +74,11 @@ const WinnersField = ({ source }: WinnersFieldProps) => {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <PersonIcon fontSize="small" color="action" />
                     <Typography variant="body2">{winner.agaId}</Typography>
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="body2">{winner.name}</Typography>
                   </Box>
                 </TableCell>
               </TableRow>
