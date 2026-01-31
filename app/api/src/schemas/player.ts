@@ -76,7 +76,7 @@ export const PlayerMessageSchema = z.object({
 
 export const PlayerQuerySchema = z.object({
   ids: z
-    .union([z.array(z.guid()), z.string().transform((val) => val.split(','))])
+    .union([z.array(z.guid()), z.array(z.string()), z.string().transform((val) => val.split(','))])
     .nullable()
     .optional(),
   page: z.coerce.number().min(0).max(MAX_PAGE).default(0),
