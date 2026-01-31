@@ -132,9 +132,9 @@ export const bulkSyncResults = async (context: Context, input: ImportResults): P
     );
   }
 
-  // Generate bulk upsert values
-  const resultValues = [`(?, ?, ?)`];
-  const resultArgs: (string | number)[] = [];
+  const eventId = input.results[0].eventId;
+
+  // Build winners JSON with player names
   const winnersJson = await Promise.all(
     input.results.map(async ({ division, agaId, place }) => {
       const player = await getByAgaId(context, agaId);
@@ -146,24 +146,33 @@ export const bulkSyncResults = async (context: Context, input: ImportResults): P
       };
     }),
   );
-  resultArgs.push(randomUUID(), input.results[0].eventId, JSON.stringify(winnersJson));
 
-  if (resultValues.length) {
-    // Delete all previous results for the event to ensure sync
+  // Check if a result already exists for this event
+  const existingResult = await getByEventId(context, eventId);
+
+  if (existingResult) {
+    // Update existing result's winners
     await context
       .db<ResultDb>(RESULTS_TABLE_NAME)
-      .where({ event_id: input.results[0].eventId })
-      .del();
+      .where({ id: existingResult.id })
+      .update({ winners: JSON.stringify(winnersJson) });
 
-    // SQL injection safe, fully-parameterized bulk insert.
+    context.logger.info(
+      { resultId: existingResult.id, eventId },
+      'Updated existing result with new winners',
+    );
+  } else {
+    // Insert new result
     await context.db.raw(
       `
       INSERT INTO results (id, event_id, winners)
-      VALUES ${resultValues.join(',')}
+      VALUES (?, ?, ?)
       RETURNING id, event_id;
     `,
-      resultArgs,
+      [randomUUID(), eventId, JSON.stringify(winnersJson)],
     );
+
+    context.logger.info({ eventId }, 'Created new result for event');
   }
 };
 

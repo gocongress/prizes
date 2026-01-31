@@ -23,6 +23,7 @@ export const getAllAwardPreference = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: AwardPreferenceListApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: AwardPreferenceQuerySchema,
@@ -55,6 +56,7 @@ export const getAwardPreferenceById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: AwardPreferenceApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -87,6 +89,7 @@ export const getAwardPreferencesByPlayer = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: AwardPreferenceListApiSchema,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: AwardPreferenceQuerySchema.extend({ playerId: z.guid() }),
@@ -122,6 +125,7 @@ export const createAwardPreference = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: AwardPreferenceApiSchema,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: AwardPreferenceCreateSchema,
@@ -151,6 +155,7 @@ export const updateAwardPreferenceById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: AwardPreferenceApiSchema,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(AwardPreferenceUpdateSchema.shape),
@@ -180,6 +185,7 @@ export const deleteAwardPreferenceById = (context: Context) =>
     scopes: ScopeKinds.ADMIN,
     context,
     itemSchema: AwardPreferenceApiSchema,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,
