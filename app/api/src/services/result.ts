@@ -301,10 +301,7 @@ export const getAllocationRecommendations = async ({
           { playerId: player.id, agaId: winner.agaId },
           `No available awards for player ${player.name}. Skipping.`,
         );
-        throw createHttpError(
-          400,
-          `Unable to allocate awards for all of the players requested. Please ensure there are enough awards available.`,
-        );
+        continue;
       }
       recommendedAwards.add(awardResult.award.id);
 
