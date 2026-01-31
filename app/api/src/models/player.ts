@@ -68,7 +68,10 @@ export const getAll = async (
     .where(`${TABLE_NAME}.deleted_at`, null);
 
   if (queryParams.ids) {
-    query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
+    const ids = queryParams.ids;
+    query.andWhere((subQuery) => {
+      subQuery.whereIn(`${TABLE_NAME}.id`, ids).orWhereIn(`${TABLE_NAME}.aga_id`, ids);
+    });
   }
 
   if (queryParams?.q) {
