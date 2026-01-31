@@ -1,5 +1,6 @@
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import PersonIcon from '@mui/icons-material/Person';
+import WarningIcon from '@mui/icons-material/Warning';
 import {
   Box,
   Chip,
@@ -78,7 +79,10 @@ const WinnersField = ({ source }: WinnersFieldProps) => {
                 </TableCell>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="body2">{winner.name}</Typography>
+                    {!winner.name && <WarningIcon fontSize="small" color="warning" />}
+                    <Typography variant="body2" color={!winner.name ? 'warning.main' : undefined}>
+                      {winner.name || 'PLAYER NOT FOUND'}
+                    </Typography>
                   </Box>
                 </TableCell>
               </TableRow>
