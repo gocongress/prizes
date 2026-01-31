@@ -69,9 +69,10 @@ export const getAll = async (
 
   if (queryParams.ids) {
     const ids = queryParams.ids;
-    query.andWhere((subQuery) => {
-      subQuery.whereIn(`${TABLE_NAME}.id`, ids).orWhereIn(`${TABLE_NAME}.aga_id`, ids);
-    });
+    const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const isGuidArray = ids.every((id) => guidPattern.test(id));
+    const column = isGuidArray ? `${TABLE_NAME}.id` : `${TABLE_NAME}.aga_id`;
+    query.whereIn(column, ids);
   }
 
   if (queryParams?.q) {
