@@ -41,6 +41,7 @@ export const ResultAwardSchema = z.object({
   place: z.coerce.number().int().positive(),
   division: z.string().min(1).trim(),
   prizeTitle: z.string(),
+  prizeDescription: z.string(),
   awardId: z.guid(),
   awardValue: z.coerce.number().nullable().optional(),
   awardRedeemCode: z.string().nullable().optional(),

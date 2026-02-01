@@ -1,3 +1,4 @@
+import { sendAwardEmail } from '@/lib/email';
 import { getTopAvailableAwardForPlayer, updateById as updateAwardById } from '@/models/award';
 import { getById as getEventById } from '@/models/event';
 import { getByAgaId } from '@/models/player';
@@ -323,6 +324,7 @@ export const getAllocationRecommendations = async ({
         place: winner.place,
         division: winner.division,
         prizeTitle: award.prizeTitle || '',
+        prizeDescription: award.prizeDescription || '',
         awardId: award.id,
         awardValue: award.value,
         awardRedeemCode: award.redeemCode,
@@ -441,6 +443,35 @@ export const allocateAwardsToWinners = async ({
       { resultId: result.id, awardCount: input.awards.length },
       'Successfully allocated and finalized awards',
     );
+
+    // Send congratulations emails to all players who have an email address
+    for (const award of input.awards) {
+      if (award.userEmail) {
+        try {
+          await sendAwardEmail(context, {
+            playerName: award.playerName,
+            playerEmail: award.userEmail,
+            prizeTitle: award.prizeTitle,
+            prizeDescription: award.prizeDescription,
+            awardValue: award.awardValue,
+            awardRedeemCode: award.awardRedeemCode,
+            eventTitle: award.eventTitle,
+            place: award.place,
+            division: award.division,
+          });
+          context.logger.info(
+            { playerId: award.playerId, email: award.userEmail, awardId: award.awardId },
+            'Sent award congratulations email to player',
+          );
+        } catch (emailError) {
+          // Log the error but don't fail the allocation - emails are non-critical
+          context.logger.error(
+            { playerId: award.playerId, email: award.userEmail, error: emailError },
+            'Failed to send award congratulations email',
+          );
+        }
+      }
+    }
 
     return updatedResult;
   } catch (error) {
