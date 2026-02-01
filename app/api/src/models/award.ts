@@ -34,6 +34,7 @@ type AwardWithPreferenceDb = AwardDb & {
 const asModel = (
   item: AwardDb & {
     prize_title?: PrizeApi['title'];
+    prize_description?: PrizeApi['description'];
     player_name?: string;
   },
 ): AwardApi => {
@@ -44,6 +45,7 @@ const asModel = (
     playerId: item.player_id,
     playerName: item.player_name,
     prizeId: item.prize_id,
+    prizeDescription: item.prize_description,
     prizeTitle: item.prize_title,
     redeemCode: item.redeem_code,
     createdAt: item.created_at.toISOString(),
@@ -302,6 +304,7 @@ export const getTopAvailableAwardForPlayer = async ({
         END as player_name`,
       ),
       `${PRIZE_TABLE_NAME}.title as prize_title`,
+      `${PRIZE_TABLE_NAME}.description as prize_description`,
       `${AWARD_PREFERENCE_TABLE_NAME}.preference_order as preference_order`,
     )
     .innerJoin(
@@ -338,6 +341,7 @@ export const getTopAvailableAwardForPlayer = async ({
         END as player_name`,
       ),
       `${PRIZE_TABLE_NAME}.title as prize_title`,
+      `${PRIZE_TABLE_NAME}.description as prize_description`,
     )
     .leftJoin(PLAYER_TABLE_NAME, `${TABLE_NAME}.player_id`, `${PLAYER_TABLE_NAME}.id`)
     .leftJoin(PRIZE_TABLE_NAME, `${TABLE_NAME}.prize_id`, `${PRIZE_TABLE_NAME}.id`)

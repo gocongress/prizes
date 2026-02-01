@@ -575,3 +575,222 @@ export async function sendSupportEmail(
 
   return sendHtmlEmail(context, context.runtime.supportEmail, subject, htmlBody);
 }
+
+export interface AwardEmailParams {
+  playerName: string;
+  playerEmail: string;
+  prizeTitle: string;
+  prizeDescription: string;
+  awardValue: number | null | undefined;
+  awardRedeemCode: string | null | undefined;
+  eventTitle: string;
+  place: number;
+  division: string;
+}
+
+/**
+ * Generates a styled HTML email template for award congratulations
+ */
+export function generateAwardEmailHtml(params: AwardEmailParams): string {
+  const { playerName, prizeTitle, prizeDescription, awardRedeemCode, eventTitle } = params;
+
+  const redeemCodeHtml = awardRedeemCode
+    ? `
+      <div class="redeem-container">
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Your Redemption Code</h3>
+        <div class="redeem-code">${awardRedeemCode}</div>
+        <p style="margin: 10px 0 0 0; font-size: 13px; color: #666;">Use this code to redeem your award</p>
+      </div>
+    `
+    : '';
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .header p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 10px 0 0 0;
+      font-size: 16px;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .content p {
+      color: #333333;
+      font-size: 16px;
+      margin: 0 0 20px 0;
+    }
+    .award-container {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      margin: 30px 0;
+      border: 2px solid #667eea;
+    }
+    .award-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 10px 0;
+    }
+    .award-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #667eea;
+      margin: 10px 0;
+    }
+    .award-details {
+      background-color: #e7f3ff;
+      border-radius: 6px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .award-details p {
+      margin: 8px 0;
+      font-size: 15px;
+      color: #004085;
+    }
+    .award-details strong {
+      color: #002752;
+    }
+    .redeem-container {
+      background-color: #fff3cd;
+      border-radius: 8px;
+      padding: 25px;
+      text-align: center;
+      margin: 30px 0;
+      border: 1px solid #ffc107;
+    }
+    .redeem-code {
+      font-size: 28px;
+      font-weight: 700;
+      color: #856404;
+      letter-spacing: 4px;
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #ffffff;
+      padding: 15px 20px;
+      border-radius: 6px;
+      display: inline-block;
+      border: 2px dashed #ffc107;
+      user-select: all;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e9ecef;
+    }
+    .footer p {
+      color: #6c757d;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    @media only screen and (max-width: 600px) {
+      .container {
+        margin: 20px;
+        border-radius: 4px;
+      }
+      .header {
+        padding: 30px 20px;
+      }
+      .header h1 {
+        font-size: 24px;
+      }
+      .content {
+        padding: 30px 20px;
+      }
+      .award-value {
+        font-size: 28px;
+      }
+      .redeem-code {
+        font-size: 20px;
+        letter-spacing: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Congratulations!</h1>
+      <p>You've won a prize!</p>
+    </div>
+    <div class="content">
+      <p>Dear ${playerName},</p>
+      <p>We are thrilled to share details of the prize you won at the tournament!</p>
+
+      <div class="award-container">
+        <div class="award-title">${prizeTitle}</div>
+        <p>${prizeDescription}</p>
+      </div>
+
+      <div class="award-details">
+        <p><strong>Event:</strong> ${eventTitle}</p>
+      </div>
+
+      ${redeemCodeHtml}
+
+      <p>Thank you for your participation and congratulations once again on your achievement!</p>
+    </div>
+    <div class="footer">
+      <p>© ${new Date().getFullYear()} AGA Prizes. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+}
+
+/**
+ * Sends a congratulations email to a player who has been awarded a prize
+ */
+export async function sendAwardEmail(
+  context: Context,
+  params: AwardEmailParams,
+): Promise<SMTP2GoResponse | void> {
+  if (!context.runtime.smtp.enabled) {
+    context.logger.warn('SMTP is not enabled, skipping sending award email');
+    return;
+  }
+
+  const htmlBody = generateAwardEmailHtml(params);
+  const subject = `Congratulations! You've won: ${params.prizeTitle}`;
+
+  return sendHtmlEmail(
+    context,
+    { email: params.playerEmail, name: params.playerName },
+    subject,
+    htmlBody,
+  );
+}
