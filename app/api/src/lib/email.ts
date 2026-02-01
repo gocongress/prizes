@@ -597,9 +597,9 @@ export function generateAwardEmailHtml(params: AwardEmailParams): string {
   const redeemCodeHtml = awardRedeemCode
     ? `
       <div class="redeem-container">
-        <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Your Redemption Code</h3>
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Redemption Code/Link</h3>
         <div class="redeem-code">${awardRedeemCode}</div>
-        <p style="margin: 10px 0 0 0; font-size: 13px; color: #666;">Use this code to redeem your award</p>
+        <p style="margin: 10px 0 0 0; font-size: 13px; color: #666;">Use this code/link to redeem your award</p>
       </div>
     `
     : '';
@@ -742,21 +742,14 @@ export function generateAwardEmailHtml(params: AwardEmailParams): string {
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>Congratulations!</h1>
-      <p>You've won a prize!</p>
-    </div>
     <div class="content">
       <p>Dear ${playerName},</p>
       <p>We are thrilled to share details of the prize you won at the tournament!</p>
 
-      <div class="award-container">
-        <div class="award-title">${prizeTitle}</div>
-        <p>${prizeDescription}</p>
-      </div>
-
       <div class="award-details">
         <p><strong>Event:</strong> ${eventTitle}</p>
+        <p><strong>Prize:</strong> ${prizeTitle}</p>
+        <p>${prizeDescription}</p>
       </div>
 
       ${redeemCodeHtml}
