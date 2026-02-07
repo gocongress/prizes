@@ -7,7 +7,7 @@ import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvents } from '@/hooks/use-events';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { Calendar } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export interface BreadcrumbSegment {
   label: string;
@@ -43,6 +43,28 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
     });
   };
 
+  const { upcomingEvents, pastEvents } = useMemo(() => {
+    const now = new Date();
+    const upcoming: typeof events = [];
+    const past: typeof events = [];
+
+    for (const event of events) {
+      const endDate = new Date(event.endAt);
+      if (endDate >= now) {
+        upcoming.push(event);
+      } else {
+        past.push(event);
+      }
+    }
+
+    // Sort upcoming by start date ascending (soonest first)
+    upcoming.sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
+    // Sort past by end date descending (most recent first)
+    past.sort((a, b) => new Date(b.endAt).getTime() - new Date(a.endAt).getTime());
+
+    return { upcomingEvents: upcoming, pastEvents: past };
+  }, [events]);
+
   const handleEventClick = (eventSlug: string) => {
     // Determine if we're in the dashboard context by checking the current route
     const isDashboard =
@@ -77,61 +99,87 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
   return (
     <div className="p-4 sm:p-6 flex flex-col items-center">
       <div className="w-full max-w-6xl">
-        {/* Events Section */}
-        <div className="mb-6">
+        {/* Upcoming Events Section */}
+        <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Upcoming Events</h2>
+
+          {upcomingEvents.length === 0 ? (
+            <Card className="w-full">
+              <CardContent className="flex flex-col items-center justify-center py-12">
+                <Calendar className="h-16 w-16 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No Upcoming Events</h3>
+                <p className="text-muted-foreground text-center">
+                  There are no events scheduled at the moment. Check back soon!
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {upcomingEvents.map((event) => (
+                <Card
+                  key={event.id}
+                  className="flex flex-col cursor-pointer transition-all duration-300 hover:border-blue-500 hover:shadow-xl hover:-translate-y-2"
+                  onClick={() => handleEventClick(event.slug)}
+                >
+                  <CardHeader>
+                    <CardTitle>{event.title}</CardTitle>
+                    <CardDescription className="flex flex-col gap-1.5 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {formatDate(event.startAt)} - {formatDate(event.endAt)}
+                      </div>
+                      {event.registrationUrl && (
+                        <ExternalLink
+                          href={event.registrationUrl}
+                          className="text-xs font-semibold text-blue-500 hover:text-blue-800"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Register for this event
+                        </ExternalLink>
+                      )}
+                    </CardDescription>
+                  </CardHeader>
+                  {event.description && (
+                    <CardContent className="flex-1">
+                      <p className="text-sm text-muted-foreground line-clamp-3">
+                        {event.description}
+                      </p>
+                    </CardContent>
+                  )}
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
 
-        {events.length === 0 ? (
-          <Card className="w-full">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Calendar className="h-16 w-16 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No Upcoming Events</h3>
-              <p className="text-muted-foreground text-center">
-                There are no events scheduled at the moment. Check back soon!
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <Card
-                key={event.id}
-                className="flex flex-col cursor-pointer transition-all duration-300 hover:border-blue-500 hover:shadow-xl hover:-translate-y-2"
-                onClick={() => handleEventClick(event.slug)}
-              >
-                <CardHeader>
-                  <CardTitle>{event.title}</CardTitle>
-                  <CardDescription className="flex flex-col gap-1.5 text-xs">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {formatDate(event.startAt)} - {formatDate(event.endAt)}
-                    </div>
-                    {event.registrationUrl && (
-                      <ExternalLink
-                        href={event.registrationUrl}
-                        className="text-xs font-semibold text-blue-500 hover:text-blue-800"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        Register for this event
-                      </ExternalLink>
-                    )}
-                  </CardDescription>
-                </CardHeader>
-                {event.description && (
-                  <CardContent className="flex-1">
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {event.description}
-                    </p>
-                  </CardContent>
-                )}
-              </Card>
-            ))}
+        {/* Call to Action */}
+        {showCallToAction && upcomingEvents.length > 0 && <LoginCallToAction />}
+
+        {/* Past Events Section */}
+        {pastEvents.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-xl font-semibold text-muted-foreground mb-4">Past Events</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {pastEvents.map((event) => (
+                <Card
+                  key={event.id}
+                  className="flex flex-col cursor-pointer transition-all duration-200 hover:border-muted-foreground/50 opacity-75 hover:opacity-100"
+                  onClick={() => handleEventClick(event.slug)}
+                >
+                  <CardHeader className="py-4">
+                    <CardTitle className="text-base">{event.title}</CardTitle>
+                    <CardDescription className="text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3 h-3" />
+                        {formatDate(event.startAt)} - {formatDate(event.endAt)}
+                      </div>
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
           </div>
         )}
-
-        {/* Call to Action */}
-        {showCallToAction && events.length > 0 && <LoginCallToAction />}
       </div>
     </div>
   );
