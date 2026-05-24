@@ -1,5 +1,5 @@
 import ImportButton from '@/components/ImportButton';
-import { API_URL } from '@/config';
+import { API_URL, EXPORT_MAX_RESULTS } from '@/config';
 import {
   ColumnsButton,
   CreateButton,
@@ -14,7 +14,7 @@ const UserListActions = () => (
   <TopToolbar>
     <ColumnsButton />
     <CreateButton />
-    <ExportButton maxResults={100} />
+    <ExportButton maxResults={EXPORT_MAX_RESULTS} />
     <ImportButton
       csvFields="email, agaId, name, rank"
       csvNotes={{

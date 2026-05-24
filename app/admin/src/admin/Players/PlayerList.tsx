@@ -1,3 +1,4 @@
+import { EXPORT_MAX_RESULTS } from '@/config';
 import {
   ColumnsButton,
   CreateButton,
@@ -15,7 +16,7 @@ const PlayerListActions = () => (
   <TopToolbar>
     <ColumnsButton />
     <CreateButton />
-    <ExportButton maxResults={100} />
+    <ExportButton maxResults={EXPORT_MAX_RESULTS} />
   </TopToolbar>
 );
 

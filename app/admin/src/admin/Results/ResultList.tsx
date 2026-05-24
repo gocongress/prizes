@@ -1,5 +1,5 @@
 import ImportButton from '@/components/ImportButton';
-import { API_URL } from '@/config';
+import { API_URL, EXPORT_MAX_RESULTS } from '@/config';
 import { VisibilityOutlined } from '@mui/icons-material';
 import { Chip, IconButton, Tooltip } from '@mui/material';
 import {
@@ -19,7 +19,7 @@ const ResultListActions = () => (
   <TopToolbar>
     <ColumnsButton />
     <CreateButton />
-    <ExportButton maxResults={100} />
+    <ExportButton maxResults={EXPORT_MAX_RESULTS} />
     {/* Give the user an easy way to import results via CSV, while providing them with a list of events to select for the imported results */}
     <ImportButton
       dialogTitle="Import Results CSV"
