@@ -1,3 +1,4 @@
+import { EXPORT_MAX_RESULTS } from '@/config';
 import {
   ColumnsButton,
   CreateButton,
@@ -13,7 +14,7 @@ const RegistrantListActions = () => (
   <TopToolbar>
     <ColumnsButton />
     <CreateButton />
-    <ExportButton maxResults={100} />
+    <ExportButton maxResults={EXPORT_MAX_RESULTS} />
   </TopToolbar>
 );
 
