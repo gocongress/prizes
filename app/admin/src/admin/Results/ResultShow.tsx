@@ -1,9 +1,10 @@
 import AllocationWorkflow from '@/admin/Results/AllocationWorkflow';
 import AwardsField from '@/admin/Results/AwardsField';
 import WinnersField from '@/admin/Results/WinnersField';
+import ImportButton from '@/components/ImportButton';
+import { API_URL } from '@/config';
 import {
   DateField,
-  EditButton,
   Labeled,
   ReferenceField,
   Show,
@@ -18,7 +19,32 @@ const ResultShowActions = () => {
   const hasAwards = record?.awards && record.awards.length > 0;
   const isFinalized = !!record?.allocationFinalizedAt;
 
-  return <TopToolbar>{!hasAwards && !isFinalized && <EditButton />}</TopToolbar>;
+  return (
+    <TopToolbar>
+      {!hasAwards && !isFinalized && (
+        <ImportButton
+          buttonLabel="Re-import CSV"
+          dialogTitle="Re-import Results CSV"
+          referenceSelector={{
+            reference: 'events',
+            label: 'Event',
+            fieldName: 'eventId',
+            optionText: 'title',
+            defaultValue: record?.eventId,
+          }}
+          csvFields="place,agaId,division"
+          csvNotes={{
+            place: 'Place/rank number (ex. 1, 2, 3)',
+            agaId: 'Player AGA ID (ex. 12298)',
+            division: 'Division name (ex. Open, Kyu, Dan)',
+          }}
+          confirmMessage="BEWARE! Importing these results will destroy any previous results related to the selected event. Are you sure you want to import these results?"
+          importUrl={`${API_URL}/api/v1/admin/results/import`}
+          payloadKey="results"
+        />
+      )}
+    </TopToolbar>
+  );
 };
 
 const ResultShow = () => {

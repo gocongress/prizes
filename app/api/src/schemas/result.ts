@@ -1,5 +1,5 @@
-import * as z from 'zod';
 import { DEFAULT_PAGE_SIZE, MAX_PAGE, MAX_PAGE_SIZE } from '@/lib/constants';
+import * as z from 'zod';
 
 export const ResultQueryFields = {
   id: 'id',
@@ -21,6 +21,7 @@ export const WinnerSchema = z.object({
   division: z.string().min(1).trim(),
   agaId: z.string().min(1).trim(),
   place: z.coerce.number().int().positive(),
+  name: z.string().nullable().optional(),
 });
 
 // Allocation kind enum
@@ -40,6 +41,7 @@ export const ResultAwardSchema = z.object({
   place: z.coerce.number().int().positive(),
   division: z.string().min(1).trim(),
   prizeTitle: z.string(),
+  prizeDescription: z.string(),
   awardId: z.guid(),
   awardValue: z.coerce.number().nullable().optional(),
   awardRedeemCode: z.string().nullable().optional(),
@@ -112,6 +114,8 @@ export const ResultImportSchema = z.object({
 export const ResultImportApiSchema = z.object({
   message: z.string(),
 });
+
+export const ResultMessageSchema = ResultImportApiSchema;
 
 // Schema for allocating awards with client modifications
 // export const AllocateAwardsSchema = z.object({

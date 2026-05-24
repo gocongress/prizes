@@ -60,8 +60,7 @@ export const getAll = async (
   const query = context
     .db<ResultDb>(TABLE_NAME)
     .select(`${TABLE_NAME}.*`, `${EVENT_TABLE_NAME}.title as event_title`)
-    .leftJoin(EVENT_TABLE_NAME, `${TABLE_NAME}.event_id`, `${EVENT_TABLE_NAME}.id`)
-    .where(`${TABLE_NAME}.deleted_at`, null);
+    .leftJoin(EVENT_TABLE_NAME, `${TABLE_NAME}.event_id`, `${EVENT_TABLE_NAME}.id`);
 
   if (queryParams.ids) {
     query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
@@ -89,7 +88,7 @@ export const getById = async (context: Context, id: ResultApi['id']): Promise<Re
     .db<ResultDb>(TABLE_NAME)
     .select(`${TABLE_NAME}.*`, `${EVENT_TABLE_NAME}.title as event_title`)
     .leftJoin(EVENT_TABLE_NAME, `${TABLE_NAME}.event_id`, `${EVENT_TABLE_NAME}.id`)
-    .where({ [`${TABLE_NAME}.id`]: id, [`${TABLE_NAME}.deleted_at`]: null });
+    .where({ [`${TABLE_NAME}.id`]: id });
 
   if (!rows.length) {
     throw createHttpError(404, `Result ${id} not found.`);
@@ -106,7 +105,7 @@ export const getByEventId = async (
     .db<ResultDb>(TABLE_NAME)
     .select(`${TABLE_NAME}.*`, `${EVENT_TABLE_NAME}.title as event_title`)
     .leftJoin(EVENT_TABLE_NAME, `${TABLE_NAME}.event_id`, `${EVENT_TABLE_NAME}.id`)
-    .where({ [`${TABLE_NAME}.event_id`]: eventId, [`${TABLE_NAME}.deleted_at`]: null });
+    .where({ [`${TABLE_NAME}.event_id`]: eventId });
 
   if (!rows.length) {
     return undefined;
@@ -120,6 +119,13 @@ export const create = async (
   trx: Knex.Transaction,
   input: Partial<CreateResult>,
 ): Promise<ResultApi> => {
+  // Check if results already exist for this event
+  const existing = await trx<ResultDb>(TABLE_NAME).where({ event_id: input.eventId }).first();
+
+  if (existing) {
+    throw createHttpError(409, `Results already exist for this event.`);
+  }
+
   const rows = await trx<ResultDb>(TABLE_NAME)
     .insert({
       id: randomUUID(),
@@ -187,12 +193,7 @@ export const deleteById = async (
   trx: Knex.Transaction,
   id: ResultApi['id'],
 ): Promise<ResultApi> => {
-  const rows = await trx<ResultDb>(TABLE_NAME)
-    .where({ id, deleted_at: null })
-    .update({
-      deleted_at: new Date(),
-    })
-    .returning<ResultDb[]>('*');
+  const rows = await trx<ResultDb>(TABLE_NAME).where({ id }).del().returning<ResultDb[]>('*');
 
   if (!rows.length) {
     throw createHttpError(404, `Result ${id} not found.`);

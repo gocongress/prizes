@@ -1,5 +1,5 @@
-import * as z from 'zod';
 import { DEFAULT_PAGE_SIZE, MAX_PAGE, MAX_PAGE_SIZE } from '@/lib/constants';
+import * as z from 'zod';
 
 export const AwardQueryFields = {
   id: 'id',
@@ -34,6 +34,7 @@ export const AwardApiSchema = z.object({
   value: z.number().nullish(),
   prizeId: z.guid().nullable().optional(),
   prizeTitle: z.string().nullable().optional(),
+  prizeDescription: z.string().nullable().optional(),
   playerId: z.guid().nullable().optional(),
   playerName: z.string().nullable().optional(),
   createdAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),

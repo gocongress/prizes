@@ -1,7 +1,8 @@
+import { ExternalLink } from '@/components/ui/external-link';
 import type { PrizeAwardCombination } from '@/hooks/use-prizes';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ChevronDown, ChevronUp, ChevronsDownUp, ExternalLink, GripVertical } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronsDownUp, GripVertical } from 'lucide-react';
 import { useState } from 'react';
 
 interface SortablePrizeItemProps {
@@ -68,15 +69,12 @@ function SortablePrizeItem({
         <h3 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <span>{prize.title}</span>
           {prize.url && (
-            <a
+            <ExternalLink
               href={prize.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label={`Open link for ${prize.title}`}
-            >
-              <ExternalLink className="w-4 h-4" />
-            </a>
+              className="text-muted-foreground hover:text-foreground no-underline hover:no-underline"
+              iconClassName="w-4 h-4"
+              ariaLabel={`Open link for ${prize.title}`}
+            />
           )}
         </h3>
         {prize.sponsor && (

@@ -1,5 +1,5 @@
-import * as z from 'zod';
 import { DEFAULT_PAGE_SIZE, MAX_PAGE, MAX_PAGE_SIZE } from '@/lib/constants';
+import * as z from 'zod';
 
 export const AwardPreferenceQueryFields = {
   id: 'id',
@@ -76,6 +76,7 @@ export const AwardPreferenceQuerySchema = z.object({
   pageSize: z.coerce.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   orderBy: z.enum(AwardPreferenceQueryKeys).default('preferenceOrder'),
   orderDirection: z.enum(['asc', 'desc']).default('asc'),
+  q: z.string().optional().describe('Filter results.'),
 });
 
 export type AwardPreferenceDb = z.infer<typeof AwardPreferenceDbSchema>;

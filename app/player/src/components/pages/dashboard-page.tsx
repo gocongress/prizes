@@ -1,6 +1,7 @@
 import EventSelect from '@/components/ui/event-select';
 import PlayerSelect from '@/components/ui/player-select';
 import PrizeList from '@/components/ui/prize-list';
+import { PrizeRankingHelpDialog } from '@/components/ui/prize-ranking-help-dialog';
 import {
   useAwardPreferences,
   useDeleteAwardPreferences,
@@ -89,12 +90,12 @@ export function DashboardPage() {
       }
     });
 
-    // Sort by award preferences if available
-    if (preferenceMap) {
-      // Sort combinations based on preference order
-      combinations.sort((a, b) => {
-        const orderA = preferenceMap.get(a.id) || undefined;
-        const orderB = preferenceMap.get(b.id) || undefined;
+    // Sort combinations
+    combinations.sort((a, b) => {
+      // If we have preferences, use them first
+      if (preferenceMap) {
+        const orderA = preferenceMap.get(a.id);
+        const orderB = preferenceMap.get(b.id);
 
         // If both have preferences, sort by preference order
         if (orderA !== undefined && orderB !== undefined) {
@@ -104,11 +105,11 @@ export function DashboardPage() {
         // If only one has a preference, put it first
         if (orderA !== undefined) return -1;
         if (orderB !== undefined) return 1;
+      }
 
-        // If neither has a preference, maintain original order
-        return 0;
-      });
-    }
+      // Default: sort by award value descending (highest value first)
+      return b.awardValue - a.awardValue;
+    });
 
     return combinations;
   }, [prizes, preferenceMap, selectedPlayer, selectedEvent]);
@@ -216,11 +217,10 @@ export function DashboardPage() {
 
         {selectedPlayer && selectedEvent && (
           <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-2">Available Prizes</h1>
-            <ul className="text-xs text-muted-foreground space-y-0.5">
-              <li>• Drag rows or use arrows to rank your preference for the available prizes</li>
-              <li>• Your preferences are saved automatically</li>
-            </ul>
+            <div className="flex items-center gap-2 mb-2">
+              <h1 className="text-2xl font-bold">Available Prizes</h1>
+              <PrizeRankingHelpDialog />
+            </div>
           </div>
         )}
 

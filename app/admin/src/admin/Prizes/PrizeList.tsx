@@ -11,7 +11,7 @@ import {
 } from 'react-admin';
 import ImageThumbnail from './ImageThumbnail';
 
-const prizeFilters = [<SearchInput source="q" alwaysOn />];
+const filters = [<SearchInput source="q" alwaysOn />];
 
 const PrizeListActions = () => (
   <TopToolbar>
@@ -22,7 +22,7 @@ const PrizeListActions = () => (
 );
 
 const PrizeList = () => (
-  <List actions={<PrizeListActions />} filters={prizeFilters}>
+  <List actions={<PrizeListActions />} filters={filters}>
     <DataTable
       hiddenColumns={[
         'id',

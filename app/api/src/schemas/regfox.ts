@@ -98,7 +98,7 @@ export type PlayingRankField = z.infer<typeof multipleChoiceFieldSchema>;
 export interface RegistrantDetails {
   firstName: string;
   lastName: string;
-  email: string;
+  email?: string;
   aga: string;
   playingRank: string;
 }

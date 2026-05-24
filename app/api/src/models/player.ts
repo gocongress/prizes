@@ -68,7 +68,19 @@ export const getAll = async (
     .where(`${TABLE_NAME}.deleted_at`, null);
 
   if (queryParams.ids) {
-    query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
+    const ids = queryParams.ids;
+    const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const isGuidArray = ids.every((id) => guidPattern.test(id));
+    const column = isGuidArray ? `${TABLE_NAME}.id` : `${TABLE_NAME}.aga_id`;
+    query.whereIn(column, ids);
+  }
+
+  if (queryParams?.q) {
+    query.andWhere((subQuery) => {
+      subQuery
+        .whereILike(`${TABLE_NAME}.name`, `%${queryParams.q}%`)
+        .orWhereILike(`${USER_TABLE_NAME}.email`, `%${queryParams.q}%`);
+    });
   }
 
   const rows = await query

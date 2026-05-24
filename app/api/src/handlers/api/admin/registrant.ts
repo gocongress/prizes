@@ -1,16 +1,10 @@
 import { ScopeKinds } from '@/lib/constants';
-import {
-  ApiPayloadSchema,
-  buildResponse,
-  createQueryParamsSchema,
-  handlerFactory,
-  UuidParamsSchema,
-} from '@/lib/handlers';
+import { ApiPayloadSchema, buildResponse, handlerFactory, UuidParamsSchema } from '@/lib/handlers';
 import {
   RegistrantApiSchema,
   RegistrantCreateSchema,
   RegistrantMessageSchema,
-  RegistrantQueryKeys,
+  RegistrantQuerySchema,
   RegistrantUpdateSchema,
   type RegistrantQueryParams,
 } from '@/schemas/registrant';
@@ -27,9 +21,10 @@ export const getAllRegistrant = (context: Context) =>
     kind: ContextKinds.REGISTRANT,
     itemSchema: RegistrantApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
-    input: createQueryParamsSchema(RegistrantQueryKeys),
+    input: RegistrantQuerySchema,
     output: ApiPayloadSchema,
     handler: async ({ options: { context }, input }) => {
       try {
@@ -55,6 +50,7 @@ export const createRegistrant = (context: Context) =>
     kind: ContextKinds.REGISTRANT,
     itemSchema: RegistrantApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'post',
     input: RegistrantCreateSchema,
@@ -79,6 +75,7 @@ export const getRegistrantById = (context: Context) =>
     kind: ContextKinds.REGISTRANT,
     itemSchema: RegistrantApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'get',
     input: UuidParamsSchema,
@@ -103,6 +100,7 @@ export const updateRegistrantById = (context: Context) =>
     kind: ContextKinds.REGISTRANT,
     itemSchema: RegistrantApiSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: ['put', 'patch'],
     input: UuidParamsSchema.extend(RegistrantUpdateSchema.shape),
@@ -127,6 +125,7 @@ export const deleteRegistrantById = (context: Context) =>
     kind: ContextKinds.REGISTRANT,
     itemSchema: RegistrantMessageSchema,
     scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
   }).build({
     method: 'delete',
     input: UuidParamsSchema,

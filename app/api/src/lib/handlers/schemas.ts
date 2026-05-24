@@ -92,6 +92,10 @@ export const QueryParamsSchema = z.object({
   page: z.coerce.number().min(1).default(DEFAULT_PAGE).optional(),
   pageSize: z.coerce.number().max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE).optional(),
   orderDirection: z.enum(['asc', 'desc']).default(DEFAULT_ORDER_DIRECTION).optional(),
+  ids: z
+    .union([z.array(z.guid()), z.string().transform((val) => val.split(','))])
+    .nullable()
+    .optional(),
 });
 
 export const createQueryParamsSchema = (orderByFields: readonly [string, ...string[]]) =>

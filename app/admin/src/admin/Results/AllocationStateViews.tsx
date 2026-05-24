@@ -1,6 +1,5 @@
-import { DeleteForever, Lock, LockOpen } from '@mui/icons-material';
+import { CurrencyExchange, DeleteForever, Lock, Save } from '@mui/icons-material';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import { CurrencyExchange, Save } from '@mui/icons-material';
 import { Alert, Box, Button, Typography } from '@mui/material';
 import { Confirm } from 'react-admin';
 
@@ -21,6 +20,7 @@ interface AllocationStateViewsProps {
   children?: React.ReactNode;
 }
 
+/* 2/1: Remove for now - Unable to deallocate finalized awards, this can cause confusion because notification emails would have been sent already.
 // Component for displaying deallocate warnings with emphasis
 const DeallocateWarningContent = () => {
   return (
@@ -75,10 +75,10 @@ const DeallocateWarningContent = () => {
     </Box>
   );
 };
+*/
 
 export const AllocationStateViews = ({
   state,
-  awardsCount,
   isLoadingRecommendations,
   isAllocating,
   isDeallocating,
@@ -93,6 +93,16 @@ export const AllocationStateViews = ({
   children,
 }: AllocationStateViewsProps) => {
   if (state === 'finalized') {
+    return (
+      <Box sx={{ mt: 2 }}>
+        <Alert severity="success" sx={{ mb: 2 }}>
+          <Typography variant="body2">
+            Awards have been finalized and notifications sent!
+          </Typography>
+        </Alert>
+      </Box>
+    );
+    /* 2/1: Remove for now - Unable to deallocate finalized awards, this can cause confusion because notification emails would have been sent already.
     return (
       <Box sx={{ mt: 2 }}>
         <Alert severity="success" sx={{ mb: 2 }} icon={<LockOpen />}>
@@ -123,6 +133,7 @@ export const AllocationStateViews = ({
         />
       </Box>
     );
+    */
   }
 
   if (state === 'recommendations') {

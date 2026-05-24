@@ -3,9 +3,7 @@ import CookieConsent from '@/components/ui/cookie-consent';
 import Footer from '@/components/ui/footer';
 import { env } from '@/env';
 import type { User } from '@/hooks/use-auth';
-import TanStackDevtoolsPlugins from '@/integrations/tanstack-query/devtools';
 import { type MyRouterContext } from '@/router';
-import { TanStackDevtools } from '@tanstack/react-devtools';
 import { Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-router';
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -70,7 +68,6 @@ function RootComponent() {
         <Footer />
       </div>
       <CookieConsent />
-      {import.meta.env.DEV && <TanStackDevtools plugins={TanStackDevtoolsPlugins} />}
     </>
   );
 }

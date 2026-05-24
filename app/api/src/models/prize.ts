@@ -21,6 +21,7 @@ import {
   create as createAward,
   updateById as updateAward,
 } from './award';
+import { TABLE_NAME as AWARD_PREFERENCE_TABLE_NAME } from './awardPreference';
 import { TABLE_NAME as EVENT_TABLE_NAME } from './event';
 
 export const TABLE_NAME = 'prizes';
@@ -289,11 +290,18 @@ export const updateById = async (
    */
   const updatingAwards = input.awards?.map((a) => a.id).filter(Boolean);
   if (updatingAwards && updatingAwards.length > 0) {
+    // Delete award preferences for awards being removed
+    await trx(AWARD_PREFERENCE_TABLE_NAME)
+      .whereNotIn('award_id', updatingAwards as string[])
+      .andWhere({ prize_id: id })
+      .del();
     await trx<AwardDb>(AWARD_TABLE_NAME)
       .whereNotIn('id', updatingAwards as string[])
       .andWhere({ prize_id: id })
       .del();
   } else if (!updatingAwards || updatingAwards.length === 0) {
+    // Delete all award preferences for this prize before deleting awards
+    await trx(AWARD_PREFERENCE_TABLE_NAME).where({ prize_id: id }).del();
     await trx<AwardDb>(AWARD_TABLE_NAME).where({ prize_id: id }).del();
   }
 

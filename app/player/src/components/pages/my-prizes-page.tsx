@@ -1,9 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ExternalLink } from '@/components/ui/external-link';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { usePlayer } from '@/hooks/use-player';
 import { usePlayerAwards } from '@/hooks/use-player-awards';
-import { ExternalLink, Medal, Trophy } from 'lucide-react';
+import { Medal, Trophy } from 'lucide-react';
 import { useEffect } from 'react';
 
 export function MyPrizesPage() {
@@ -78,14 +79,7 @@ export function MyPrizesPage() {
                     <Medal className="w-5 h-5" />
                     {award.prize?.title || 'Prize'}
                     {award.prize?.url && (
-                      <a
-                        href={award.prize.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                      <ExternalLink href={award.prize.url} className="text-sm text-primary" />
                     )}
                   </CardTitle>
                   {award.prize?.eventTitle && (

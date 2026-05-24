@@ -1,3 +1,4 @@
+import { sendAwardEmail } from '@/lib/email';
 import { getTopAvailableAwardForPlayer, updateById as updateAwardById } from '@/models/award';
 import { getById as getEventById } from '@/models/event';
 import { getByAgaId } from '@/models/player';
@@ -132,32 +133,47 @@ export const bulkSyncResults = async (context: Context, input: ImportResults): P
     );
   }
 
-  // Generate bulk upsert values
-  const resultValues = [`(?, ?, ?)`];
-  const resultArgs: (string | number)[] = [];
-  const winnersJson = input.results.map(({ division, agaId, place }) => ({
-    division,
-    agaId,
-    place,
-  }));
-  resultArgs.push(randomUUID(), input.results[0].eventId, JSON.stringify(winnersJson));
+  const eventId = input.results[0].eventId;
 
-  if (resultValues.length) {
-    // Delete all previous results for the event to ensure sync
+  // Build winners JSON with player names
+  const winnersJson = await Promise.all(
+    input.results.map(async ({ division, agaId, place }) => {
+      const player = await getByAgaId(context, agaId);
+      return {
+        division,
+        agaId,
+        place,
+        name: player?.name ?? null,
+      };
+    }),
+  );
+
+  // Check if a result already exists for this event
+  const existingResult = await getByEventId(context, eventId);
+
+  if (existingResult) {
+    // Update existing result's winners
     await context
       .db<ResultDb>(RESULTS_TABLE_NAME)
-      .where({ event_id: input.results[0].eventId })
-      .del();
+      .where({ id: existingResult.id })
+      .update({ winners: JSON.stringify(winnersJson) });
 
-    // SQL injection safe, fully-parameterized bulk insert.
+    context.logger.info(
+      { resultId: existingResult.id, eventId },
+      'Updated existing result with new winners',
+    );
+  } else {
+    // Insert new result
     await context.db.raw(
       `
       INSERT INTO results (id, event_id, winners)
-      VALUES ${resultValues.join(',')}
+      VALUES (?, ?, ?)
       RETURNING id, event_id;
     `,
-      resultArgs,
+      [randomUUID(), eventId, JSON.stringify(winnersJson)],
     );
+
+    context.logger.info({ eventId }, 'Created new result for event');
   }
 };
 
@@ -295,10 +311,7 @@ export const getAllocationRecommendations = async ({
           { playerId: player.id, agaId: winner.agaId },
           `No available awards for player ${player.name}. Skipping.`,
         );
-        throw createHttpError(
-          400,
-          `Unable to allocate awards for all of the players requested. Please ensure there are enough awards available.`,
-        );
+        continue;
       }
       recommendedAwards.add(awardResult.award.id);
 
@@ -311,6 +324,7 @@ export const getAllocationRecommendations = async ({
         place: winner.place,
         division: winner.division,
         prizeTitle: award.prizeTitle || '',
+        prizeDescription: award.prizeDescription || '',
         awardId: award.id,
         awardValue: award.value,
         awardRedeemCode: award.redeemCode,
@@ -429,6 +443,35 @@ export const allocateAwardsToWinners = async ({
       { resultId: result.id, awardCount: input.awards.length },
       'Successfully allocated and finalized awards',
     );
+
+    // Send congratulations emails to all players who have an email address
+    for (const award of input.awards) {
+      if (award.userEmail) {
+        try {
+          await sendAwardEmail(context, {
+            playerName: award.playerName,
+            playerEmail: award.userEmail,
+            prizeTitle: award.prizeTitle,
+            prizeDescription: award.prizeDescription,
+            awardValue: award.awardValue,
+            awardRedeemCode: award.awardRedeemCode,
+            eventTitle: award.eventTitle,
+            place: award.place,
+            division: award.division,
+          });
+          context.logger.info(
+            { playerId: award.playerId, email: award.userEmail, awardId: award.awardId },
+            'Sent award congratulations email to player',
+          );
+        } catch (emailError) {
+          // Log the error but don't fail the allocation - emails are non-critical
+          context.logger.error(
+            { playerId: award.playerId, email: award.userEmail, error: emailError },
+            'Failed to send award congratulations email',
+          );
+        }
+      }
+    }
 
     return updatedResult;
   } catch (error) {

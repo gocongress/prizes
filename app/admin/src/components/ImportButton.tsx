@@ -18,9 +18,11 @@ interface ReferenceSelector {
   label: string;
   fieldName: string;
   optionText?: string | ((record: Record<string, unknown>) => string);
+  defaultValue?: string;
 }
 
 interface ImportButtonProps {
+  buttonLabel?: string;
   csvFields: string;
   csvNotes?: object;
   dialogTitle: string;
@@ -31,6 +33,7 @@ interface ImportButtonProps {
 }
 
 const ImportButton = ({
+  buttonLabel = 'Import CSV',
   csvFields,
   csvNotes,
   dialogTitle,
@@ -61,6 +64,15 @@ const ImportButton = ({
         })
         .then(({ data }) => {
           setReferenceOptions(data);
+          // Pre-select the default value if provided
+          if (referenceSelector.defaultValue) {
+            const defaultOption = data.find(
+              (option: Record<string, unknown>) => option.id === referenceSelector.defaultValue,
+            );
+            if (defaultOption) {
+              setSelectedReference(defaultOption);
+            }
+          }
         })
         .catch((error) => {
           notify(`Error loading ${referenceSelector.label}: ${error.message}`, { type: 'error' });
@@ -156,7 +168,7 @@ const ImportButton = ({
 
   return (
     <>
-      <Button label="Import CSV" onClick={handleClickOpen} startIcon={<CloudUploadIcon />} />
+      <Button label={buttonLabel} onClick={handleClickOpen} startIcon={<CloudUploadIcon />} />
 
       {/* Confirmation Dialog */}
       {confirmMessage && (

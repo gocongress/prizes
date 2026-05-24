@@ -1,5 +1,6 @@
 import { getQueryParams } from '@/lib/handlers';
 import { TABLE_NAME as AWARD_TABLE_NAME } from '@/models/award';
+import { TABLE_NAME as PLAYER_TABLE_NAME } from '@/models/player';
 import { TABLE_NAME as PRIZE_TABLE_NAME } from '@/models/prize';
 import type { AwardDb } from '@/schemas/award';
 import {
@@ -59,12 +60,22 @@ export const getAll = async (
     .db<AwardPreferenceDb>(TABLE_NAME)
     .select(`${TABLE_NAME}.*`)
     .select(`${AWARD_TABLE_NAME}.value as awardValue`)
-    .leftJoin(AWARD_TABLE_NAME, `${TABLE_NAME}.award_id`, `${AWARD_TABLE_NAME}.id`);
+    .leftJoin(AWARD_TABLE_NAME, `${TABLE_NAME}.award_id`, `${AWARD_TABLE_NAME}.id`)
+    .leftJoin(PRIZE_TABLE_NAME, `${AWARD_TABLE_NAME}.prize_id`, `${PRIZE_TABLE_NAME}.id`)
+    .leftJoin(PLAYER_TABLE_NAME, `${TABLE_NAME}.player_id`, `${PLAYER_TABLE_NAME}.id`);
 
   if (queryParams.ids) {
     query.whereIn(`${TABLE_NAME}.id`, queryParams.ids);
   } else if (queryParams.playerId) {
     query.where(`${TABLE_NAME}.player_id`, queryParams.playerId);
+  }
+
+  if (queryParams?.q) {
+    query.andWhere((subQuery) => {
+      subQuery
+        .whereILike(`${PLAYER_TABLE_NAME}.name`, `%${queryParams.q}%`)
+        .orWhereILike(`${PRIZE_TABLE_NAME}.title`, `%${queryParams.q}%`);
+    });
   }
 
   const { page, pageSize, orderBy, orderDirection, offset, totalPages } =

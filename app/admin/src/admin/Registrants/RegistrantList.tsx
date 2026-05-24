@@ -7,8 +7,11 @@ import {
   ExportButton,
   List,
   ReferenceField,
+  SearchInput,
   TopToolbar,
 } from 'react-admin';
+
+const filters = [<SearchInput source="q" alwaysOn />];
 
 const RegistrantListActions = () => (
   <TopToolbar>
@@ -19,7 +22,7 @@ const RegistrantListActions = () => (
 );
 
 const RegistrantList = () => (
-  <List actions={<RegistrantListActions />}>
+  <List actions={<RegistrantListActions />} filters={filters}>
     <DataTable hiddenColumns={['id', 'createdAt', 'updatedAt']}>
       <DataTable.Col source="id" />
       <DataTable.Col source="playerName" label="Player">
