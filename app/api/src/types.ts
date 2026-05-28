@@ -43,6 +43,7 @@ export type Context = {
     jwtExpiresIn: SignOptions['expiresIn']; // ie. '1h', '7d'
     adminEmails: string[];
     supportEmail: string;
+    playerAppUrl: string;
     smtp: {
       enabled: boolean;
       apiKey: string;

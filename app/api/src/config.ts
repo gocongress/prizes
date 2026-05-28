@@ -55,6 +55,7 @@ const runtime = {
     : [],
   supportEmail: process.env.SUPPORT_EMAIL || 'noreply@gocongress.org',
   otpCodeLength: Number.parseInt(process.env.OTP_CODE_LENGTH || '8', 10),
+  playerAppUrl: process.env.PLAYER_APP_URL || 'http://localhost:3000',
   smtp: {
     enabled: process.env.SMTP2GO_ENABLED === 'true' || process.env.SMTP2GO_ENABLED === '1',
     apiKey: process.env.SMTP2GO_API_KEY || '',

@@ -6,5 +6,6 @@ import * as Prize from '@/handlers/api/admin/prize';
 import * as Registrant from '@/handlers/api/admin/registrant';
 import * as Result from '@/handlers/api/admin/result';
 import * as User from '@/handlers/api/admin/user';
+import * as WelcomeEmail from '@/handlers/api/admin/welcomeEmail';
 
-export { Award, AwardPreference, Event, Player, Prize, Registrant, Result, User };
+export { Award, AwardPreference, Event, Player, Prize, Registrant, Result, User, WelcomeEmail };
