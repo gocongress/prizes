@@ -640,7 +640,7 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
     }
     .login-button {
       display: inline-block;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #111111;
       color: #ffffff;
       text-decoration: none;
       padding: 16px 40px;
@@ -649,16 +649,16 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
       font-weight: 600;
       letter-spacing: 0.5px;
     }
-    .info-box {
-      background-color: #fff3cd;
-      border-left: 4px solid #ffc107;
+    .warning-box {
+      background-color: #f8d7da;
+      border-left: 4px solid #dc3545;
       padding: 15px 20px;
       margin: 25px 0;
       border-radius: 4px;
     }
-    .info-box p {
+    .warning-box p {
       margin: 0;
-      color: #856404;
+      color: #721c24;
       font-size: 14px;
     }
     .link-fallback {
@@ -725,8 +725,8 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
         <a href="${loginLink}" class="login-button">Access My Account</a>
       </div>
 
-      <div class="info-box">
-        <p><strong>Important:</strong> This login link is unique to your account. Do not share it with others.</p>
+      <div class="warning-box">
+        <p><strong>⚠️ Important:</strong> This login link is unique to your account. Do not share it with others.</p>
       </div>
 
       <div class="link-fallback">
