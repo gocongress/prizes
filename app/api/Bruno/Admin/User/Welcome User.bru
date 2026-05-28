@@ -1,0 +1,21 @@
+meta {
+  name: Welcome User Email
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/users/welcome
+  body: json
+  auth: bearer
+}
+
+body:json {
+  {
+    "agaId": "{{agaId}}"
+  }
+}
+
+auth:bearer {
+  token: {{token}}
+}

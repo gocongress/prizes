@@ -18,6 +18,15 @@ export const getUserJwt = (
   return userJwt;
 };
 
+export const getWelcomeLinkJwt = (
+  context: Context,
+  user: { id: string; email: string; scope: ScopeKindKey },
+) => {
+  return sign({ sub: user.id, scopes: ScopeKinds[user.scope] }, context.runtime.jwtSecretKey, {
+    expiresIn: context.runtime.jwtExpiresIn,
+  });
+};
+
 export const verifyUserJwt = (context: Context, token: string): JwtPayload => {
   const jwt = verify(token, context.runtime.jwtSecretKey) as JwtPayload | JsonWebTokenError;
   if (jwt instanceof JsonWebTokenError) throw createHttpError(401, 'Invalid token');

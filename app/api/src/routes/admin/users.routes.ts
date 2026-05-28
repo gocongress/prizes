@@ -11,6 +11,10 @@ export const usersRoutes = (context: Context) =>
       post: handlers.Admin.User.createUser(context),
     },
     {
+      // POST: /api/v1/admin/users/welcome
+      welcome: route({
+        post: handlers.Admin.WelcomeEmail.sendWelcomeEmailHandler(context),
+      }),
       // POST: /api/v1/admin/users/import
       import: route({
         post: handlers.Admin.User.importUsers(context),

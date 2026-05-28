@@ -576,6 +576,195 @@ export async function sendSupportEmail(
   return sendHtmlEmail(context, context.runtime.supportEmail, subject, htmlBody);
 }
 
+export interface WelcomeEmailParams {
+  playerName: string;
+  playerEmail: string;
+  loginLink: string;
+}
+
+/**
+ * Generates a styled HTML email template for welcome emails with a login link
+ */
+export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
+  const { playerName, loginLink } = params;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .header p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 10px 0 0 0;
+      font-size: 16px;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .content p {
+      color: #333333;
+      font-size: 16px;
+      margin: 0 0 20px 0;
+    }
+    .button-container {
+      text-align: center;
+      margin: 35px 0;
+    }
+    .login-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 16px 40px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .info-box {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .info-box p {
+      margin: 0;
+      color: #856404;
+      font-size: 14px;
+    }
+    .link-fallback {
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      padding: 15px 20px;
+      margin: 20px 0;
+      word-break: break-all;
+    }
+    .link-fallback p {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      color: #6c757d;
+    }
+    .link-fallback a {
+      font-size: 13px;
+      color: #667eea;
+      word-break: break-all;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e9ecef;
+    }
+    .footer p {
+      color: #6c757d;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    @media only screen and (max-width: 600px) {
+      .container {
+        margin: 20px;
+        border-radius: 4px;
+      }
+      .header {
+        padding: 30px 20px;
+      }
+      .header h1 {
+        font-size: 24px;
+      }
+      .content {
+        padding: 30px 20px;
+      }
+      .login-button {
+        padding: 14px 30px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome to AGA Prizes</h1>
+      <p>Your account is ready</p>
+    </div>
+    <div class="content">
+      <p>Dear ${playerName},</p>
+      <p>Welcome! Your AGA Prizes account has been set up and you can now access the player dashboard to set your preference for tournament prizes and view the prizes you've won.</p>
+      <p>Click the button below to log in to your account:</p>
+
+      <div class="button-container">
+        <a href="${loginLink}" class="login-button">Access My Account</a>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Important:</strong> This login link is unique to your account. Do not share it with others.</p>
+      </div>
+
+      <div class="link-fallback">
+        <p>If the button above doesn't work, copy and paste this link into your browser:</p>
+        <a href="${loginLink}">${loginLink}</a>
+      </div>
+    </div>
+    <div class="footer">
+      <p>© ${new Date().getFullYear()} AGA Prizes. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+}
+
+/**
+ * Sends a welcome email to a player with a unique login link
+ */
+export async function sendWelcomeEmail(
+  context: Context,
+  params: WelcomeEmailParams,
+): Promise<SMTP2GoResponse | void> {
+  if (!context.runtime.smtp.enabled) {
+    context.logger.warn('SMTP is not enabled, skipping sending welcome email');
+    return;
+  }
+
+  const htmlBody = generateWelcomeEmailHtml(params);
+
+  return sendHtmlEmail(
+    context,
+    { email: params.playerEmail, name: params.playerName },
+    'Welcome to AGA Prizes — Access Your Account',
+    htmlBody,
+  );
+}
+
 export interface AwardEmailParams {
   playerName: string;
   playerEmail: string;
