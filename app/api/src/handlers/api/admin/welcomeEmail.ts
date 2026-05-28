@@ -1,7 +1,7 @@
 import { getWelcomeLinkJwt } from '@/lib/auth';
 import { ScopeKinds } from '@/lib/constants';
-import { ApiPayloadSchema, buildResponse, handlerFactory } from '@/lib/handlers';
 import { sendWelcomeEmail } from '@/lib/email';
+import { ApiPayloadSchema, buildResponse, handlerFactory } from '@/lib/handlers';
 import { getByAgaId } from '@/models/player';
 import { getById as getUserById } from '@/models/user';
 import { ContextKinds, type Context } from '@/types';
@@ -17,7 +17,7 @@ const WelcomeEmailMessageSchema = z.object({
 });
 
 /**
- * POST /api/v1/admin/welcome-email
+ * POST /api/v1/admin/users/welcome-email
  */
 export const sendWelcomeEmailHandler = (context: Context) =>
   handlerFactory({
