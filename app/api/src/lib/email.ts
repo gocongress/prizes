@@ -610,22 +610,6 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
-    .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 40px 30px;
-      text-align: center;
-    }
-    .header h1 {
-      color: #ffffff;
-      margin: 0;
-      font-size: 28px;
-      font-weight: 600;
-    }
-    .header p {
-      color: rgba(255, 255, 255, 0.9);
-      margin: 10px 0 0 0;
-      font-size: 16px;
-    }
     .content {
       padding: 40px 30px;
     }
@@ -640,11 +624,7 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
     }
     .login-button {
       display: inline-block;
-      background: #111111;
-      color: #ffffff;
-      text-decoration: none;
       padding: 16px 40px;
-      border-radius: 6px;
       font-size: 16px;
       font-weight: 600;
       letter-spacing: 0.5px;
@@ -694,12 +674,6 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
         margin: 20px;
         border-radius: 4px;
       }
-      .header {
-        padding: 30px 20px;
-      }
-      .header h1 {
-        font-size: 24px;
-      }
       .content {
         padding: 30px 20px;
       }
@@ -712,14 +686,9 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>Welcome to AGA Prizes</h1>
-      <p>Your account is ready</p>
-    </div>
     <div class="content">
       <p>Dear ${playerName},</p>
       <p>Welcome! Your AGA Prizes account has been set up and you can now access the player dashboard to set your preference for tournament prizes and view the prizes you've won.</p>
-      <p>Click the button below to log in to your account:</p>
 
       <div class="button-container">
         <a href="${loginLink}" class="login-button">Access My Account</a>
@@ -730,7 +699,7 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
       </div>
 
       <div class="link-fallback">
-        <p>If the button above doesn't work, copy and paste this link into your browser:</p>
+        <p>If the link above doesn't work, copy and paste this link into your browser:</p>
         <a href="${loginLink}">${loginLink}</a>
       </div>
     </div>
