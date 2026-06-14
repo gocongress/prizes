@@ -38,6 +38,10 @@ interface LoginUserInput {
   verificationToken?: string;
 }
 
+interface WelcomeLoginInput {
+  token: string;
+}
+
 interface ApiResponse<T> {
   data: T;
   api: {
@@ -167,6 +171,38 @@ export const useAuth = () => {
     },
   });
 
+  // Log the user in with a welcome link token (from the welcome email)
+  const welcomeLoginMutation = useMutation({
+    mutationFn: async (input: WelcomeLoginInput): Promise<User> => {
+      const response = await fetch(`${API_URL}/api/v1/auth/welcome-login`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Failed to login with welcome token');
+      }
+
+      const result: ApiResponse<User> = await response.json();
+      return result.data;
+    },
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token || 'logged-in');
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      window.location.replace('/dashboard');
+    },
+    onError: (error) => {
+      toast.error('Login failed', {
+        description: error.message || 'Invalid or expired welcome link',
+      });
+    },
+  });
+
   // Log the user out, disabling the profile query and clearing the query client cache
   // entirely.
   const logoutMutation = useMutation({
@@ -218,11 +254,13 @@ export const useAuth = () => {
       profileQuery.isLoading ||
       createUserMutation.isPending ||
       loginMutation.isPending ||
+      welcomeLoginMutation.isPending ||
       logoutMutation.isPending,
 
     // Methods
     createUser: createUserMutation.mutateAsync,
     login: loginMutation.mutateAsync,
+    welcomeLogin: welcomeLoginMutation.mutateAsync,
     logout: logoutMutation.mutateAsync,
     refetchProfile: profileQuery.refetch,
 

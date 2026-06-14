@@ -14,6 +14,10 @@ export const authRoutes = (context: Context) =>
       login: route({
         post: handlers.Auth.loginUser(context),
       }),
+      // POST: /api/v1/auth/welcome-login
+      'welcome-login': route({
+        post: handlers.Auth.welcomeLogin(context),
+      }),
       // POST: /api/v1/auth/logout
       logout: route({
         post: handlers.Auth.logoutUser(context),
