@@ -1,3 +1,4 @@
+import { verifyUserJwt } from '@/lib/auth';
 import { ScopeKinds } from '@/lib/constants';
 import { ApiPayloadSchema, buildResponse, handlerFactory } from '@/lib/handlers';
 import {
@@ -10,6 +11,7 @@ import * as UserService from '@/services/user';
 import { ContextKinds, type Context } from '@/types';
 import rateLimit from 'express-rate-limit';
 import createHttpError from 'http-errors';
+import * as z from 'zod';
 
 /**
  * POST /api/v1/auth/login
@@ -79,6 +81,57 @@ export const logoutUser = (context: Context) =>
       }
     },
   });
+
+const WelcomeLoginInputSchema = z.object({
+  token: z.jwt(),
+});
+
+/**
+ * POST /api/v1/auth/welcome-login
+ */
+export const welcomeLogin = (context: Context) =>
+  handlerFactory({
+    authenticateUser: false,
+    useBotProtection: false,
+    context,
+    kind: ContextKinds.USER,
+    itemSchema: UserMinimalDetailsSchema,
+    scopes: ScopeKinds.USER,
+  })
+    .use(
+      rateLimit({
+        windowMs: 60 * 1000,
+        max: 5,
+        standardHeaders: 'draft-8',
+        legacyHeaders: false,
+        identifier: 'welcome-login',
+      }),
+    )
+    .build({
+      method: 'post',
+      input: WelcomeLoginInputSchema,
+      output: ApiPayloadSchema,
+      handler: async ({ input, options: { context } }) => {
+        try {
+          const payload = verifyUserJwt(context, input.token);
+          const user = await UserService.loginWithWelcomeToken({ context, input: payload.sub });
+          if (!user.token) {
+            throw createHttpError(500, 'Welcome login failed, token not generated.');
+          }
+          return buildResponse(UserMinimalDetailsSchema, context, ContextKinds.USER, {
+            id: user.id,
+            email: user.email,
+            token: user.token,
+            kind: user.kind,
+            isAdmin: user.scope === 'ADMIN',
+          });
+        } catch (err) {
+          if (createHttpError.isHttpError(err)) throw err;
+          context.logger.error({ err }, 'Error logging in with welcome token');
+          throw createHttpError(401, 'Invalid or expired welcome token.');
+        }
+      },
+    });
 
 /**
  * GET /api/v1/auth/profile

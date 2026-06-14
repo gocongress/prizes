@@ -17,12 +17,13 @@ import { useCallback, useEffect, useState } from 'react';
 // ---------- Page component ----------
 function LoginPage() {
   const { queryClient } = Route.useRouteContext();
+  const { token: welcomeToken } = Route.useSearch();
   const [showOtp, setShowOtp] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { createUser, login, createUserState, loginState } = useAuth();
+  const { createUser, login, welcomeLogin, createUserState, loginState } = useAuth();
 
   const [token, setToken] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState(false);
@@ -34,6 +35,13 @@ function LoginPage() {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
     };
   }, [queryClient]);
+
+  // Auto-login when a welcome token is present in the URL
+  useEffect(() => {
+    if (welcomeToken) {
+      welcomeLogin({ token: welcomeToken });
+    }
+  }, [welcomeToken, welcomeLogin]);
 
   const handleEmailSubmit = async (email: string) => {
     if (!isVerified || !token) {

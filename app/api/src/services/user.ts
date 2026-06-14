@@ -148,6 +148,44 @@ export const loginUser = async ({ context, input }: ServiceParams<LoginUser>): P
   }
 };
 
+export const loginWithWelcomeToken = async ({
+  context,
+  input: userId,
+}: ServiceParams<string>): Promise<UserApi> => {
+  if (!userId) {
+    throw createHttpError(400, 'User ID is missing.');
+  }
+
+  const user = await getById(context, userId);
+  if (!user) {
+    throw createHttpError(404, 'User not found.');
+  }
+
+  const trx = await context.db.transaction();
+  try {
+    let updatedUser: UserApi | undefined;
+    if (context.runtime.adminEmails.includes(user.email)) {
+      updatedUser = await updateById(context, trx, user.id, {
+        last_login_at: new Date(),
+        scope: 'ADMIN',
+      });
+    } else {
+      updatedUser = await updateById(context, trx, user.id, {
+        last_login_at: new Date(),
+      });
+    }
+    if (!updatedUser) {
+      throw createHttpError(500, 'User update failed.');
+    }
+    updatedUser.token = getUserJwt(context, updatedUser);
+    await trx.commit();
+    return updatedUser;
+  } catch (error) {
+    await trx.rollback();
+    throw createHttpError(401, 'Error logging in with welcome token.');
+  }
+};
+
 export const getUserProfile = async ({
   context,
   input,
