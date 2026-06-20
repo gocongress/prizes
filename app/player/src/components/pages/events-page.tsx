@@ -5,7 +5,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvents } from '@/hooks/use-events';
-import { useNavigate, useRouterState } from '@tanstack/react-router';
+import { usePlayer } from '@/hooks/use-player';
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Calendar } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 
@@ -22,8 +23,14 @@ export interface EventsPageProps {
 function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
   const { setBreadcrumbs } = useBreadcrumb();
   const { events, isLoading } = useEvents();
+  const { selectedPlayer } = usePlayer();
   const navigate = useNavigate();
   const routerState = useRouterState();
+
+  const registeredEventIds = useMemo(
+    () => new Set(selectedPlayer?.events?.map((e) => e.id) ?? []),
+    [selectedPlayer?.events],
+  );
 
   useEffect(() => {
     if (breadcrumbs) {
@@ -128,14 +135,24 @@ function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
                         <Calendar className="w-3.5 h-3.5" />
                         {formatDate(event.startAt)} - {formatDate(event.endAt)}
                       </div>
-                      {event.registrationUrl && (
-                        <ExternalLink
-                          href={event.registrationUrl}
+                      {registeredEventIds.has(event.id) ? (
+                        <Link
+                          to="/dashboard"
                           className="text-xs font-semibold text-blue-500 hover:text-blue-800"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          Register for this event
-                        </ExternalLink>
+                          View your dashboard
+                        </Link>
+                      ) : (
+                        event.registrationUrl && (
+                          <ExternalLink
+                            href={event.registrationUrl}
+                            className="text-xs font-semibold text-blue-500 hover:text-blue-800"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            Register for this event
+                          </ExternalLink>
+                        )
                       )}
                     </CardDescription>
                   </CardHeader>
