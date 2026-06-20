@@ -146,9 +146,12 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                 {new Date(event.endAt).toLocaleDateString()}
               </span>
             </div>
-            {new Date(event.endAt) >= new Date() && (
-              selectedPlayer?.events?.some((e) => e.id === event.id) ? (
-                <Link to="/dashboard" className="text-sm font-semibold text-blue-500 hover:text-blue-800">
+            {new Date(event.endAt) >= new Date() &&
+              (selectedPlayer?.events?.some((e) => e.id === event.id) ? (
+                <Link
+                  to="/dashboard"
+                  className="text-sm font-semibold text-blue-500 hover:text-blue-800"
+                >
                   View your dashboard
                 </Link>
               ) : (
@@ -161,8 +164,7 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                     Register for this event
                   </ExternalLink>
                 )
-              )
-            )}
+              ))}
           </div>
         </div>
 
