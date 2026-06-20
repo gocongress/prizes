@@ -3,12 +3,12 @@ import { ExternalLink } from '@/components/ui/external-link';
 import { LoginCallToAction } from '@/components/ui/login-call-to-action';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
+import { PlayerContext } from '@/contexts/player';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvents } from '@/hooks/use-events';
-import { usePlayer } from '@/hooks/use-player';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { Calendar } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 
 export interface BreadcrumbSegment {
   label: string;
@@ -23,7 +23,8 @@ export interface EventsPageProps {
 function EventsPage({ breadcrumbs, showCallToAction = true }: EventsPageProps) {
   const { setBreadcrumbs } = useBreadcrumb();
   const { events, isLoading } = useEvents();
-  const { selectedPlayer } = usePlayer();
+  const playerContext = useContext(PlayerContext);
+  const selectedPlayer = playerContext?.selectedPlayer;
   const navigate = useNavigate();
   const routerState = useRouterState();
 
