@@ -10,16 +10,17 @@ import {
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvent } from '@/hooks/use-event';
 import { usePlayer } from '@/hooks/use-player';
-import { usePrizes, type PrizeAwardCombination } from '@/hooks/use-prizes';
+import { type PrizeAwardCombination } from '@/hooks/use-prizes';
+import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
 import { Calendar, UserCircle2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 
 export function DashboardPage() {
   const { setBreadcrumbs } = useBreadcrumb();
-  const { prizes, isLoading: isLoadingPrizes } = usePrizes();
   const { selectedPlayer, isLoading: isLoadingPlayers } = usePlayer();
   const { selectedEvent, setSelectedEvent, availableEvents } = useEvent();
+  const { prizes, isLoading: isLoadingPrizes } = usePrizesByEvent(selectedEvent?.id);
   const { awardPreferences, isLoading: isLoadingAwardPreferences } = useAwardPreferences(
     selectedPlayer?.id,
   );
@@ -35,10 +36,7 @@ export function DashboardPage() {
   // Filter award preferences to only those for the selected event
   const eventAwardPreferences = useMemo(() => {
     if (!selectedEvent) return [];
-    // Filter preferences to only those matching prizes in the selected event
-    const eventPrizeIds = new Set(
-      prizes.filter((prize) => prize.eventId === selectedEvent.id).map((prize) => prize.id),
-    );
+    const eventPrizeIds = new Set(prizes.map((prize) => prize.id));
     return awardPreferences.filter((pref) => eventPrizeIds.has(pref.prizeId));
   }, [awardPreferences, prizes, selectedEvent]);
 
@@ -64,10 +62,7 @@ export function DashboardPage() {
       return combinations;
     }
 
-    // Filter prizes to only those matching the selected event
-    const eventPrizes = prizes.filter((prize) => prize.eventId === selectedEvent.id);
-
-    eventPrizes.forEach((prize) => {
+    prizes.forEach((prize) => {
       if (prize.awards && prize.awards.length > 0) {
         // Get unique award values for this prize, but only for available awards
         const uniqueValues = new Set(
@@ -126,9 +121,7 @@ export function DashboardPage() {
     if (!selectedPlayer || !selectedEvent) return;
 
     // Filter out combinations without awardId (prizes with no awards)
-    const validCombinations = orderedCombinations
-      .filter((c) => c.awardId)
-      .filter((c) => c.prize.eventId === selectedEvent.id);
+    const validCombinations = orderedCombinations.filter((c) => c.awardId);
 
     if (validCombinations.length === 0) return;
 

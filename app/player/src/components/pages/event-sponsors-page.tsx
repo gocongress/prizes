@@ -4,13 +4,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ExternalLink } from '@/components/ui/external-link';
 import { LoginCallToAction } from '@/components/ui/login-call-to-action';
 import type { BreadcrumbItem } from '@/contexts/breadcrumb';
+import { PlayerContext } from '@/contexts/player';
 import { env } from '@/env';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEventBySlug } from '@/hooks/use-event-by-slug';
 import { usePrizesByEvent } from '@/hooks/use-prizes-by-event';
-import { useParams } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 import { ArrowDownAZ, ArrowDownWideNarrow, CalendarDays, Trophy } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 type SortOrder = 'totalValue' | 'sponsorName';
 
@@ -40,6 +41,8 @@ const getExtensionFromMimeType = (mimeType: string): string | null => {
 
 export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProps = {}) {
   const { setBreadcrumbs } = useBreadcrumb();
+  const playerContext = useContext(PlayerContext);
+  const selectedPlayer = playerContext?.selectedPlayer;
   // Try to get slug from props first, fallback to route params
   const routeParams = useParams({ strict: false });
   const slug = slugProp || (routeParams as { slug?: string })?.slug || '';
@@ -143,15 +146,25 @@ export function EventSponsorsPage({ slug: slugProp, breadcrumbs }: EventPageProp
                 {new Date(event.endAt).toLocaleDateString()}
               </span>
             </div>
-            {event.registrationUrl && (
-              <ExternalLink
-                href={event.registrationUrl}
-                className="text-sm font-semibold"
-                iconClassName="w-4 h-4"
-              >
-                Register for this event
-              </ExternalLink>
-            )}
+            {new Date(event.endAt) >= new Date() &&
+              (selectedPlayer?.events?.some((e) => e.id === event.id) ? (
+                <Link
+                  to="/dashboard"
+                  className="text-sm font-semibold text-blue-500 hover:text-blue-800"
+                >
+                  View your dashboard
+                </Link>
+              ) : (
+                event.registrationUrl && (
+                  <ExternalLink
+                    href={event.registrationUrl}
+                    className="text-sm font-semibold"
+                    iconClassName="w-4 h-4"
+                  >
+                    Register for this event
+                  </ExternalLink>
+                )
+              ))}
           </div>
         </div>
 
