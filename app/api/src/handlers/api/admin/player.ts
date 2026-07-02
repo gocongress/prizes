@@ -134,6 +134,10 @@ export const syncPlayer = (context: Context) =>
     handler: async ({ input, options: { context } }) => {
       try {
         const payload = await PlayerService.syncPlayer({ context, input });
+        context.logger.info(
+          { agaId: input.agaId, rating: input.rating },
+          'Player synced successfully',
+        );
         return buildResponse(PlayerApiSchema, context, ContextKinds.PLAYER, payload);
       } catch (err) {
         context.logger.error({ err }, 'Error syncing player');
