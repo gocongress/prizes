@@ -22,7 +22,7 @@ export function DashboardPage() {
   const { selectedEvent, setSelectedEvent, availableEvents } = useEvent();
   const { prizes, isLoading: isLoadingPrizes } = usePrizesByEvent(selectedEvent?.id);
   const { awardPreferences, isLoading: isLoadingAwardPreferences } = useAwardPreferences(
-    selectedEvent ? selectedPlayer?.id : undefined,
+    selectedPlayer?.id,
   );
   const { saveAwardPreferences } = useSaveAwardPreferences();
   const { deleteAwardPreferences, isPending: isResettingPreferences } = useDeleteAwardPreferences();
