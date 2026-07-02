@@ -45,11 +45,10 @@ export function EventProvider({ children }: EventProviderProps) {
     });
   }, [availableEvents, selectedPlayer?.id]);
 
-  const value: EventContextValue = {
-    selectedEvent,
-    setSelectedEvent,
-    availableEvents,
-  };
+  const value = useMemo<EventContextValue>(
+    () => ({ selectedEvent, setSelectedEvent, availableEvents }),
+    [selectedEvent, setSelectedEvent, availableEvents],
+  );
 
   return <EventContext.Provider value={value}>{children}</EventContext.Provider>;
 }

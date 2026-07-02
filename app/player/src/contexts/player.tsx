@@ -36,12 +36,10 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
     }
   }, [players, selectedPlayer]);
 
-  const value: PlayerContextValue = {
-    players,
-    selectedPlayer,
-    setSelectedPlayer,
-    isLoading: auth.isLoading,
-  };
+  const value = useMemo<PlayerContextValue>(
+    () => ({ players, selectedPlayer, setSelectedPlayer, isLoading: auth.isLoading }),
+    [players, selectedPlayer, setSelectedPlayer, auth.isLoading],
+  );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }

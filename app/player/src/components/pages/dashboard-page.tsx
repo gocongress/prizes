@@ -6,6 +6,7 @@ import {
   useAwardPreferences,
   useDeleteAwardPreferences,
   useSaveAwardPreferences,
+  type AwardPreference,
 } from '@/hooks/use-award-preferences';
 import { useBreadcrumb } from '@/hooks/use-breadcrumb';
 import { useEvent } from '@/hooks/use-event';
@@ -18,6 +19,7 @@ import { Skeleton } from '../ui/skeleton';
 
 // Stable empty array references to prevent unnecessary re-renders
 const EMPTY_COMBINATIONS: PrizeAwardCombination[] = [];
+const EMPTY_EVENT_AWARD_PREFS: AwardPreference[] = [];
 
 export function DashboardPage() {
   const { setBreadcrumbs } = useBreadcrumb();
@@ -48,7 +50,7 @@ export function DashboardPage() {
 
   // Filter award preferences to only those for the selected event
   const eventAwardPreferences = useMemo(() => {
-    if (!selectedEvent) return [];
+    if (!selectedEvent) return EMPTY_EVENT_AWARD_PREFS;
     const eventPrizeIds = new Set(prizes.map((prize) => prize.id));
     return awardPreferences.filter((pref) => eventPrizeIds.has(pref.prizeId));
   }, [awardPreferences, prizes, selectedEvent]);
@@ -122,7 +124,8 @@ export function DashboardPage() {
     return combinations;
   }, [prizes, preferenceMap, selectedPlayer, selectedEvent]);
 
-  const [prizeAwardCombinations, setPrizeAwardCombinations] = useState<PrizeAwardCombination[]>([]);
+  // Initialize directly from initialCombinations so the first effect fire is a no-op (same ref)
+  const [prizeAwardCombinations, setPrizeAwardCombinations] = useState<PrizeAwardCombination[]>(initialCombinations);
 
   // Update combinations when prizes change
   useEffect(() => {
