@@ -127,6 +127,7 @@ export const syncPlayer = (context: Context) =>
     itemSchema: PlayerApiSchema,
     scopes: ScopeKinds.ADMIN,
     disableScrub: true,
+    enableRateLimit: false, // Disable rate limiting for sync endpoint
   }).build({
     method: 'post',
     input: PlayerSyncSchema,

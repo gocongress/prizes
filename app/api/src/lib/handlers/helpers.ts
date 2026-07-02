@@ -222,6 +222,7 @@ export const handlerFactory = <T extends ZodTypeAny>({
   rawOutput = false,
   clearCookie = false,
   disableScrub = false,
+  enableRateLimit = true,
 }: {
   kind: ContextKind;
   context: Context;
@@ -232,6 +233,7 @@ export const handlerFactory = <T extends ZodTypeAny>({
   rawOutput?: boolean;
   clearCookie?: boolean;
   disableScrub?: boolean;
+  enableRateLimit?: boolean;
 }) => {
   let handler = new EndpointsFactory(
     apiResultsHandler(kind, itemSchema, rawOutput, clearCookie, disableScrub),
@@ -261,20 +263,20 @@ export const handlerFactory = <T extends ZodTypeAny>({
     handler = handler.addMiddleware(TurnstileMiddleware);
   }
 
+  if (enableRateLimit) {
+    handler = handler.use(
+      rateLimit({
+        windowMs: 1 * 60 * 1000, // 1 minute
+        max: 100, // limit each IP to 100 requests per windowMs
+        standardHeaders: 'draft-8',
+        legacyHeaders: false,
+        identifier: 'api',
+      }),
+    );
+  }
+
   if (authenticateUser) {
-    handler = handler
-      .use(
-        // Rate limit authentication attempts to prevent brute-force attacks, do not limit successful requests
-        rateLimit({
-          windowMs: 1 * 60 * 1000, // 1 minute
-          max: 5, // limit each IP to 5 failed requests per windowMs
-          standardHeaders: 'draft-8',
-          legacyHeaders: false,
-          identifier: 'api-auth',
-          skipSuccessfulRequests: true,
-        }),
-      )
-      .addMiddleware(AuthMiddleware(getJwtUser, scopes));
+    handler = handler.addMiddleware(AuthMiddleware(getJwtUser, scopes));
   }
 
   return handler;

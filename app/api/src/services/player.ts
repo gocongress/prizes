@@ -1,5 +1,13 @@
 import { deleteByPlayer } from '@/models/awardPreference';
-import { create, deleteById, getAll, getByAgaId, getById, updateById, updateByAgaId } from '@/models/player';
+import {
+  create,
+  deleteById,
+  getAll,
+  getByAgaId,
+  getById,
+  updateByAgaId,
+  updateById,
+} from '@/models/player';
 import {
   type CreatePlayer,
   type PlayerApi,
@@ -122,7 +130,7 @@ export const syncPlayer = async ({
   try {
     const player = await updateByAgaId(context, trx, input);
     if (!player) {
-      throw createHttpError(404, 'Player not found for sync.');
+      throw createHttpError(404, `Player not found for sync. AGA ID: ${input.agaId}`);
     }
     await trx.commit();
     return player;

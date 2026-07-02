@@ -264,7 +264,7 @@ export const updateByAgaId = async (
     .returning<PlayerDb[]>('*');
 
   if (!rows.length) {
-    throw new Error('Failed syncing player.');
+    throw new Error(`Failed syncing player. AGA ID: ${input.agaId}`);
   }
 
   const user = await userGetById(context, rows[0].user_id);

@@ -125,7 +125,8 @@ export function DashboardPage() {
   }, [prizes, preferenceMap, selectedPlayer, selectedEvent]);
 
   // Initialize directly from initialCombinations so the first effect fire is a no-op (same ref)
-  const [prizeAwardCombinations, setPrizeAwardCombinations] = useState<PrizeAwardCombination[]>(initialCombinations);
+  const [prizeAwardCombinations, setPrizeAwardCombinations] =
+    useState<PrizeAwardCombination[]>(initialCombinations);
 
   // Update combinations when prizes change
   useEffect(() => {
