@@ -22,7 +22,8 @@ export default defineConfig((env) => {
       },
     },
     build: {
-      sourcemap: env.mode !== 'production',
+      // sourcemap: env.mode !== 'production',
+      sourcemap: true,
     },
     server: {
       port: 3002,
