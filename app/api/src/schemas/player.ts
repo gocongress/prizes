@@ -72,6 +72,7 @@ export const PlayerMinimalDetailsSchema = PlayerApiSchema.pick({
 
 export const PlayerSyncSchema = z.object({
   agaId: z.string(),
+  badgefileId: z.string().optional(),
   name: z.string().optional(),
   rating: z.number().optional(),
 });

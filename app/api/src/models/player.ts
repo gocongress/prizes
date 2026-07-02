@@ -258,6 +258,7 @@ export const updateByAgaId = async (
     .update({
       name: input.name ?? player.name,
       rank: input.rating ?? player.rank,
+      // TODO: Add badgefile_id to the PlayerDb type and schema, then uncomment this line
       updated_at: new Date(),
     })
     .returning<PlayerDb[]>('*');
