@@ -2,6 +2,9 @@ import { env } from '@/env';
 import { useQuery } from '@tanstack/react-query';
 import type { Prize } from './use-prizes';
 
+// Stable empty array reference to prevent unnecessary re-renders
+const EMPTY_PRIZES: Prize[] = [];
+
 interface ApiResponse<T> {
   data: T;
   api: {
@@ -61,7 +64,7 @@ export const usePrizesByEvent = (eventId: string | undefined) => {
   });
 
   return {
-    prizes: prizesQuery.data?.items || [],
+    prizes: prizesQuery.data?.items ?? EMPTY_PRIZES,
     total: prizesQuery.data?.total || 0,
     page: prizesQuery.data?.page || 0,
     pageSize: prizesQuery.data?.pageSize || 10,
