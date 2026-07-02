@@ -10,7 +10,7 @@ import {
   type SyncPlayer,
   type UpdatePlayer,
 } from '@/schemas/player';
-import type { UserDb } from '@/schemas/user';
+import type { UserApi, UserDb } from '@/schemas/user';
 import { ContextKinds, type Context } from '@/types';
 import type { Knex } from 'knex';
 import { randomUUID } from 'node:crypto';
@@ -176,14 +176,17 @@ export const create = async (
   context: Context,
   trx: Knex.Transaction,
   input: CreatePlayer,
+  existingUser?: UserApi,
 ): Promise<PlayerApi | undefined> => {
   const user = input.email
     ? await find(context, input.email)
     : await userGetById(context, input.userId);
 
-  if (!user) {
+  if (!user && !existingUser) {
     return;
   }
+
+  const user_id = user?.id || existingUser?.id;
 
   const rows = await trx<PlayerDb>(TABLE_NAME)
     .insert({
@@ -191,7 +194,7 @@ export const create = async (
       name: input.name,
       aga_id: input.agaId,
       rank: input.rank,
-      user_id: user.id,
+      user_id,
       created_at: new Date(),
     })
     .returning<PlayerDb[]>('*');
@@ -201,7 +204,8 @@ export const create = async (
   }
 
   context.logger.debug({ id: rows[0].id }, 'New player created');
-  return asModel({ ...rows[0], email: user.email });
+  const email = user?.email || existingUser?.email;
+  return asModel({ ...rows[0], email });
 };
 
 export const updateById = async (
@@ -272,12 +276,17 @@ export const updateByAgaId = async (
       );
       return;
     }
-    const player = await create(context, trx, {
-      userId: user.id,
-      agaId: input.agaId,
-      name: input.name,
-      rank: input.rating,
-    });
+    const player = await create(
+      context,
+      trx,
+      {
+        userId: user.id,
+        agaId: input.agaId,
+        name: input.name,
+        rank: input.rating,
+      },
+      user,
+    );
     if (player) {
       await registrantCreate(context, trx, {
         playerId: player.id,
