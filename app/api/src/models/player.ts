@@ -255,6 +255,10 @@ export const updateByAgaId = async (
 
   if (!playerRows.length) {
     if (!input.email || !input.name) {
+      context.logger.warn(
+        { agaId: input.agaId, email: input.email, name: input.name },
+        'Cannot create player without email and name',
+      );
       return;
     }
     let user = await find(context, input.email);
@@ -262,6 +266,10 @@ export const updateByAgaId = async (
       user = await userCreate(context, trx, { email: input.email });
     }
     if (!user) {
+      context.logger.warn(
+        { agaId: input.agaId, email: input.email, name: input.name },
+        'Failed to create user for new player',
+      );
       return;
     }
     const player = await create(context, trx, {
