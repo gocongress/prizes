@@ -28,6 +28,16 @@ export function DashboardPage() {
   const { deleteAwardPreferences, isPending: isResettingPreferences } = useDeleteAwardPreferences();
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const prevRef = useRef({ prizes, awardPreferences, selectedPlayer, selectedEvent });
+  useEffect(() => {
+    const prev = prevRef.current;
+    if (prev.prizes !== prizes) console.log('prizes changed', prizes);
+    if (prev.awardPreferences !== awardPreferences) console.log('preferenceMap changed');
+    if (prev.selectedPlayer !== selectedPlayer) console.log('selectedPlayer changed');
+    if (prev.selectedEvent !== selectedEvent) console.log('selectedEvent changed');
+    prevRef.current = { prizes, awardPreferences, selectedPlayer, selectedEvent };
+  });
+
   useEffect(() => {
     setBreadcrumbs([{ title: 'Dashboard', href: '/dashboard' }]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
