@@ -258,20 +258,21 @@ export const updateByAgaId = async (
     .returning<PlayerDb[]>('*');
 
   if (!playerRows.length) {
-    if (!input.email || !input.name) {
+    const email = input.email || input.priEmail;
+    if (!email || !input.name) {
       context.logger.warn(
         { agaId: input.agaId, email: input.email, name: input.name },
         'Cannot create player without email and name',
       );
       return;
     }
-    let user = await find(context, input.email);
+    let user = await find(context, email);
     if (!user) {
-      user = await userCreate(context, trx, { email: input.email });
+      user = await userCreate(context, trx, { email });
     }
     if (!user) {
       context.logger.warn(
-        { agaId: input.agaId, email: input.email, name: input.name },
+        { agaId: input.agaId, email, name: input.name },
         'Failed to create user for new player',
       );
       return;

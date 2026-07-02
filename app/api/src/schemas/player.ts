@@ -74,6 +74,7 @@ export const PlayerSyncSchema = z.object({
   agaId: z.string(),
   badgefileId: z.string().optional(),
   email: z.email().optional(),
+  priEmail: z.email().optional(),
   name: z.string().optional(),
   rating: z
     .number()
