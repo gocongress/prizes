@@ -37,6 +37,7 @@ services:
       TURNSTILE_TIMEOUT: ${TURNSTILE_TIMEOUT:-3000}
       REGFOX_WEBHOOK_SIGNING_SECRET: ${REGFOX_WEBHOOK_SIGNING_SECRET}
       BADGEFILE_API_KEY: ${BADGEFILE_API_KEY}
+      BADGEFILE_EVENT_ID: ${BADGEFILE_EVENT_ID}
     depends_on:
       postgres:
         condition: service_healthy

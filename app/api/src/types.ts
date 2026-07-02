@@ -62,6 +62,7 @@ export type Context = {
     };
     badgefile: {
       apiKey: string;
+      eventId: string;
     };
   };
   server: {

@@ -74,6 +74,7 @@ const runtime = {
   },
   badgefile: {
     apiKey: process.env.BADGEFILE_API_KEY!,
+    eventId: process.env.BADGEFILE_EVENT_ID!,
   },
 };
 

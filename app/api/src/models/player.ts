@@ -14,7 +14,13 @@ import type { UserDb } from '@/schemas/user';
 import { ContextKinds, type Context } from '@/types';
 import type { Knex } from 'knex';
 import { randomUUID } from 'node:crypto';
-import { find, TABLE_NAME as USER_TABLE_NAME, getById as userGetById } from './user';
+import { create as registrantCreate } from './registrant';
+import {
+  find,
+  TABLE_NAME as USER_TABLE_NAME,
+  create as userCreate,
+  getById as userGetById,
+} from './user';
 
 export const TABLE_NAME = 'players';
 
@@ -248,7 +254,30 @@ export const updateByAgaId = async (
     .returning<PlayerDb[]>('*');
 
   if (!playerRows.length) {
-    return;
+    if (!input.email || !input.name) {
+      return;
+    }
+    let user = await find(context, input.email);
+    if (!user) {
+      user = await userCreate(context, trx, { email: input.email });
+    }
+    if (!user) {
+      return;
+    }
+    const player = await create(context, trx, {
+      userId: user.id,
+      agaId: input.agaId,
+      name: input.name,
+      rank: input.rating,
+    });
+    if (player) {
+      await registrantCreate(context, trx, {
+        playerId: player.id,
+        eventId: context.runtime.badgefile.eventId,
+        registrationDate: new Date().toISOString(),
+      });
+    }
+    return player;
   }
 
   const player = playerRows[0];
