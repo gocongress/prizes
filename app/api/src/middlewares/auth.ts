@@ -11,7 +11,23 @@ export const AuthMiddleware = (getUser: GetJwtUser<Context>, scopes: ScopeKind) 
     handler: async ({ request, options: { context } }) => {
       const { server, logger } = context;
       const cookie = request.cookies ? request.cookies[server.cookieName] : undefined;
-      const token = cookie ?? request.headers.authorization?.split(' ')[1];
+      const authHeader = request.headers.authorization ?? '';
+      const bearerToken = authHeader.split(' ')[1];
+      const token = cookie ?? bearerToken;
+
+      // Allow admin access via badgefile API key in the Authorization header
+      const badgefileApiKey = context.runtime.badgefile?.apiKey;
+      if (badgefileApiKey && bearerToken === badgefileApiKey) {
+        logger.info('Badgefile API key authentication successful');
+        if (!context.request) {
+          context.request = { token: bearerToken ?? authHeader, scopes };
+        } else {
+          context.request.scopes = scopes;
+          context.request.token = bearerToken ?? authHeader;
+        }
+        return { user: undefined };
+      }
+
       logger.debug(
         { cookiePresent: !!cookie, authHeaderPresent: !!request.headers.authorization, token },
         'User JWT authentication attempt',

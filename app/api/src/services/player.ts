@@ -1,9 +1,10 @@
 import { deleteByPlayer } from '@/models/awardPreference';
-import { create, deleteById, getAll, getByAgaId, getById, updateById } from '@/models/player';
+import { create, deleteById, getAll, getByAgaId, getById, updateById, updateByAgaId } from '@/models/player';
 import {
   type CreatePlayer,
   type PlayerApi,
   type PlayerQueryParams,
+  type SyncPlayer,
   type UpdatePlayer,
 } from '@/schemas/player';
 import type { Context, ServiceParams } from '@/types';
@@ -105,6 +106,28 @@ export const deletePlayerById = async ({
     if ((error as any).detail?.includes('is still referenced')) {
       throw new Error('Cannot delete a player who has been awarded prizes.');
     }
+    throw error;
+  }
+};
+
+export const syncPlayer = async ({
+  context,
+  input,
+}: ServiceParams<SyncPlayer>): Promise<PlayerApi> => {
+  if (!input) {
+    throw new Error('Sync player input is missing.');
+  }
+
+  const trx = await context.db.transaction();
+  try {
+    const player = await updateByAgaId(context, trx, input);
+    if (!player) {
+      throw createHttpError(404, 'Player not found for sync.');
+    }
+    await trx.commit();
+    return player;
+  } catch (error) {
+    await trx.rollback();
     throw error;
   }
 };

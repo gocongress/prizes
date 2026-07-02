@@ -70,6 +70,12 @@ export const PlayerMinimalDetailsSchema = PlayerApiSchema.pick({
   events: z.array(EventMinimalDetailsSchema).optional(),
 });
 
+export const PlayerSyncSchema = z.object({
+  agaId: z.string(),
+  name: z.string().optional(),
+  rating: z.number().optional(),
+});
+
 export const PlayerMessageSchema = z.object({
   message: z.string(),
 });
@@ -90,4 +96,5 @@ export type PlayerDb = z.infer<typeof PlayerDbSchema>;
 export type PlayerApi = z.infer<typeof PlayerApiSchema>;
 export type CreatePlayer = z.infer<typeof PlayerCreateSchema>;
 export type UpdatePlayer = z.infer<typeof PlayerUpdateSchema>;
+export type SyncPlayer = z.infer<typeof PlayerSyncSchema>;
 export type PlayerQueryParams = z.infer<typeof PlayerQuerySchema>;

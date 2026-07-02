@@ -60,6 +60,9 @@ export type Context = {
         signingSecret: string;
       };
     };
+    badgefile: {
+      apiKey: string;
+    };
   };
   server: {
     url: string;

@@ -72,6 +72,9 @@ const runtime = {
       signingSecret: process.env.REGFOX_WEBHOOK_SIGNING_SECRET || '',
     },
   },
+  badgefile: {
+    apiKey: process.env.BADGEFILE_API_KEY!,
+  },
 };
 
 export { db, env, runtime, server, serviceName };

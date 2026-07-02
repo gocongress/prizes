@@ -5,6 +5,7 @@ import {
   PlayerCreateSchema,
   PlayerMessageSchema,
   PlayerQuerySchema,
+  PlayerSyncSchema,
   PlayerUpdateSchema,
   type PlayerQueryParams,
 } from '@/schemas/player';
@@ -111,6 +112,31 @@ export const updatePlayerById = (context: Context) =>
         return buildResponse(PlayerApiSchema, context, ContextKinds.PLAYER, payload);
       } catch (err) {
         context.logger.error({ err, id: input.id }, 'Error updating player');
+        throw createHttpError(500, err as Error, { expose: false });
+      }
+    },
+  });
+
+/**
+ * POST /api/v1/admin/players/sync
+ */
+export const syncPlayer = (context: Context) =>
+  handlerFactory({
+    context,
+    kind: ContextKinds.PLAYER,
+    itemSchema: PlayerApiSchema,
+    scopes: ScopeKinds.ADMIN,
+    disableScrub: true,
+  }).build({
+    method: 'post',
+    input: PlayerSyncSchema,
+    output: ApiPayloadSchema,
+    handler: async ({ input, options: { context } }) => {
+      try {
+        const payload = await PlayerService.syncPlayer({ context, input });
+        return buildResponse(PlayerApiSchema, context, ContextKinds.PLAYER, payload);
+      } catch (err) {
+        context.logger.error({ err }, 'Error syncing player');
         throw createHttpError(500, err as Error, { expose: false });
       }
     },

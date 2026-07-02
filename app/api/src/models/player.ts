@@ -7,6 +7,7 @@ import {
   type PlayerDb,
   type PlayerQueryKey,
   type PlayerQueryParams,
+  type SyncPlayer,
   type UpdatePlayer,
 } from '@/schemas/player';
 import type { UserDb } from '@/schemas/user';
@@ -227,6 +228,42 @@ export const updateById = async (
 
   if (!rows.length) {
     throw new Error('Failed updating player.');
+  }
+
+  const user = await userGetById(context, rows[0].user_id);
+  if (!user) {
+    return;
+  }
+  return asModel({ ...rows[0], email: user.email });
+};
+
+export const updateByAgaId = async (
+  context: Context,
+  trx: Knex.Transaction,
+  input: SyncPlayer,
+): Promise<PlayerApi | undefined> => {
+  const playerRows = await context
+    .db<PlayerDb>(TABLE_NAME)
+    .where({ aga_id: input.agaId })
+    .returning<PlayerDb[]>('*');
+
+  if (!playerRows.length) {
+    return;
+  }
+
+  const player = playerRows[0];
+
+  const rows = await trx<PlayerDb>(TABLE_NAME)
+    .where({ aga_id: input.agaId })
+    .update({
+      name: input.name ?? player.name,
+      rank: input.rating ?? player.rank,
+      updated_at: new Date(),
+    })
+    .returning<PlayerDb[]>('*');
+
+  if (!rows.length) {
+    throw new Error('Failed syncing player.');
   }
 
   const user = await userGetById(context, rows[0].user_id);
