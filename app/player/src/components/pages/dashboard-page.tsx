@@ -16,6 +16,9 @@ import { Calendar, UserCircle2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 
+// Stable empty array references to prevent unnecessary re-renders
+const EMPTY_COMBINATIONS: PrizeAwardCombination[] = [];
+
 export function DashboardPage() {
   const { setBreadcrumbs } = useBreadcrumb();
   const { selectedPlayer, isLoading: isLoadingPlayers } = usePlayer();
@@ -65,12 +68,12 @@ export function DashboardPage() {
 
   // Create unique combinations of prizeId and award values
   const initialCombinations = useMemo(() => {
-    const combinations: PrizeAwardCombination[] = [];
-
     // Only show prizes if both player and event are selected
     if (!selectedPlayer || !selectedEvent) {
-      return combinations;
+      return EMPTY_COMBINATIONS;
     }
+
+    const combinations: PrizeAwardCombination[] = [];
 
     prizes.forEach((prize) => {
       if (prize.awards && prize.awards.length > 0) {
