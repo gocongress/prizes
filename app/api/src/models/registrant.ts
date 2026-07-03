@@ -104,6 +104,9 @@ export const getAll = async (
     case 'playerName':
       orderByTable = `${PLAYER_TABLE_NAME}.name`;
       break;
+    case 'playerRank':
+      orderByTable = `${PLAYER_TABLE_NAME}.rank`;
+      break;
     case 'eventTitle':
       orderByTable = `${EVENT_TABLE_NAME}.title`;
       break;
