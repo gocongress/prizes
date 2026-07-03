@@ -39,6 +39,13 @@ const RegistrantList = () => (
           render={(c) => c.referenceRecord?.eventTitle}
         />
       </DataTable.Col>
+      <DataTable.Col source="playerRank" label="Player Rank">
+        <ReferenceField
+          source="playerId"
+          reference="players"
+          render={(c) => c.referenceRecord?.rank}
+        />
+      </DataTable.Col>
       <DataTable.Col source="registrationDate" field={DateField} />
       <DataTable.Col source="status" />
       <DataTable.Col source="notes" />

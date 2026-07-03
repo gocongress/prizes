@@ -20,6 +20,7 @@ export const TABLE_NAME = 'registrants';
 const asModel = (
   item: RegistrantDb & {
     player_name?: string;
+    player_rank?: number;
     event_title?: string;
   },
 ): RegistrantApi => {
@@ -29,6 +30,7 @@ const asModel = (
     playerId: item.player_id,
     eventId: item.event_id,
     playerName: item.player_name,
+    playerRank: item.player_rank,
     eventTitle: item.event_title,
     registrationDate: item.registration_date.toISOString(),
     status: item.status || undefined,
@@ -71,6 +73,12 @@ export const getAll = async (
           WHEN ${PLAYER_TABLE_NAME}.id IS NULL THEN NULL
           ELSE CONCAT(${PLAYER_TABLE_NAME}.aga_id, ' - ', ${PLAYER_TABLE_NAME}.name)
         END as player_name`,
+      ),
+      context.db.raw(
+        `CASE
+          WHEN ${PLAYER_TABLE_NAME}.id IS NULL THEN NULL
+          ELSE ${PLAYER_TABLE_NAME}.rank
+        END as player_rank`,
       ),
       `${EVENT_TABLE_NAME}.title as event_title`,
     )
