@@ -39,7 +39,7 @@ export const RegistrantApiSchema = z.object({
   kind: z.literal('registrant'),
   playerId: z.guid().example('550e8400-e29b-41d4-a716-446655440000'),
   playerName: z.string().optional(),
-  playerRank: z.number().optional(),
+  playerRank: z.union([z.number(), z.string()]).nullish(),
   eventId: z.guid().example('550e8400-e29b-41d4-a716-446655440000'),
   eventTitle: z.string().optional(),
   registrationDate: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
