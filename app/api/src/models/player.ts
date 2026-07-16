@@ -14,7 +14,7 @@ import type { UserApi, UserDb } from '@/schemas/user';
 import { ContextKinds, type Context } from '@/types';
 import type { Knex } from 'knex';
 import { randomUUID } from 'node:crypto';
-import { create as registrantCreate } from './registrant';
+import { create as registrantCreate, getByPlayerAndEvent } from './registrant';
 import {
   find,
   TABLE_NAME as USER_TABLE_NAME,
@@ -299,6 +299,19 @@ export const updateByAgaId = async (
   }
 
   const player = playerRows[0];
+
+  const existingRegistrant = await getByPlayerAndEvent(
+    context,
+    player.id,
+    context.runtime.badgefile.eventId,
+  );
+  if (!existingRegistrant) {
+    await registrantCreate(context, trx, {
+      playerId: player.id,
+      eventId: context.runtime.badgefile.eventId,
+      registrationDate: new Date().toISOString(),
+    });
+  }
 
   const rows = await trx<PlayerDb>(TABLE_NAME)
     .where({ aga_id: input.agaId })

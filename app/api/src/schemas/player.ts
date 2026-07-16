@@ -35,7 +35,7 @@ export const PlayerApiSchema = z.object({
   kind: z.literal('player'),
   userId: z.guid().example('550e8400-e29b-41d4-a716-446655440000'),
   agaId: z.string().example('12298'),
-  rank: z.coerce.number().example(-2.1).optional(),
+  rank: z.coerce.number().example(-2.1).nullish(),
   name: z.string(),
   email: z.email().nullable().optional(), // Data joined from users table by user_id
   createdAt: z.iso.datetime().example('2025-01-01T12:00:00.000Z'),
