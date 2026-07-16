@@ -687,7 +687,7 @@ export function generateWelcomeEmailHtml(params: WelcomeEmailParams): string {
 <body>
   <div class="container">
     <div class="content">
-      <p>Dear ${playerName},</p>
+      ${playerName ? `<p>Dear ${playerName},</p>` : ''}
       <p>Welcome! Your AGA Prizes account has been set up and you can now access the player dashboard to set your preference for tournament prizes and view the prizes you've won.</p>
       <p>Be sure to visit https://gocongress.org/apps for more information on the other apps available to you as a player!</p>
 

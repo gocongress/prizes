@@ -1,0 +1,15 @@
+meta {
+  name: Welcome User Email
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/events/{{eventId}}/welcome-emails
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
