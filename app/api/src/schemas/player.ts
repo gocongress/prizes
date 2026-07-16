@@ -79,7 +79,7 @@ export const PlayerSyncSchema = z.object({
   rating: z
     .number()
     .transform((val) => Math.round(val * 10) / 10)
-    .optional(),
+    .nullish(),
 });
 
 export const PlayerMessageSchema = z.object({
