@@ -37,13 +37,13 @@ function CookieConsent() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-50 transition-all duration-300 ease-in-out ${
+      className={`fixed bottom-4 left-1/2 z-50 w-full -translate-x-1/2 px-4 transition-all duration-300 ease-in-out md:w-1/2 md:px-0 ${
         isClosing ? 'translate-y-full opacity-0' : 'translate-y-0 opacity-100'
       }`}
     >
-      <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t shadow-lg">
-        <div className="container mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 rounded-lg border shadow-lg">
+        <div className="px-4 py-4">
+          <div className="flex flex-col gap-4">
             {/* Icon and Message */}
             <div className="flex flex-1 items-start gap-4">
               <div className="text-muted-foreground mt-0.5 flex-shrink-0">
@@ -66,16 +66,16 @@ function CookieConsent() {
             </div>
 
             {/* Buttons */}
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="flex flex-row justify-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleRejectAll}
-                className="w-full sm:w-auto"
+                className="w-full w-auto"
               >
                 Reject All
               </Button>
-              <Button size="sm" onClick={handleAcceptAll} className="w-full sm:w-auto">
+              <Button size="sm" onClick={handleAcceptAll} className="w-full w-auto">
                 Accept All
               </Button>
             </div>
