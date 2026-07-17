@@ -29,6 +29,7 @@ type AwardWithPrizeDb = AwardDb & {
 
 type AwardWithPreferenceDb = AwardDb & {
   preference_order?: AwardPreferenceDb['preference_order'];
+  prize_sponsor?: string | null;
 };
 
 const asModel = (
@@ -283,13 +284,21 @@ export const getTopAvailableAwardForPlayer = async ({
   trx,
   playerId,
   notInAwardIds,
+  notInSponsorNames,
 }: {
   context: Context;
   trx: Knex.Transaction;
   playerId: string;
   notInAwardIds: string[];
+  notInSponsorNames: string[];
 }): Promise<
-  { award: AwardApi; preferenceOrder?: number | null; fromPreference: boolean } | undefined
+  | {
+      award: AwardApi;
+      preferenceOrder?: number | null;
+      fromPreference: boolean;
+      prizeSponsor?: string | null;
+    }
+  | undefined
 > => {
   // Query award preferences ordered by preference_order (ascending)
   // Join with awards to check availability
@@ -305,6 +314,7 @@ export const getTopAvailableAwardForPlayer = async ({
       ),
       `${PRIZE_TABLE_NAME}.title as prize_title`,
       `${PRIZE_TABLE_NAME}.description as prize_description`,
+      `${PRIZE_TABLE_NAME}.sponsor as prize_sponsor`,
       `${AWARD_PREFERENCE_TABLE_NAME}.preference_order as preference_order`,
     )
     .innerJoin(
@@ -317,6 +327,15 @@ export const getTopAvailableAwardForPlayer = async ({
     .whereNotIn(`${TABLE_NAME}.id`, notInAwardIds) // Exclude specified awards
     .andWhere(`${AWARD_PREFERENCE_TABLE_NAME}.player_id`, playerId)
     .andWhere(`${TABLE_NAME}.player_id`, null) // Only available awards
+    .modify((qb) => {
+      if (notInSponsorNames.length > 0) {
+        qb.where(function () {
+          this.whereNotIn(`${PRIZE_TABLE_NAME}.sponsor`, notInSponsorNames).orWhereNull(
+            `${PRIZE_TABLE_NAME}.sponsor`,
+          );
+        });
+      }
+    })
     .orderBy(`${AWARD_PREFERENCE_TABLE_NAME}.preference_order`, 'asc')
     .first()
     .returning<AwardWithPreferenceDb>('*');
@@ -326,6 +345,7 @@ export const getTopAvailableAwardForPlayer = async ({
       award: asModel(row),
       preferenceOrder: row.preference_order,
       fromPreference: true,
+      prizeSponsor: row.prize_sponsor,
     };
   }
 
@@ -342,11 +362,21 @@ export const getTopAvailableAwardForPlayer = async ({
       ),
       `${PRIZE_TABLE_NAME}.title as prize_title`,
       `${PRIZE_TABLE_NAME}.description as prize_description`,
+      `${PRIZE_TABLE_NAME}.sponsor as prize_sponsor`,
     )
     .leftJoin(PLAYER_TABLE_NAME, `${TABLE_NAME}.player_id`, `${PLAYER_TABLE_NAME}.id`)
     .leftJoin(PRIZE_TABLE_NAME, `${TABLE_NAME}.prize_id`, `${PRIZE_TABLE_NAME}.id`)
     .whereNotIn(`${TABLE_NAME}.id`, notInAwardIds) // Exclude specified awards
     .andWhere(`${TABLE_NAME}.player_id`, null) // Only available awards
+    .modify((qb) => {
+      if (notInSponsorNames.length > 0) {
+        qb.where(function () {
+          this.whereNotIn(`${PRIZE_TABLE_NAME}.sponsor`, notInSponsorNames).orWhereNull(
+            `${PRIZE_TABLE_NAME}.sponsor`,
+          );
+        });
+      }
+    })
     .orderBy(`${TABLE_NAME}.value`, 'desc')
     .first()
     .returning<AwardWithPreferenceDb>('*');
@@ -359,5 +389,6 @@ export const getTopAvailableAwardForPlayer = async ({
     award: asModel(fallbackRow),
     preferenceOrder: null,
     fromPreference: false,
+    prizeSponsor: fallbackRow.prize_sponsor,
   };
 };

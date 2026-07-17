@@ -284,6 +284,7 @@ export const getAllocationRecommendations = async ({
 
     const recommendations: ResultAward[] = [];
     const recommendedAwards = new Set<string>();
+    const recommendedSponsorsByPlayer = new Map<string, Set<string>>();
 
     for (const winner of sortedWinners) {
       // Get player by agaId
@@ -299,12 +300,15 @@ export const getAllocationRecommendations = async ({
         );
       }
 
+      const notInSponsorNames = [...(recommendedSponsorsByPlayer.get(player.id) ?? [])];
+
       // Find the best award available which has not yet been allocated in this process or previously assigned
       const awardResult = await getTopAvailableAwardForPlayer({
         context,
         trx,
         playerId: player.id,
         notInAwardIds: Array.from(recommendedAwards.keys()),
+        notInSponsorNames,
       });
       if (!awardResult) {
         context.logger.error(
@@ -314,6 +318,12 @@ export const getAllocationRecommendations = async ({
         continue;
       }
       recommendedAwards.add(awardResult.award.id);
+
+      if (awardResult.prizeSponsor) {
+        const playerSponsors = recommendedSponsorsByPlayer.get(player.id) ?? new Set<string>();
+        playerSponsors.add(awardResult.prizeSponsor);
+        recommendedSponsorsByPlayer.set(player.id, playerSponsors);
+      }
 
       // Add to recommendations array (without actually assigning)
       const { award, preferenceOrder, fromPreference } = awardResult;
