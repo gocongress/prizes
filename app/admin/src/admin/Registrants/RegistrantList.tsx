@@ -43,7 +43,7 @@ const RegistrantList = () => (
         <ReferenceField
           source="playerId"
           reference="players"
-          render={(c) => c.referenceRecord?.rank}
+          render={(c) => c.referenceRecord?.rank || 'N/A'}
         />
       </DataTable.Col>
       <DataTable.Col source="registrationDate" field={DateField} />
