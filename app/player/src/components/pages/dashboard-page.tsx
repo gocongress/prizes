@@ -28,6 +28,7 @@ export function DashboardPage() {
   const { prizes, isLoading: isLoadingPrizes } = usePrizesByEvent(selectedEvent?.id);
   const { awardPreferences, isLoading: isLoadingAwardPreferences } = useAwardPreferences(
     selectedPlayer?.id,
+    selectedEvent?.id,
   );
   const { saveAwardPreferences } = useSaveAwardPreferences();
   const { deleteAwardPreferences, isPending: isResettingPreferences } = useDeleteAwardPreferences();
@@ -48,12 +49,8 @@ export function DashboardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Filter award preferences to only those for the selected event
-  const eventAwardPreferences = useMemo(() => {
-    if (!selectedEvent) return EMPTY_EVENT_AWARD_PREFS;
-    const eventPrizeIds = new Set(prizes.map((prize) => prize.id));
-    return awardPreferences.filter((pref) => eventPrizeIds.has(pref.prizeId));
-  }, [awardPreferences, prizes, selectedEvent]);
+  // Award preferences are already filtered by event via the API eventId query param
+  const eventAwardPreferences = selectedEvent ? awardPreferences : EMPTY_EVENT_AWARD_PREFS;
 
   // Create a preference map for easy lookup
   const preferenceMap = useMemo(() => {

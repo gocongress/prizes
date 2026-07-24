@@ -70,6 +70,10 @@ export const getAll = async (
     query.where(`${TABLE_NAME}.player_id`, queryParams.playerId);
   }
 
+  if (queryParams.eventId) {
+    query.where(`${PRIZE_TABLE_NAME}.event_id`, queryParams.eventId);
+  }
+
   if (queryParams?.q) {
     query.andWhere((subQuery) => {
       subQuery

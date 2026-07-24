@@ -47,15 +47,23 @@ const API_URL = env.VITE_API_URL;
  * return <div>{awardPreferences?.map(p => <div key={p.id}>{p.preferenceOrder}</div>)}</div>;
  * ```
  */
-export const useAwardPreferences = (playerId: string | null | undefined) => {
+export const useAwardPreferences = (
+  playerId: string | null | undefined,
+  eventId?: string | null,
+) => {
   const awardPreferencesQuery = useQuery({
-    queryKey: ['awardPreferences', playerId],
+    queryKey: ['awardPreferences', playerId, eventId],
     queryFn: async (): Promise<AwardPreferencesResponse> => {
       if (!playerId) {
         throw new Error('Player ID is required');
       }
 
-      const response = await fetch(`${API_URL}/api/v1/awardPreferences/player/${playerId}`, {
+      const url = new URL(`${API_URL}/api/v1/awardPreferences/player/${playerId}`);
+      if (eventId) {
+        url.searchParams.set('eventId', eventId);
+      }
+
+      const response = await fetch(url.toString(), {
         method: 'GET',
         credentials: 'include',
         headers: {
