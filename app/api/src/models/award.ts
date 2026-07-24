@@ -279,16 +279,25 @@ export const getByUserPlayerId = async (
  * @param playerId - The ID of the player
  * @returns The top available award based on preferences with preference order info, or undefined if none available
  */
+const getExcludedRecommendedRanks = (rank: number | null | undefined): string[] => {
+  if (rank == null) return [];
+  if (rank <= -10) return ['SDK']; // DDK players cannot receive SDK prizes
+  if (rank <= -1) return ['DDK']; // SDK players cannot receive DDK prizes
+  return ['DDK', 'SDK']; // DAN players (rank >= 1) cannot receive DDK or SDK prizes
+};
+
 export const getTopAvailableAwardForPlayer = async ({
   context,
   trx,
   playerId,
+  playerRank,
   notInAwardIds,
   notInSponsorNames,
 }: {
   context: Context;
   trx: Knex.Transaction;
   playerId: string;
+  playerRank?: number | null;
   notInAwardIds: string[];
   notInSponsorNames: string[];
 }): Promise<
@@ -335,6 +344,14 @@ export const getTopAvailableAwardForPlayer = async ({
           );
         });
       }
+      const excludedRanks = getExcludedRecommendedRanks(playerRank);
+      if (excludedRanks.length > 0) {
+        qb.where(function () {
+          this.whereNotIn(`${PRIZE_TABLE_NAME}.recommended_rank`, excludedRanks).orWhereNull(
+            `${PRIZE_TABLE_NAME}.recommended_rank`,
+          );
+        });
+      }
     })
     .orderBy(`${AWARD_PREFERENCE_TABLE_NAME}.preference_order`, 'asc')
     .first()
@@ -373,6 +390,14 @@ export const getTopAvailableAwardForPlayer = async ({
         qb.where(function () {
           this.whereNotIn(`${PRIZE_TABLE_NAME}.sponsor`, notInSponsorNames).orWhereNull(
             `${PRIZE_TABLE_NAME}.sponsor`,
+          );
+        });
+      }
+      const excludedRanks = getExcludedRecommendedRanks(playerRank);
+      if (excludedRanks.length > 0) {
+        qb.where(function () {
+          this.whereNotIn(`${PRIZE_TABLE_NAME}.recommended_rank`, excludedRanks).orWhereNull(
+            `${PRIZE_TABLE_NAME}.recommended_rank`,
           );
         });
       }

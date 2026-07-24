@@ -307,6 +307,7 @@ export const getAllocationRecommendations = async ({
         context,
         trx,
         playerId: player.id,
+        playerRank: player.rank,
         notInAwardIds: Array.from(recommendedAwards.keys()),
         notInSponsorNames,
       });
